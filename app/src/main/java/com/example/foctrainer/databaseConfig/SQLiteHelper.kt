@@ -29,8 +29,6 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
 
     }
 
-
-
     override fun onCreate(db: SQLiteDatabase?) {
 
         val CREATE_ML_CONFIG_TABLE = ("CREATE TABLE " + ML_CONFIG_TABLE + " (" + ML_CONFIG_ID
@@ -49,18 +47,6 @@ class SQLiteHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, 
             Log.d("database","database is not created")
         }
     }
-
-    fun insertExercise(exercise:ExerciseModel):Long{
-        val db = this.writableDatabase
-        Log.d("database content",exercise.getName())
-        val contentValues = ContentValues()
-        contentValues.put(EXERCISE_NAME,exercise.getName())
-        contentValues.put(EXERCISE_ID,exercise.getName())
-        val success = db.insert(EXERCISE_TABLE,null,contentValues)
-        db.close()
-        return success
-    }
-
 
     override fun onUpgrade(db: SQLiteDatabase?, p1: Int, p2: Int) {
         db!!.execSQL("DROP TABLE IF EXISTS $EXERCISE_TABLE")

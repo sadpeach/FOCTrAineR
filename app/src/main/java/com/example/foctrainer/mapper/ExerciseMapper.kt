@@ -1,25 +1,28 @@
 package com.example.foctrainer.mapper
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.database.Cursor
+import android.util.Log
 import com.example.foctrainer.MainActivity
 import com.example.foctrainer.databaseConfig.SQLiteHelper
 import com.example.foctrainer.entity.ExerciseModel
 import java.lang.Exception
 
-class ExerciseMapper{
+class ExerciseMapper(con:Context){
 
     companion object{
         private const val TABLE_NAME="ExerciseTable"
-        var sqlHelper: SQLiteHelper = SQLiteHelper(MainActivity.getContext())
+
     }
+    var sqlHelper: SQLiteHelper = SQLiteHelper(con)
+    val db = sqlHelper.readableDatabase
 
     @SuppressLint("Range")
     fun getAllExercises():List<ExerciseModel>{
         val allExerciseModels : ArrayList<ExerciseModel> = ArrayList()
         val sqlQuery = "SELECT * FROM $TABLE_NAME"
-
-        val db = sqlHelper.readableDatabase
+        Log.d("DBRetrieve",sqlQuery)
 
         val cursor:Cursor?
 
@@ -36,8 +39,8 @@ class ExerciseMapper{
 
         if (cursor.moveToFirst()){
             do {
-                id = cursor.getInt(cursor.getColumnIndex("id"))
-                name = cursor.getInt(cursor.getColumnIndex("name")).toString()
+                id = cursor.getInt(cursor.getColumnIndex("_id"))
+                name = cursor.getString(cursor.getColumnIndex("name"))
                 mlId = cursor.getInt(cursor.getColumnIndex("mlId"))
                 val exercise = ExerciseModel(id,name,mlId)
                 allExerciseModels.add(exercise)
