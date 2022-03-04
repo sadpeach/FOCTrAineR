@@ -1,13 +1,9 @@
-package com.example.foctrainer
+package com.example.foctrainer.exercise
 
 import com.example.foctrainer.databinding.ActivityExerciseBinding
-import com.google.mlkit.vision.pose.PoseDetection
-import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
-
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.Manifest
-import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
@@ -16,143 +12,12 @@ import androidx.core.content.ContextCompat
 import java.util.concurrent.Executors
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.video.*
-import java.util.*
 import java.util.concurrent.ExecutorService
-import android.content.Context
-import android.graphics.*
 import android.os.Build
-import android.util.AttributeSet
-import android.view.View
-import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
-import java.lang.Math.atan2
 import kotlin.math.atan2 as kotlinMathAtan2
 
-//pose analyzer class set up
-private class PoseAnalyzer(private val poseFoundListener: (Pose) -> Unit) : ImageAnalysis.Analyzer {
-
-    // Base pose detector with streaming frames, when depending on the pose-detection sdk
-    private val options = PoseDetectorOptions.Builder()
-        .setDetectorMode(PoseDetectorOptions.STREAM_MODE)
-        .build()
-    private val poseDetector = PoseDetection.getClient(options)
-
-    @SuppressLint("UnsafeOptInUsageError")
-    override fun analyze(imageProxy: ImageProxy) {
-
-        val mediaImage = imageProxy.image
-        if (mediaImage != null){
-            val image = InputImage.fromMediaImage(mediaImage, imageProxy.imageInfo.rotationDegrees)
-
-            poseDetector
-                .process(image)
-                .addOnSuccessListener { pose ->
-                    poseFoundListener(pose)
-                    imageProxy.close()
-                }
-                .addOnFailureListener { error ->
-                    Log.d(Exercise.TAG, "Failed to process the image")
-                    error.printStackTrace()
-                    imageProxy.close()
-                }
-        }
-    }
-}
-
-//drawing class
-class RectOverlay constructor(context: Context?, attributeSet: AttributeSet?) :
-    View(context, attributeSet) {
-    private lateinit var extraCanvas: Canvas
-    private lateinit var extraBitmap: Bitmap
-    private val STROKE_WIDTH = 3f // has to be float
-    private val drawColor = Color.RED
-    // Set up the paint with which to draw.
-    private val paint = Paint().apply {
-        color = drawColor
-        // Smooths out edges of what is drawn without affecting shape.
-        isAntiAlias = true
-        // Dithering affects how colors with higher-precision than the device are down-sampled.
-        isDither = true
-        style = Paint.Style.STROKE // default: FILL
-        strokeJoin = Paint.Join.ROUND // default: MITER
-        strokeCap = Paint.Cap.ROUND // default: BUTT
-        strokeWidth = STROKE_WIDTH // default: Hairline-width (really thin)
-    }
-
-    override fun onSizeChanged(width: Int, height: Int, oldWidth: Int, oldHeight: Int) {
-        super.onSizeChanged(width, height, oldWidth, oldHeight)
-        if (::extraBitmap.isInitialized) extraBitmap.recycle()
-        extraBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        extraCanvas = Canvas(extraBitmap)
-        extraCanvas.drawColor(Color.TRANSPARENT)
-    }
-
-    override fun onDraw(canvas: Canvas) {
-        super.onDraw(canvas)
-        canvas.drawBitmap(extraBitmap, 0f, 0f, null)
-    }
-
-    fun clear() {
-        extraCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-    }
-
-    internal fun drawLine(
-        startLandmark: PoseLandmark?,
-        endLandmark: PoseLandmark?
-    ) {
-        val start = startLandmark!!.position
-        val end = endLandmark!!.position
-
-
-        val xmul = 3.3f;
-        val ymul = 3.3f;
-
-        extraCanvas.drawLine(
-            (start.x * xmul) - 250, start.y* ymul, (end.x* xmul) -250, end.y* ymul, paint
-        )
-        invalidate();
-    }
-
-    internal fun drawNeck(
-        _occhioSx: PoseLandmark?,
-        _occhioDx: PoseLandmark?,
-        _spallaSx: PoseLandmark?,
-        _spallaDx: PoseLandmark?
-    ) {
-
-        val xmul = 3.3f;
-        val ymul = 3.3f;
-
-
-        val occhioSx = _occhioSx!!.position
-        val occhioDx = _occhioDx!!.position
-        val spallaSx = _spallaSx!!.position
-        val spallaDx = _spallaDx!!.position
-
-
-        val fineColloX =  occhioDx.x +  ((occhioSx.x - occhioDx.x) / 2);
-        val fineColloY = occhioDx.y + ((occhioSx.y - occhioDx.y) / 2);
-
-        val inizioColloX = spallaDx.x + ((spallaSx.x - spallaDx.x ) / 2);
-        val inizioColloY = spallaDx.y + ((spallaSx.y - spallaDx.y) / 2);
-
-        extraCanvas.drawLine(
-            (fineColloX * xmul) - 250, fineColloY* ymul, (inizioColloX* xmul) -250, inizioColloY* ymul, paint
-        )
-
-        extraCanvas.drawLine(
-            (occhioSx.x * xmul) - 250, occhioSx.y* ymul, (occhioDx.x* xmul) -250, occhioDx.y* ymul, paint
-        )
-        invalidate();
-    }
-
-
-}
-
-
-//set up camerax
 class Exercise : AppCompatActivity() {
 
     private lateinit var binding:ActivityExerciseBinding
@@ -168,7 +33,8 @@ class Exercise : AppCompatActivity() {
             startCamera()
         } else {
             ActivityCompat.requestPermissions(
-                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS)
+                this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
+            )
         }
 
         cameraExecutor = Executors.newSingleThreadExecutor()

@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FOCTrAineR">
         <activity
-            android:name=".Exercise"
+            android:name=".exercise.Exercise"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
