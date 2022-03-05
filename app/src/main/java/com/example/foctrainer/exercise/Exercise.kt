@@ -123,14 +123,14 @@ class Exercise : AppCompatActivity() {
     }
 
     fun getNeckAngle(
-        orecchio: PoseLandmark, spalla: PoseLandmark
+        ear: PoseLandmark, shoulder: PoseLandmark
     ): Double {
 
         var result = Math.toDegrees(
-            kotlinMathAtan2( spalla.getPosition().y.toDouble() - spalla.getPosition().y,
-                (spalla.getPosition().x + 100 ).toDouble() - spalla.getPosition().x)
-                - kotlinMathAtan2(orecchio.getPosition().y - spalla.getPosition().y,
-            orecchio.getPosition().x - spalla.getPosition().x)
+            kotlinMathAtan2( shoulder.getPosition().y.toDouble() - shoulder.getPosition().y,
+                (shoulder.getPosition().x + 100 ).toDouble() - shoulder.getPosition().x)
+                - kotlinMathAtan2(ear.getPosition().y - shoulder.getPosition().y,
+                ear.getPosition().x - shoulder.getPosition().x)
         )
 
         result = Math.abs(result) // Angle should never be negative
@@ -168,50 +168,50 @@ class Exercise : AppCompatActivity() {
             val leftFootIndex = pose.getPoseLandmark(PoseLandmark.LEFT_FOOT_INDEX)
             val rightFootIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX)
 
-            val occhioSx = pose.getPoseLandmark(PoseLandmark.LEFT_EYE);
-            val occhioDx = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE);
+            val eyeSx = pose.getPoseLandmark(PoseLandmark.LEFT_EYE);
+            val eyeDx = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE);
 
-            val orecchioDx = pose.getPoseLandmark(PoseLandmark.RIGHT_EAR);
-            val orecchioSx = pose.getPoseLandmark(PoseLandmark.LEFT_EAR);
+            val earDx = pose.getPoseLandmark(PoseLandmark.RIGHT_EAR);
+            val earSx = pose.getPoseLandmark(PoseLandmark.LEFT_EAR);
 
             val builder = StringBuilder()
             binding.rectOverlay.clear()
 
-            if( occhioSx != null && occhioDx != null && leftShoulder != null && rightShoulder != null  ){
-                binding.rectOverlay.drawNeck(occhioSx, occhioDx, leftShoulder, rightShoulder);
+            if( eyeSx != null && eyeDx != null && leftShoulder != null && rightShoulder != null  ){
+                binding.rectOverlay.drawNeck(eyeSx, eyeDx, leftShoulder, rightShoulder);
             }
 
-            if(orecchioSx != null && leftShoulder != null){
-                binding.rectOverlay.drawLine(orecchioSx, leftShoulder)
-                var angoloCollo = getNeckAngle(orecchioSx, leftShoulder);
-                builder.append("${90 - angoloCollo.toInt()} collo (da sx) \n")
+            if(earSx != null && leftShoulder != null){
+                binding.rectOverlay.drawLine(earSx, leftShoulder)
+                var neckAngle = getNeckAngle(earSx, leftShoulder);
+                builder.append("${90 - neckAngle.toInt()} collo (da sx) \n")
             }
 
-            if(orecchioDx != null && rightShoulder != null){
-                binding.rectOverlay.drawLine(orecchioDx, rightShoulder)
-                var angoloCollo = getNeckAngle(orecchioDx, rightShoulder);
-                builder.append("${90 - angoloCollo.toInt()} collo (da dx) \n")
+            if(earDx != null && rightShoulder != null){
+                binding.rectOverlay.drawLine(earDx, rightShoulder)
+                var neckAngle = getNeckAngle(earDx, rightShoulder);
+                builder.append("${90 - neckAngle.toInt()} collo (da dx) \n")
             }
 
             if(rightShoulder != null && rightHip != null && rightKnee != null){
-                var angoloBusto = getAngle(rightShoulder, rightHip, rightKnee);
-                builder.append("${ 180 - angoloBusto.toInt()} busto (da dx) \n")
+                var neckAngle = getAngle(rightShoulder, rightHip, rightKnee);
+                builder.append("${ 180 - neckAngle.toInt()} busto (da dx) \n")
             }
 
             if(leftShoulder != null && leftHip != null && leftKnee != null){
-                var angoloBusto = getAngle(leftShoulder, leftHip, leftKnee);
-                builder.append("${180 - angoloBusto.toInt()} busto (da sx) \n")
+                var neckAngle = getAngle(leftShoulder, leftHip, leftKnee);
+                builder.append("${180 - neckAngle.toInt()} busto (da sx) \n")
             }
 
             if( rightHip != null && rightKnee != null  && rightAnkle != null){
-                var angoloBusto = getAngle( rightHip, rightKnee, rightAnkle);
-                builder.append("${ 180 - angoloBusto.toInt()} gamba (da dx) \n")
+                var neckAngle = getAngle( rightHip, rightKnee, rightAnkle);
+                builder.append("${ 180 - neckAngle.toInt()} gamba (da dx) \n")
             }
 
             // angolo gamba sinistra
             if( leftHip != null && leftKnee != null  && leftAnkle != null){
-                var angoloBusto = getAngle( leftHip, leftKnee,leftAnkle);
-                builder.append("${ 180 - angoloBusto.toInt()} gamba (da sx) \n")
+                var neckAngle = getAngle( leftHip, leftKnee,leftAnkle);
+                builder.append("${ 180 - neckAngle.toInt()} gamba (da sx) \n")
             }
 
 
