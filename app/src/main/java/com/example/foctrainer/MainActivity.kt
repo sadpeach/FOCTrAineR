@@ -55,7 +55,7 @@ class MainActivity : AppCompatActivity() {
 //        val exemap = ExerciseMapper(this)
 //        val allexe: List <ExerciseModel> = exemap.getAllExercises()
 //        for (exe in allexe){
-//            Log.d("DB Retreive",exe.getName())
+//            Log.d("DB Retreive",exe.name)
 //        }
 
         val listView = findViewById<ListView>(R.id.workoutCategoriesListView)
