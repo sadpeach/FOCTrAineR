@@ -1,4 +1,15 @@
 package com.example.foctrainer.entity
 
-data class UserModel (val id:Int,val height:Float,val weight:Float,val bmi:Float) {
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
+@Entity (tableName = "UserTable")
+data class UserModel (
+    @PrimaryKey (autoGenerate = true) val id:Int,
+    @ColumnInfo(name="userName") val userName:String,
+    @ColumnInfo(name="password") val password:String,
+    @ColumnInfo(name="height") val height:Float,
+    @ColumnInfo(name="weight") val weight:Float,
+    @ColumnInfo(name="bmi") val bmi:Float) {
 }

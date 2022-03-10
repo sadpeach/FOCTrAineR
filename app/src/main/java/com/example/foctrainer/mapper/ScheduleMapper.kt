@@ -1,4 +1,7 @@
 package com.example.foctrainer.mapper
 
-class ScheduleMapper {
+import androidx.room.Dao
+
+@Dao
+interface ScheduleMapper {
 }

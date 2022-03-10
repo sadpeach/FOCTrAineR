@@ -1,4 +1,7 @@
 package com.example.foctrainer.mapper
 
-class completedExerciseCalendarMapper {
+import androidx.room.Dao
+
+@Dao
+interface CompletedExerciseCalendarMapper {
 }

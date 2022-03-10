@@ -1,4 +1,8 @@
 package com.example.foctrainer.mapper
 
-class CompletedExerciseMapper {
+import androidx.room.Dao
+
+
+@Dao
+interface CompletedExerciseMapper {
 }

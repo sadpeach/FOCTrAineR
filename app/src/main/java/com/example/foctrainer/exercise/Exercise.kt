@@ -107,7 +107,7 @@ class Exercise : AppCompatActivity() {
 
     }
 
-    fun getAngle(firstPoint: PoseLandmark, midPoint: PoseLandmark, lastPoint: PoseLandmark): Double {
+    private fun getAngle(firstPoint: PoseLandmark, midPoint: PoseLandmark, lastPoint: PoseLandmark): Double {
 
         var result = Math.toDegrees(
             kotlinMathAtan2( lastPoint.getPosition().y.toDouble() - midPoint.getPosition().y,
@@ -122,7 +122,7 @@ class Exercise : AppCompatActivity() {
         return result
     }
 
-    fun getNeckAngle(
+    private fun getNeckAngle(
         ear: PoseLandmark, shoulder: PoseLandmark
     ): Double {
 
