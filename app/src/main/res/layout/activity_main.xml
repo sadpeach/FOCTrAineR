@@ -54,6 +54,56 @@
                         android:textColor="@color/white"
                         android:textSize="20dp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/height"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/name"
+                        android:text="Height: "
+                        android:textColor="@color/white"
+                        android:textSize="20dp" />
+
+                    <EditText
+                        android:id="@+id/editHeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        android:textColor="@color/white"
+                        android:layout_below="@+id/name"
+                        android:layout_toRightOf="@id/height"
+                        android:ems="5"
+                        android:padding="5dp"/>
+
+                    <TextView
+                        android:id="@+id/weight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/height"
+                        android:text="Weight: "
+                        android:textColor="@color/white"
+                        android:textSize="20dp"/>
+
+                    <EditText
+                        android:id="@+id/editWeight"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:backgroundTint="@color/white"
+                        android:textColor="@color/white"
+                        android:layout_toRightOf="@id/weight"
+                        android:layout_below="@+id/height"
+                        android:ems="5"
+                        android:padding="5dp"/>
+
+                    <Button
+                        android:id="@+id/btnUpdate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Update"
+                        android:layout_below="@+id/height"
+                        android:layout_alignParentEnd="true"
+                        android:minHeight="5dp" />
+
                 </RelativeLayout>
             </LinearLayout>
 
@@ -65,7 +115,7 @@
                 android:outlineAmbientShadowColor="@color/black"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
-                android:layout_marginTop="150dp">
+                android:layout_marginTop="160dp">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -94,11 +144,12 @@
                         android:layout_marginRight="20dp"
                         android:background="@drawable/circle"/>
                     <TextView
+                        android:id="@+id/bmi"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="25"
-                        android:textSize="25dp"
-                        android:layout_marginLeft="45dp"
+                        android:text="20"
+                        android:textSize="20dp"
+                        android:layout_marginLeft="40dp"
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="20dp"
                         android:textColor="@color/black"/>
@@ -110,10 +161,11 @@
                         android:layout_centerHorizontal="true"
                         android:background="@drawable/circle"/>
                     <TextView
+                        android:id="@+id/totalCalories"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="130"
-                        android:textSize="25dp"
+                        android:textSize="20dp"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="20dp"
                         android:textColor="@color/black"/>
@@ -128,9 +180,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total Push up"
+                        android:text="BMI"
                         android:textSize="10dp"
-                        android:layout_marginLeft="20dp"
+                        android:layout_marginLeft="30dp"
                         android:layout_marginRight="20dp"
                         android:textColor="@color/black"/>
                     <TextView
@@ -138,7 +190,7 @@
                         android:layout_height="wrap_content"
                         android:text="Total Calories burnt"
                         android:textSize="10dp"
-                        android:layout_marginLeft="30dp"
+                        android:layout_marginLeft="60dp"
                         android:textColor="@color/black"/>
                 </LinearLayout>
             </LinearLayout>
@@ -170,6 +222,13 @@
                 android:id="@+id/workoutCategoriesListView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:itemCount="5"
+                tools:listitem="@layout/card_view" />
 
             <Button
                 android:id="@+id/selectButton"
