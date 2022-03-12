@@ -51,13 +51,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        userViewModel.allUsers.observe(this, Observer{ users ->
+            Log.d("db insertion testing", users[3].userName)
+        })
+
         //database testing: data insertion
         val user = UserModel(4,"jiayi","123",155.3f,45f,18.9f)
         userViewModel.createNewUser(user = user)
 
-        userViewModel.allUsers.observe(this, Observer{ users ->
-            Log.d("db insertion testing", users[3].userName)
-        })
+
 
         displayUserDetails()
         exerciseDetails()
@@ -113,6 +115,8 @@ class MainActivity : AppCompatActivity() {
         var totalCalories = 0f
         val tvTotalCalories = findViewById<TextView>(R.id.totalCalories)
         tvTotalCalories.text = ""
+        var test1 = "hey"
+        completeExerciseModel.completedExercise
         completeExerciseModel.completedExercise.observe(this, Observer<List<CompletedExerciseModel>>(){ completedExercise->
             for ( comEx in completedExercise){
                 val exUserId = comEx.userId
@@ -120,15 +124,18 @@ class MainActivity : AppCompatActivity() {
                     totalCalories += comEx.total_calories
                 }
             }
+            test1 = totalCalories.toString();
             tvTotalCalories.append(totalCalories.toString())
+            Log.d("0009",test1)
         })
     }
 
     //line Chart
     fun setLineChartData(){
         val lineChart = findViewById<LineChart>(R.id.lineChart)
-        lineValuesList = ArrayList();
-        completeExerciseModel.completedExercise.observe(this, Observer<List<CompletedExerciseModel>>(){ completedExercise->
+        var lineValuesList : ArrayList<Entry> = ArrayList();
+
+        completeExerciseModel.completedExercise.observe(this, { completedExercise->
             for (eachEx in completedExercise){
                 val comExUserId = eachEx.userId
                 val comExExerciseId = eachEx.exerciseId
@@ -136,11 +143,14 @@ class MainActivity : AppCompatActivity() {
                 if (comExUserId == userID){
                     Log.d("IDW1", comExExerciseId.toString())
                     Log.d("IDW2", calories.toString())
+//                    test.add(comExExerciseId.toString())
                     lineValuesList.add(Entry(comExExerciseId.toFloat(), calories))
                 }
+
             }
-        })
-        Log.d("IDW", lineValuesList.toString())
+
+
+        Log.d("testing", lineValuesList.toString())
 //        lineValuesList.add(Entry(10f, 100F))
 //        lineValuesList.add(Entry(20f, 200F))
 //        lineValuesList.add(Entry(30f, 300F))
@@ -158,6 +168,6 @@ class MainActivity : AppCompatActivity() {
 
 //        lineChart.setBackgroundColor(resources.getColor(R.color.white))
         lineChart.animateXY(2000,2000)
-
+        })
     }
 }
