@@ -1,32 +1,29 @@
 package com.example.foctrainer
 
-import android.util.Log
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.foctrainer.viewModel.ExerciseViewModel
+import com.example.foctrainer.entity.ExerciseModel
+import com.example.foctrainer.mapper.ExerciseMapper
 
-class RecyclerAdapter(private var exerciseList: List<ExerciseViewModel>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>(){
-
+class RecyclerAdapter(private val exerciseList: List<ExerciseModel>): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        TODO("Not yet implemented")
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.card_view, parent, false)
-        return ViewHolder(view)
+        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.card_view, parent, false))
     }
 
-    override fun onBindViewHolder(holder: RecyclerAdapter.ViewHolder, position: Int) {
-        TODO("Not yet implemented")
-        Log.d("IDK", exerciseList.toString())
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+        val ex = exerciseList[position]
+        holder.exerciseCategories.text = ex.name
     }
 
     override fun getItemCount(): Int {
-        TODO("Not yet implemented")
         return exerciseList.size
     }
 
-    class ViewHolder(itemView : View): RecyclerView.ViewHolder(itemView){
-        val exerciseCategories : TextView = itemView.findViewById(R.id.tvExerciseCat)
+    class ViewHolder (view : View): RecyclerView.ViewHolder(view){
+        val exerciseCategories : TextView = view.findViewById(R.id.tvExerciseCat)
     }
 }
