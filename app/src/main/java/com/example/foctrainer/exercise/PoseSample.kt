@@ -1,11 +1,6 @@
 package com.example.foctrainer.exercise
 
-import android.util.Log
-import com.google.common.base.Splitter
 import com.google.mlkit.vision.common.PointF3D
-import java.lang.NullPointerException
-import java.lang.NumberFormatException
-
 
 class PoseSample (name: String?,className: String?,landmarks: MutableList<PointF3D>) {
 

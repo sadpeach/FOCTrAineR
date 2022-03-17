@@ -1,9 +1,5 @@
 package com.example.foctrainer.exercise
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import java.util.Collections.max
-
 
 class ClassificationResult {
     private var classConfidences: HashMap <String, Float>;

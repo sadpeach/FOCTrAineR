@@ -8,7 +8,6 @@ import android.media.AudioManager
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.WorkerThread
-import com.google.common.base.Splitter
 import com.google.mlkit.vision.common.PointF3D
 
 import com.google.mlkit.vision.pose.Pose

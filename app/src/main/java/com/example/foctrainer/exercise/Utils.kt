@@ -3,8 +3,6 @@ package com.example.foctrainer.exercise
 import com.google.mlkit.vision.common.PointF3D
 import com.google.common.primitives.Floats.max
 
-
-
     fun add(a: PointF3D, b: PointF3D): PointF3D {
         return PointF3D.from(a.x + b.x, a.y + b.y, a.z + b.z)
     }
