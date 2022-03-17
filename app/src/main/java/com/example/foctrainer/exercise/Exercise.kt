@@ -16,6 +16,7 @@ import java.util.concurrent.ExecutorService
 import android.os.Build
 import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
+import kotlin.math.abs
 import kotlin.math.atan2 as kotlinMathAtan2
 
 class Exercise : AppCompatActivity() {
@@ -23,6 +24,8 @@ class Exercise : AppCompatActivity() {
     private lateinit var binding:ActivityExerciseBinding
     private var imageCapture: ImageCapture? = null
     private lateinit var cameraExecutor: ExecutorService
+    private val runClassification: Boolean = true // change runclassificatioin
+    private val isStreamMode: Boolean = true //change isStreamMode
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,7 +39,6 @@ class Exercise : AppCompatActivity() {
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
             )
         }
-
         cameraExecutor = Executors.newSingleThreadExecutor()
     }
 
@@ -87,7 +89,8 @@ class Exercise : AppCompatActivity() {
             val imageAnalyzer = ImageAnalysis.Builder()
                 .build()
                 .also {
-                    it.setAnalyzer(cameraExecutor, PoseAnalyzer(::onTextFound))
+                    //PoseAnalyzer(::onTextFound) passing onTextFound function to poseAnalyzer
+                    it.setAnalyzer(cameraExecutor, PoseAnalyzer(::onTextFound,runClassification,isStreamMode,this))
                 }
 
             try {
@@ -97,6 +100,7 @@ class Exercise : AppCompatActivity() {
                 // Bind use cases to camera
                 cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageCapture, imageAnalyzer)
+
 
             } catch(exc: Exception) {
                 Log.e(TAG, "Use case binding failed", exc)
@@ -110,12 +114,12 @@ class Exercise : AppCompatActivity() {
     private fun getAngle(firstPoint: PoseLandmark, midPoint: PoseLandmark, lastPoint: PoseLandmark): Double {
 
         var result = Math.toDegrees(
-            kotlinMathAtan2( lastPoint.getPosition().y.toDouble() - midPoint.getPosition().y,
-                lastPoint.getPosition().x.toDouble() - midPoint.getPosition().x)
-                - kotlinMathAtan2(firstPoint.getPosition().y - midPoint.getPosition().y,
-            firstPoint.getPosition().x - midPoint.getPosition().x)
+            kotlinMathAtan2( lastPoint.position.y.toDouble() - midPoint.position.y,
+                lastPoint.position.x.toDouble() - midPoint.position.x)
+                - kotlinMathAtan2(firstPoint.position.y - midPoint.position.y,
+            firstPoint.position.x - midPoint.position.x)
         )
-        result = Math.abs(result) // Angle should never be negative
+        result = abs(result) // Angle should never be negative
         if (result > 180) {
             result = 360.0 - result // Always get the acute representation of the angle
         }
@@ -127,13 +131,13 @@ class Exercise : AppCompatActivity() {
     ): Double {
 
         var result = Math.toDegrees(
-            kotlinMathAtan2( shoulder.getPosition().y.toDouble() - shoulder.getPosition().y,
-                (shoulder.getPosition().x + 100 ).toDouble() - shoulder.getPosition().x)
-                - kotlinMathAtan2(ear.getPosition().y - shoulder.getPosition().y,
-                ear.getPosition().x - shoulder.getPosition().x)
+            kotlinMathAtan2( shoulder.position.y.toDouble() - shoulder.position.y,
+                (shoulder.position.x + 100 ).toDouble() - shoulder.position.x)
+                - kotlinMathAtan2(ear.position.y - shoulder.position.y,
+                ear.position.x - shoulder.position.x)
         )
 
-        result = Math.abs(result) // Angle should never be negative
+        result = abs(result) // Angle should never be negative
 
         if (result > 180) {
             result = 360.0 - result // Always get the acute representation of the angle
@@ -168,49 +172,49 @@ class Exercise : AppCompatActivity() {
             val leftFootIndex = pose.getPoseLandmark(PoseLandmark.LEFT_FOOT_INDEX)
             val rightFootIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX)
 
-            val eyeSx = pose.getPoseLandmark(PoseLandmark.LEFT_EYE);
-            val eyeDx = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE);
+            val eyeSx = pose.getPoseLandmark(PoseLandmark.LEFT_EYE)
+            val eyeDx = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE)
 
-            val earDx = pose.getPoseLandmark(PoseLandmark.RIGHT_EAR);
-            val earSx = pose.getPoseLandmark(PoseLandmark.LEFT_EAR);
+            val earDx = pose.getPoseLandmark(PoseLandmark.RIGHT_EAR)
+            val earSx = pose.getPoseLandmark(PoseLandmark.LEFT_EAR)
 
             val builder = StringBuilder()
             binding.rectOverlay.clear()
 
             if( eyeSx != null && eyeDx != null && leftShoulder != null && rightShoulder != null  ){
-                binding.rectOverlay.drawNeck(eyeSx, eyeDx, leftShoulder, rightShoulder);
+                binding.rectOverlay.drawNeck(eyeSx, eyeDx, leftShoulder, rightShoulder)
             }
 
             if(earSx != null && leftShoulder != null){
                 binding.rectOverlay.drawLine(earSx, leftShoulder)
-                var neckAngle = getNeckAngle(earSx, leftShoulder);
+                val neckAngle = getNeckAngle(earSx, leftShoulder)
                 builder.append("${90 - neckAngle.toInt()} collo (da sx) \n")
             }
 
             if(earDx != null && rightShoulder != null){
                 binding.rectOverlay.drawLine(earDx, rightShoulder)
-                var neckAngle = getNeckAngle(earDx, rightShoulder);
+                val neckAngle = getNeckAngle(earDx, rightShoulder)
                 builder.append("${90 - neckAngle.toInt()} collo (da dx) \n")
             }
 
             if(rightShoulder != null && rightHip != null && rightKnee != null){
-                var neckAngle = getAngle(rightShoulder, rightHip, rightKnee);
+                val neckAngle = getAngle(rightShoulder, rightHip, rightKnee)
                 builder.append("${ 180 - neckAngle.toInt()} busto (da dx) \n")
             }
 
             if(leftShoulder != null && leftHip != null && leftKnee != null){
-                var neckAngle = getAngle(leftShoulder, leftHip, leftKnee);
+                val neckAngle = getAngle(leftShoulder, leftHip, leftKnee)
                 builder.append("${180 - neckAngle.toInt()} busto (da sx) \n")
             }
 
             if( rightHip != null && rightKnee != null  && rightAnkle != null){
-                var neckAngle = getAngle( rightHip, rightKnee, rightAnkle);
+                val neckAngle = getAngle( rightHip, rightKnee, rightAnkle)
                 builder.append("${ 180 - neckAngle.toInt()} gamba (da dx) \n")
             }
 
             // angolo gamba sinistra
             if( leftHip != null && leftKnee != null  && leftAnkle != null){
-                var neckAngle = getAngle( leftHip, leftKnee,leftAnkle);
+                val neckAngle = getAngle( leftHip, leftKnee,leftAnkle)
                 builder.append("${ 180 - neckAngle.toInt()} gamba (da sx) \n")
             }
 
@@ -312,7 +316,7 @@ class Exercise : AppCompatActivity() {
             }
 
 
-            binding.textViewId.setText("${builder.toString()}")
+            binding.textViewId.text = "$builder"
 
         } catch (e: java.lang.Exception) {
             Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
