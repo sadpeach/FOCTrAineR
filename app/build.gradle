@@ -117,4 +117,6 @@ dependencies {
     //precondition
     implementation("com.google.guava:guava:28.1-android")
 
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+
 }

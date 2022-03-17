@@ -2,7 +2,7 @@ package com.example.foctrainer.exercise
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.nfc.Tag
+import androidx.core.content.ContextCompat
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
@@ -26,6 +26,10 @@ class PoseAnalyzer(private val poseFoundListener: (Pose) -> Unit, private val ru
     private val poseDetector = PoseDetection.getClient(options)
     private var classificationExecutor: Executor = Executors.newSingleThreadExecutor();
     private var poseClassifierProcessor: PoseClassifierProcessor? = null
+
+    init {
+        ContextCompat.getMainExecutor(context)
+    }
 
     /** Internal class to hold Pose and classification results. */
     class PoseWithClassification(val pose: Pose, val classificationResult: List<String>)
