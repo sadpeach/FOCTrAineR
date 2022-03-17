@@ -18,6 +18,11 @@ import com.google.mlkit.vision.pose.Pose
 import com.google.mlkit.vision.pose.PoseLandmark
 import kotlin.math.abs
 import kotlin.math.atan2 as kotlinMathAtan2
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.LiveData
+import java.util.concurrent.ExecutionException
+
 
 class Exercise : AppCompatActivity() {
 
@@ -26,6 +31,8 @@ class Exercise : AppCompatActivity() {
     private lateinit var cameraExecutor: ExecutorService
     private val runClassification: Boolean = true // change runclassificatioin
     private val isStreamMode: Boolean = true //change isStreamMode
+    private lateinit var cameraProviderLiveData: MutableLiveData<ProcessCameraProvider>
+    private var cameraProvider: ProcessCameraProvider? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +40,9 @@ class Exercise : AppCompatActivity() {
         setContentView(binding.root)
 
         if (allPermissionsGranted()) {
-            startCamera()
+//            startCamera()
+            cameraProvider()
+
         } else {
             ActivityCompat.requestPermissions(
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
@@ -49,7 +58,9 @@ class Exercise : AppCompatActivity() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
-                startCamera()
+//                startCamera()
+                cameraProvider()
+
             } else {
                 Toast.makeText(this,
                     "Permissions not granted by the user.",
@@ -58,6 +69,18 @@ class Exercise : AppCompatActivity() {
             }
         }
     }
+    private fun cameraProvider () {
+        ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
+            .get(CameraXViewModel::class.java)
+            .getProcessCameraProvider()
+            ?.observe(
+                this,
+                { provider: ProcessCameraProvider? ->
+                    cameraProvider = provider
+                    bindAllCameraUseCases()
+                }
+            )
+    }
 
     //check permission granted
     private fun allPermissionsGranted() = REQUIRED_PERMISSIONS.all {
@@ -65,50 +88,79 @@ class Exercise : AppCompatActivity() {
             baseContext, it) == PackageManager.PERMISSION_GRANTED
     }
 
-    //starting camera
-    private fun startCamera() {
-        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+    private fun bindAllCameraUseCases() {
+        if (cameraProvider != null) {
+            // As required by CameraX API, unbinds all use cases before trying to re-bind any of them.
+            cameraProvider!!.unbindAll()
+        }
+    }
 
-        cameraProviderFuture.addListener({
-            // Used to bind the lifecycle of cameras to the lifecycle owner
-            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+//    //starting camera
+//    private fun startCamera() {
+//        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
+//
+//        cameraProviderFuture.addListener({
+//            // Used to bind the lifecycle of cameras to the lifecycle owner
+//            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
+//
+//            // Preview
+//            val preview = Preview.Builder()
+//                .build()
+//                .also {
+//                    it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
+//                }
+//
+//            imageCapture = ImageCapture.Builder()
+//                .build()
+//
+//            // Select back camera as a default
+//            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
+//
+//            val imageAnalyzer = ImageAnalysis.Builder()
+//                .build()
+//                .also {
+//                    //PoseAnalyzer(::onTextFound) passing onTextFound function to poseAnalyzer
+//                    it.setAnalyzer(cameraExecutor, PoseAnalyzer(::onTextFound,runClassification,isStreamMode,this))
+//                }
+//
+//            try {
+//                // Unbind use cases before rebinding
+//                cameraProvider.unbindAll()
+//
+//                // Bind use cases to camera
+//                cameraProvider.bindToLifecycle(
+//                    this, cameraSelector, preview, imageCapture, imageAnalyzer)
+//
+//
+//            } catch(exc: Exception) {
+//                Log.e(TAG, "Use case binding failed", exc)
+//            }
+//
+//        }, ContextCompat.getMainExecutor(this))
+//    }
 
-            // Preview
-            val preview = Preview.Builder()
-                .build()
-                .also {
-                    it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
-                }
 
-            imageCapture = ImageCapture.Builder()
-                .build()
-
-            // Select back camera as a default
-            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-
-            val imageAnalyzer = ImageAnalysis.Builder()
-                .build()
-                .also {
-                    //PoseAnalyzer(::onTextFound) passing onTextFound function to poseAnalyzer
-                    it.setAnalyzer(cameraExecutor, PoseAnalyzer(::onTextFound,runClassification,isStreamMode,this))
-                }
-
-            try {
-                // Unbind use cases before rebinding
-                cameraProvider.unbindAll()
-
-                // Bind use cases to camera
-                cameraProvider.bindToLifecycle(
-                    this, cameraSelector, preview, imageCapture, imageAnalyzer)
-
-
-            } catch(exc: Exception) {
-                Log.e(TAG, "Use case binding failed", exc)
-            }
-
-        }, ContextCompat.getMainExecutor(this))
-
-
+    fun getProcessCameraProvider(): LiveData<ProcessCameraProvider?>? {
+        if (cameraProviderLiveData == null) {
+            cameraProviderLiveData = MutableLiveData()
+            val cameraProviderFuture = ProcessCameraProvider.getInstance(
+                application
+            )
+            cameraProviderFuture.addListener(
+                {
+                    try {
+                        cameraProviderLiveData.setValue(cameraProviderFuture.get())
+                    } catch (e: ExecutionException) {
+                        // Handle any errors (including cancellation) here.
+                        Log.e(TAG, "Unhandled exception", e)
+                    } catch (e: InterruptedException) {
+                        Log.e(TAG, "Unhandled exception", e)
+                    }
+                },
+                ContextCompat.getMainExecutor(application)
+            )
+        }
+        return cameraProviderLiveData
     }
 
     private fun getAngle(firstPoint: PoseLandmark, midPoint: PoseLandmark, lastPoint: PoseLandmark): Double {
