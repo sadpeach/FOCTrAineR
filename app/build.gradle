@@ -111,4 +111,10 @@ dependencies {
     def fragment_version = "1.4.1"
     implementation("androidx.fragment:fragment-ktx:$fragment_version")
 
+    //reading csv
+    implementation 'org.apache.commons:commons-csv:1.5'
+
+    //precondition
+    implementation("com.google.guava:guava:28.1-android")
+
 }
