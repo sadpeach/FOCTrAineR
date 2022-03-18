@@ -73,7 +73,7 @@ class PoseClassifierProcessor {
 
         //load from csv
         try {
-
+            Log.d(TAG, "starting to load samples from file.\n")
             val reader = BufferedReader(InputStreamReader(context.assets.open(POSE_SAMPLES_FILE)))
             val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
 
