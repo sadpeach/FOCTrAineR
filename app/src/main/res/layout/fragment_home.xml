@@ -192,8 +192,13 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChart"
+<!--        <com.github.mikephil.charting.charts.LineChart-->
+<!--            android:id="@+id/lineChart"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_margin="35dp"/>-->
+        <com.github.mikephil.charting.charts.BarChart
+            android:id="@+id/BarChart"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_margin="35dp"/>

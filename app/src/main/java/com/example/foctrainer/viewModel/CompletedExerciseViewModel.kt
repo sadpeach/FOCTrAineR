@@ -8,6 +8,7 @@ import com.example.foctrainer.entity.CompletedExerciseModel
 import com.example.foctrainer.repository.CompletedExerciseRepository
 
 class CompletedExerciseViewModel(private val repository: CompletedExerciseRepository):ViewModel() {
+//    val chartSummary: LiveData<List<CompletedExerciseModel>> = repository.chartSummary.asLiveData()
     val completedExercise: LiveData<List<CompletedExerciseModel>> = repository.completedExercise.asLiveData()
 }
 
