@@ -162,30 +162,6 @@ class MainActivity : AppCompatActivity() {
 
 
     fun exerciseDetails(){
-        //Exercise
-        val exlist = ArrayList<String>()
-        //val exerciseListView = findViewById<ListView>(R.id.workoutCategoriesListView)
-
-        //get recycle view
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-
-        exerciseViewModel.allExercise.observe(this, Observer<List<ExerciseModel>>(){ exercise->
-            for (ex in exercise){
-                exerciseName = ex.name
-//                exerciseID = ex.id
-                exlist.add("$exerciseName")
-            }
-            //attach the array adapter to the list view
-//            exerciseListView.adapter = ArrayAdapter<String>(
-//                this, android.R.layout.simple_list_item_1,exlist)
-
-//            recyclerView.adapter = ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, exlist)
-        })
-//        exerciseListView.setOnItemClickListener { adapterView, view, i, l ->
-//            Toast.makeText(this, "You have selected " + exlist[i], Toast.LENGTH_LONG).show()
-//        }
-
         var totalCalories = 0f
         val tvTotalCalories = findViewById<TextView>(R.id.totalCalories)
         tvTotalCalories.text = ""

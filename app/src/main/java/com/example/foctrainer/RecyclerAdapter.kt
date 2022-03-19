@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
@@ -17,6 +18,7 @@ class RecyclerAdapter(private val exerciseList: ArrayList<String>): RecyclerView
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d("IDK", exerciseList[position].toString())
+
         val ex = exerciseList[position]
         holder.textExCategories.text = ex.toString()
 
