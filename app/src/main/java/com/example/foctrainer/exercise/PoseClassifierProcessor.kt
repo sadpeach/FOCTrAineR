@@ -44,9 +44,10 @@ class PoseClassifierProcessor {
     private var repCounters: MutableList<RepetitionCounter>? = null
     private var poseClassifier: PoseClassifier? = null
     private var lastRepResult: String? = null
+    private var selectedExerciseId: Int = -1
 
     @WorkerThread
-    constructor(context: Context, isStreamMode: Boolean) {
+    constructor(context: Context, isStreamMode: Boolean,selectedExerciseId:Int) {
         Log.d(TAG,"starting configuration for poseClassifierProcessor...")
         //precondition -> throws illegalArgument
         //return the app's main looper
@@ -57,7 +58,8 @@ class PoseClassifierProcessor {
             repCounters = ArrayList()
             lastRepResult = ""
         }
-        loadPoseSamples(context)
+        this.selectedExerciseId = selectedExerciseId
+        loadPoseSamples(context,selectedExerciseId)
         Log.d(TAG,"completed configuration for poseClassifierProcessor..")
     }
 
@@ -69,7 +71,7 @@ class PoseClassifierProcessor {
      * @param context
      * @return void
      */
-    private fun loadPoseSamples(context: Context) {
+    private fun loadPoseSamples(context: Context,selectedExerciseId: Int) {
         val poseSamples: MutableList<PoseSample?> = ArrayList()
 
         //load from csv
@@ -107,6 +109,7 @@ class PoseClassifierProcessor {
 
         val name = csvRecord[0]
         val className = csvRecord[1]
+        Log.d(TAG,"className retrieved:"+className)
         val landmarks: MutableList<PointF3D> = ArrayList()
 
         var i =2
@@ -188,7 +191,7 @@ class PoseClassifierProcessor {
             val maxConfidenceClass: String? = classification?.getMaxConfidenceClass()
             val maxConfidenceClassResult: String = java.lang.String.format(
                 Locale.US,
-                "%s : %.2f confidencessss",
+                "%s : %.2f confidence",
                 maxConfidenceClass, classification?.getClassConfidence(maxConfidenceClass)!!
                         / poseClassifier?.confidenceRange()!!
             )

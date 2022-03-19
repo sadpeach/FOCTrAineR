@@ -29,7 +29,8 @@ class PoseDetectorProcessor(
     private val visualizeZ: Boolean,
     private val rescaleZForVisualization: Boolean,
     private val runClassification: Boolean,
-    private val isStreamMode: Boolean
+    private val isStreamMode: Boolean,
+    private val selectedExerciseId: Int
 ) : VisionProcessorBase<PoseDetectorProcessor.PoseWithClassification>(context) {
 
     private val detector: PoseDetector = PoseDetection.getClient(options)
@@ -62,7 +63,7 @@ class PoseDetectorProcessor(
                         Log.d(TAG,"running classification with inputImg")
                         if (poseClassifierProcessor == null) {
                             Log.d(TAG,"poseClassifierProcessor is null")
-                            poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode)
+                            poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode,selectedExerciseId)
                         }
                         classificationResult = poseClassifierProcessor!!.getPoseResult(pose) as List<String>
                         Log.d(TAG,"classificationResult"+classificationResult)
@@ -89,7 +90,7 @@ class PoseDetectorProcessor(
                         Log.d(TAG,"runClassification enabled")
                         if (poseClassifierProcessor == null) {
                             Log.d(TAG,"setting poseClassifierProcessor")
-                            poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode)
+                            poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode,selectedExerciseId)
                             Log.d(TAG, "poseClassifierProcessor setting completed $poseClassifierProcessor")
                         }
                         classificationResult = poseClassifierProcessor?.getPoseResult(pose) as List<String>
@@ -115,6 +116,7 @@ class PoseDetectorProcessor(
                 visualizeZ,
                 rescaleZForVisualization,
                 poseWithClassification.classificationResult
+
             )
         )
     }

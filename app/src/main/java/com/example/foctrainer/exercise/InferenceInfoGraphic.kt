@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 class InferenceInfoGraphic : GraphicOverlay.Graphic {
 
     private val TEXT_COLOR: Int = Color.WHITE
-    private val TEXT_SIZE = 60.0f
+    private val TEXT_SIZE = 20.0f
 
     private var textPaint: Paint? = null
     private var overlay: GraphicOverlay? = null

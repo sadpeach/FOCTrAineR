@@ -1,17 +1,26 @@
 package com.example.foctrainer.viewModel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.asLiveData
+import androidx.annotation.WorkerThread
+import androidx.lifecycle.*
 import com.example.foctrainer.entity.ExerciseModel
 import com.example.foctrainer.repository.ExerciseRepository
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel() {
     val allExercise: LiveData<List<ExerciseModel>> = repository.allExercise.asLiveData()
+
+    fun getExerciseNameById(exerciseId: Int): LiveData<String> {
+        return repository.getExerciseNameById(exerciseId).asLiveData()
+    }
+
+//     fun getExerciseNameById(exerciseId: Int): String {
+//         return repository.getExerciseNameById(exerciseId)
+//    }
 }
 
 class ExerciseViewModelFactory(private val repository: ExerciseRepository) : ViewModelProvider.Factory {
+
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
 
         if (modelClass.isAssignableFrom(ExerciseViewModel::class.java)) {

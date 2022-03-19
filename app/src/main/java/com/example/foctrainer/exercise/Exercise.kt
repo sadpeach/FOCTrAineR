@@ -3,7 +3,6 @@ package com.example.foctrainer.exercise
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.Manifest
-import android.app.Fragment
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
@@ -13,17 +12,17 @@ import androidx.core.content.ContextCompat
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import android.os.Build
-import android.preference.PreferenceFragment
-import android.widget.CompoundButton
+import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.camera.view.PreviewView
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import com.example.foctrainer.R
+import com.example.foctrainer.MainActivity
+import com.example.foctrainer.databaseConfig.FocTrainerApplication
 import com.example.foctrainer.databinding.ActivityCameraxLivePreviewBinding
+import com.example.foctrainer.viewModel.ExerciseViewModel
+import com.example.foctrainer.viewModel.ExerciseViewModelFactory
 import com.google.mlkit.common.MlKitException
-import java.lang.RuntimeException
-import kotlin.math.log
+import kotlinx.coroutines.awaitAll
 
 class Exercise : AppCompatActivity()  {
 
@@ -38,14 +37,26 @@ class Exercise : AppCompatActivity()  {
     private var selectedModel = OBJECT_DETECTION
     private var needUpdateGraphicOverlayImageSourceInfo = false
     private var graphicOverlay: GraphicOverlay? = null
+    private var selectedExerciseId: Int = -1
+
+    private val exerciseViewModel: ExerciseViewModel by viewModels {
+        ExerciseViewModelFactory((application as FocTrainerApplication).exerciseRepository)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCameraxLivePreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+        //get exerciseId
+        selectedExerciseId = intent.getIntExtra("exerciseId",-1)
 
+       exerciseViewModel.getExerciseNameById(selectedExerciseId).observe(this, { exerciseName ->
+            title = exerciseName
+            Log.d(TAG,"retrieve $exerciseName from database")
+        })
+
+        cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
         graphicOverlay = binding.graphicOverlay
         previewView = binding.previewView
 
@@ -74,7 +85,23 @@ class Exercise : AppCompatActivity()  {
             )
         }
 
+        binding.endWorkout.setOnClickListener() {
+            val dialog = AlertDialog.Builder(this)
+            dialog.setTitle("Workout Ending")
+                .setMessage("Yout have completed xx ")
+                .setPositiveButton("YES") { dialog, whichButton ->
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
+                }
+                .setNegativeButton("NO") { dialog, whichButton ->
+
+                }
+
+            dialog.show()
+        }
+
     }
+
 
     override fun onSaveInstanceState(bundle: Bundle) {
         super.onSaveInstanceState(bundle)
@@ -173,7 +200,7 @@ class Exercise : AppCompatActivity()  {
 
             try {
                 val poseDetectorOptions = PreferenceUtils.getPoseDetectorOptionsForLivePreview(this)
-                val shouldShowInFrameLikelihood = true
+                val shouldShowInFrameLikelihood = false
                 val visualizeZ = true
                 val rescaleZ = true
                 val runClassification = true
@@ -185,7 +212,8 @@ class Exercise : AppCompatActivity()  {
                     visualizeZ,
                     rescaleZ,
                     runClassification,
-                    /* isStreamMode = */ true
+                    /* isStreamMode = */ true,
+                    selectedExerciseId
                 )
 
             } catch (e: Exception) {

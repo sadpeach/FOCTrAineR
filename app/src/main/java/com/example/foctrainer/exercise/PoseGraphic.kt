@@ -123,7 +123,7 @@ class PoseGraphic internal constructor(
         private val DOT_RADIUS = 8.0f
         private val IN_FRAME_LIKELIHOOD_TEXT_SIZE = 30.0f
         private val STROKE_WIDTH = 10.0f
-        private val POSE_CLASSIFICATION_TEXT_SIZE = 60.0f
+        private val POSE_CLASSIFICATION_TEXT_SIZE = 30.0f
     }
 
     override fun draw(canvas: Canvas?) {
@@ -139,7 +139,7 @@ class PoseGraphic internal constructor(
                     POSE_CLASSIFICATION_TEXT_SIZE * 1.5f * (poseClassification.size - i).toFloat()
                     )
             canvas.drawText(
-                "identified pose: "+poseClassification[i],
+                "Workout: "+poseClassification[i],
                 classificationX,
                 classificationY,
                 classificationTextPaint
@@ -240,7 +240,7 @@ class PoseGraphic internal constructor(
             for (landmark in landmarks) {
                 if (canvas != null) {
                     canvas.drawText(
-                        String.format(Locale.US, "%.2f", landmark.inFrameLikelihood),
+                        String.format(Locale.US, "testing %.2f", landmark.inFrameLikelihood),
                         translateX(landmark.position.x),
                         translateY(landmark.position.y),
                         whitePaint
