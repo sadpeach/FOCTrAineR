@@ -8,7 +8,6 @@ import android.media.AudioManager
 import android.os.Looper
 import android.util.Log
 import androidx.annotation.WorkerThread
-import com.google.common.base.Splitter
 import com.google.mlkit.vision.common.PointF3D
 
 import com.google.mlkit.vision.pose.Pose
@@ -48,7 +47,7 @@ class PoseClassifierProcessor {
 
     @WorkerThread
     constructor(context: Context, isStreamMode: Boolean) {
-
+        Log.d(TAG,"starting configuration for poseClassifierProcessor...")
         //precondition -> throws illegalArgument
         //return the app's main looper
         com.google.common.base.Preconditions.checkState(Looper.myLooper() != Looper.getMainLooper())
@@ -59,6 +58,7 @@ class PoseClassifierProcessor {
             lastRepResult = ""
         }
         loadPoseSamples(context)
+        Log.d(TAG,"completed configuration for poseClassifierProcessor..")
     }
 
     /**
@@ -74,7 +74,7 @@ class PoseClassifierProcessor {
 
         //load from csv
         try {
-
+            Log.d(TAG, "starting to load samples from file.\n")
             val reader = BufferedReader(InputStreamReader(context.assets.open(POSE_SAMPLES_FILE)))
             val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
 
@@ -86,17 +86,20 @@ class PoseClassifierProcessor {
         } catch (e: IOException) {
             Log.e(TAG, "Error when loading pose samples from file.\n$e")
         }
-
+        Log.d(TAG,"poseSamples: ${poseSamples.size}")
+        Log.d(TAG,"poseSamples name: ${poseSamples[1]?.getClassName()}")
         poseClassifier = PoseClassifier(poseSamples)
         if (isStreamMode) {
             for (className in POSE_CLASSES) {
                 repCounters!!.add(RepetitionCounter(className))
             }
+            Log.d(TAG,"repCounters: $repCounters")
         }
 
     }
 
-    fun getPoseSample(csvRecord:CSVRecord): PoseSample? {
+    private fun getPoseSample(csvRecord:CSVRecord): PoseSample? {
+
         if (csvRecord.size() != NUM_LANDMARKS * NUM_DIMS + 2) {
             Log.e(TAG, "Invalid number of tokens for PoseSample")
             return null
@@ -141,20 +144,26 @@ class PoseClassifierProcessor {
      */
     @WorkerThread
     fun getPoseResult(pose: Pose): List<String?>? {
+        Log.d(TAG,"getting pose result...")
         com.google.common.base.Preconditions.checkState(Looper.myLooper() != Looper.getMainLooper())
         val result: MutableList<String?> = ArrayList()
         var classification: ClassificationResult? = poseClassifier?.classify(pose)
 
+        Log.d(TAG,"getting pose result -> classification: $classification")
+
         // Update {@link RepetitionCounter}s if {@code isStreamMode}.
         if (isStreamMode) {
+            Log.d(TAG,"stream mode set")
             // Feed pose to smoothing even if no pose found.
             classification = emaSmoothing?.getSmoothedResult(classification)
-
+            Log.d(TAG,"smoothing classification" + classification)
             // Return early without updating repCounter if no pose found.
             if (pose.allPoseLandmarks.isEmpty()) {
                 result.add(lastRepResult)
+                Log.d(TAG,"No Pose Found")
                 return result
             }
+            Log.d(TAG,"Pose found, starting repcounter...")
             for (repCounter in repCounters!!) {
                 val repsBefore: Int = repCounter.getNumRepeats()
                 val repsAfter: Int? = classification?.let { repCounter.addClassificationResult(it) }
@@ -170,6 +179,7 @@ class PoseClassifierProcessor {
                     }
                 }
             }
+            Log.d(TAG,"lastRepResult:"+lastRepResult)
             result.add(lastRepResult)
         }
 
@@ -178,7 +188,7 @@ class PoseClassifierProcessor {
             val maxConfidenceClass: String? = classification?.getMaxConfidenceClass()
             val maxConfidenceClassResult: String = java.lang.String.format(
                 Locale.US,
-                "%s : %.2f confidence",
+                "%s : %.2f confidencessss",
                 maxConfidenceClass, classification?.getClassConfidence(maxConfidenceClass)!!
                         / poseClassifier?.confidenceRange()!!
             )

@@ -38,7 +38,7 @@ class GraphicOverlay : View {
      * this and implement the [Graphic.draw] method to define the graphics element. Add
      * instances to the overlay using [GraphicOverlay.add].
      */
-    abstract class Graphic(private val overlay: GraphicOverlay) {
+    abstract class Graphic(private val overlay: GraphicOverlay?) {
         /**
          * Draw the graphic on the supplied canvas. Drawing should use the following methods to convert
          * to view coordinates for the graphics that are drawn:
@@ -56,26 +56,26 @@ class GraphicOverlay : View {
 
         /** Adjusts the supplied value from the image scale to the view scale.  */
         fun scale(imagePixel: Float): Float {
-            return imagePixel * overlay.scaleFactor
+            return imagePixel * overlay!!.scaleFactor
         }
 
         /** Returns the application context of the app.  */
         val applicationContext: Context
-            get() = overlay.getContext().getApplicationContext()
+            get() = overlay!!.getContext().getApplicationContext()
 
 
         fun isImageFlipped(): Boolean {
-            return overlay.isImageFlipped
+            return overlay!!.isImageFlipped
         }
 
         /**
          * Adjusts the x coordinate from the image's coordinate system to the view coordinate system.
          */
         fun translateX(x: Float): Float {
-            return if (overlay.isImageFlipped) {
-                overlay.getWidth() - (scale(x) - overlay.postScaleWidthOffset)
+            if (overlay!!.isImageFlipped) {
+                return overlay.getWidth() - (scale(x) - overlay.postScaleWidthOffset);
             } else {
-                scale(x) - overlay.postScaleWidthOffset
+                return scale(x) - overlay.postScaleWidthOffset;
             }
         }
 
@@ -83,18 +83,18 @@ class GraphicOverlay : View {
          * Adjusts the y coordinate from the image's coordinate system to the view coordinate system.
          */
         fun translateY(y: Float): Float {
-            return scale(y) - overlay.postScaleHeightOffset
+            return scale(y) - overlay!!.postScaleHeightOffset
         }
 
         /**
          * Returns a [Matrix] for transforming from image coordinates to overlay view coordinates.
          */
         fun getTransformationMatrix(): Matrix {
-            return overlay.transformationMatrix
+            return overlay!!.transformationMatrix
         }
 
         fun postInvalidate() {
-            overlay.postInvalidate()
+            overlay!!.postInvalidate()
         }
     }
 

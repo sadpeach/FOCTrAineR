@@ -1,9 +1,5 @@
 package com.example.foctrainer.exercise
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import java.util.Collections.max
-
 
 class ClassificationResult {
     private var classConfidences: HashMap <String, Float>;
@@ -20,13 +16,13 @@ class ClassificationResult {
         return if (classConfidences.containsKey(className)) classConfidences[className]!! else 0f
     }
 
-    fun getMaxConfidenceClass(): String {
-        return classConfidences.maxByOrNull { it.value }!!.key
+    fun getMaxConfidenceClass(): String? {
+        return classConfidences.maxByOrNull { it.value }?.key
     }
 
     fun incrementClassConfidence(className: String) {
         classConfidences[className] =
-            (if (classConfidences.containsKey(className)) classConfidences[className]!! + 1 else 1) as Float
+            (if (classConfidences.containsKey(className)) classConfidences[className]!! + 1 else 1f) as Float
     }
 
     fun putClassConfidence(className: String, confidence: Float) {

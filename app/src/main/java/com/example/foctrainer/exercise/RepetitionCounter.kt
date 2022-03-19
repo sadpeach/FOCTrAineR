@@ -1,7 +1,10 @@
 package com.example.foctrainer.exercise
 
+import android.util.Log
+
 class RepetitionCounter {
 
+    private val TAG = "RepetitionCounter"
     private var className: String? = null
     private var enterThreshold = 0f
     private var exitThreshold = 0f
@@ -15,6 +18,7 @@ class RepetitionCounter {
     }
 
     constructor(className: String?, enterThreshold: Float, exitThreshold: Float) {
+        Log.d(TAG,"initialising repcounter")
         this.className = className
         this.enterThreshold = enterThreshold
         this.exitThreshold = exitThreshold
@@ -30,6 +34,7 @@ class RepetitionCounter {
      */
     fun addClassificationResult(classificationResult: ClassificationResult): Int {
         val poseConfidence = classificationResult.getClassConfidence(className)
+
         if (!poseEntered) {
             poseEntered = poseConfidence > enterThreshold
             return numRepeats
@@ -38,6 +43,8 @@ class RepetitionCounter {
             numRepeats++
             poseEntered = false
         }
+        Log.d(TAG, className + " count: " + numRepeats)
+
         return numRepeats
     }
 

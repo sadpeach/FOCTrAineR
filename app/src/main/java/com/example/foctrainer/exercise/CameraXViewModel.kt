@@ -20,7 +20,9 @@ class CameraXViewModel
     private var cameraProviderLiveData: MutableLiveData<ProcessCameraProvider>? = null
 
     fun getProcessCameraProvider(): LiveData<ProcessCameraProvider>? {
+        Log.d(TAG,"listening on cameras..")
         if (cameraProviderLiveData == null) {
+            Log.d(TAG,"provider live data")
             cameraProviderLiveData = MutableLiveData()
             val cameraProviderFuture: ListenableFuture<ProcessCameraProvider> = ProcessCameraProvider.getInstance(getApplication())
             cameraProviderFuture.addListener(
@@ -37,6 +39,7 @@ class CameraXViewModel
                 ContextCompat.getMainExecutor(getApplication())
             )
         }
+        Log.d(TAG,"provider live data is null")
         return cameraProviderLiveData
     }
 }
