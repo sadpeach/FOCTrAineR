@@ -4,7 +4,7 @@ import android.util.Log
 
 class RepetitionCounter {
 
-    private val TAG:String = "RepetitionCounter"
+    private val TAG = "RepetitionCounter"
     private var className: String? = null
     private var enterThreshold = 0f
     private var exitThreshold = 0f
@@ -18,6 +18,7 @@ class RepetitionCounter {
     }
 
     constructor(className: String?, enterThreshold: Float, exitThreshold: Float) {
+        Log.d(TAG,"initialising repcounter")
         this.className = className
         this.enterThreshold = enterThreshold
         this.exitThreshold = exitThreshold

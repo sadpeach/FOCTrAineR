@@ -30,7 +30,7 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
 
     companion object {
         const val MANUAL_TESTING_LOG = "LogTagForTest"
-        private const val TAG = "VisionProcessorBase"
+        private const val TAG = "x"
     }
 
     private var activityManager: ActivityManager =
@@ -50,6 +50,7 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
     private var maxDetectorMs = 0L
     private var minDetectorMs = Long.MAX_VALUE
 
+
     // Frame count that have been processed so far in an one second interval to calculate FPS.
     private var frameProcessedInOneSecondInterval = 0
     private var framesPerSecond = 0
@@ -62,7 +63,9 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
     @GuardedBy("this") private var processingMetaData: FrameMetadata? = null
 
     init {
+        Log.d(TAG,"start processing @ constructor")
         fpsTimer.scheduleAtFixedRate(
+
             object : TimerTask() {
                 override fun run() {
                     framesPerSecond = frameProcessedInOneSecondInterval
@@ -88,6 +91,7 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
         }
 
         if (isMlImageEnabled(graphicOverlay.context)) {
+            Log.d(TAG,"start processing graphicoverlay")
             val mlImage =
                 MediaMlImageBuilder(image.image!!).setRotation(image.imageInfo.rotationDegrees).build()
             requestDetectInImage(

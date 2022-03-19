@@ -8,16 +8,20 @@ import com.google.mlkit.vision.pose.defaults.PoseDetectorOptions
 import com.google.mlkit.vision.pose.PoseDetectorOptionsBase
 import androidx.camera.core.CameraSelector
 import android.os.Build.VERSION_CODES
+import android.util.Log
 import android.util.Size
 import androidx.annotation.Nullable
 import androidx.annotation.RequiresApi
 import androidx.core.util.Preconditions
+import androidx.preference.ListPreference
+import androidx.preference.Preference
 import com.example.foctrainer.R
 import java.lang.Exception
 
 object PreferenceUtils {
+    private val TAG = "PreferenceUtils"
 
-    fun saveString(context: Context, @StringRes prefKeyId: Int, @Nullable value: String?) {
+    fun saveString(context: Context, @StringRes prefKeyId: Int, @Nullable value: String) {
         PreferenceManager.getDefaultSharedPreferences(context)
             .edit()
             .putString(context.getString(prefKeyId), value)
@@ -51,8 +55,6 @@ object PreferenceUtils {
         return false
     }
 
-
-
     fun getPoseDetectorOptionsForLivePreview(context: Context): PoseDetectorOptionsBase? {
         val preferGPU = preferGPUForPoseDetection(context)
         val builder =
@@ -63,7 +65,6 @@ object PreferenceUtils {
         return builder.build()
 
     }
-
 
     fun preferGPUForPoseDetection(context: Context): Boolean {
         val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context)

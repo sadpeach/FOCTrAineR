@@ -16,8 +16,8 @@ class ClassificationResult {
         return if (classConfidences.containsKey(className)) classConfidences[className]!! else 0f
     }
 
-    fun getMaxConfidenceClass(): String {
-        return classConfidences.maxByOrNull { it.value }!!.key
+    fun getMaxConfidenceClass(): String? {
+        return classConfidences.maxByOrNull { it.value }?.key
     }
 
     fun incrementClassConfidence(className: String) {

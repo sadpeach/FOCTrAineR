@@ -1,37 +1,33 @@
 package com.example.foctrainer.exercise
 
-import com.example.foctrainer.databinding.ActivityExerciseBinding
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.Manifest
+import android.app.Fragment
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.util.Log
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import java.util.concurrent.Executors
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
-import java.util.concurrent.ExecutorService
 import android.os.Build
-import com.google.mlkit.vision.pose.Pose
-import com.google.mlkit.vision.pose.PoseLandmark
-import kotlin.math.abs
-import kotlin.math.atan2 as kotlinMathAtan2
-import androidx.lifecycle.MutableLiveData
+import android.preference.PreferenceFragment
+import android.widget.CompoundButton
 import androidx.lifecycle.ViewModelProvider
 import androidx.camera.view.PreviewView
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.example.foctrainer.R
 import com.example.foctrainer.databinding.ActivityCameraxLivePreviewBinding
 import com.google.mlkit.common.MlKitException
+import java.lang.RuntimeException
+import kotlin.math.log
 
+class Exercise : AppCompatActivity()  {
 
-class Exercise : AppCompatActivity() {
-
-//    private lateinit var binding:ActivityExerciseBinding
     private lateinit var binding:ActivityCameraxLivePreviewBinding
-    private var imageCapture: ImageCapture? = null
-    private lateinit var cameraExecutor: ExecutorService
-    private lateinit var cameraProviderLiveData: MutableLiveData<ProcessCameraProvider>
     private var cameraProvider: ProcessCameraProvider? = null
     private var previewUseCase: Preview? = null
     private var lensFacing = CameraSelector.LENS_FACING_BACK
@@ -45,11 +41,22 @@ class Exercise : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        binding = ActivityExerciseBinding.inflate(layoutInflater)
         binding = ActivityCameraxLivePreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
+//        setUpPreference()
         cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
+
         graphicOverlay = binding.graphicOverlay
+        previewView = binding.previewView
+
+//        val facingSwitch = binding.facingSwitch
+//        facingSwitch.setOnCheckedChangeListener(this)
+
+        //check graphic overlay / previewView / saved instance
+        if (previewView == null) {
+            Log.d(TAG, "previewView is null")
+        }
+
         if (graphicOverlay == null) {
             Log.d(TAG, "graphicOverlay is null")
         }
@@ -57,8 +64,8 @@ class Exercise : AppCompatActivity() {
             selectedModel = savedInstanceState.getString(STATE_SELECTED_MODEL, OBJECT_DETECTION)
         }
 
+        //permission check
         if (allPermissionsGranted()) {
-//            startCamera()
             cameraProvider()
 
         } else {
@@ -66,8 +73,62 @@ class Exercise : AppCompatActivity() {
                 this, REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS
             )
         }
-//        cameraExecutor = Executors.newSingleThreadExecutor() //camera will be running on a new thread
+
     }
+
+    private fun setUpPreference(){
+        try {
+            Log.d(Exercise.TAG,"Setting up cameraX preference")
+            val mFragmentManager: FragmentManager = supportFragmentManager
+            val mFragmentTransaction: FragmentTransaction = mFragmentManager
+                .beginTransaction()
+            val mPrefsFragment = CameraXLivePreviewPreferenceFragment()
+            mFragmentTransaction.replace(android.R.id.content, mPrefsFragment)
+            mFragmentTransaction.commit()
+            Log.d(Exercise.TAG,"cameraX preference set up completed")
+
+        } catch (e: java.lang.Exception) {
+            Log.d(Exercise.TAG,"Setting up cameraX preference $e")
+            throw RuntimeException(e)
+        }
+    }
+
+    override fun onSaveInstanceState(bundle: Bundle) {
+        super.onSaveInstanceState(bundle)
+        bundle.putString(STATE_SELECTED_MODEL, selectedModel)
+    }
+
+    //toggle between front and back camera
+//    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
+//        Log.d(TAG,"on checkedchanged")
+//        if (cameraProvider == null) {
+//            return
+//        }
+//        val newLensFacing =
+//            if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
+//                CameraSelector.LENS_FACING_BACK
+//            } else {
+//                CameraSelector.LENS_FACING_FRONT
+//            }
+//        val newCameraSelector = CameraSelector.Builder().requireLensFacing(newLensFacing).build()
+//        try {
+//            if (cameraProvider!!.hasCamera(newCameraSelector)) {
+//                Log.d(TAG, "Set facing to $newLensFacing")
+//                lensFacing = newLensFacing
+//                cameraSelector = newCameraSelector
+//                bindAllCameraUseCases()
+//                return
+//            }
+//        } catch (e: CameraInfoUnavailableException) {
+//            // Falls through
+//        }
+//        Toast.makeText(
+//            applicationContext,
+//            "This device does not have lens with facing: $newLensFacing",
+//            Toast.LENGTH_SHORT
+//        )
+//            .show()
+//    }
 
     //grant media access permission
     override fun onRequestPermissionsResult(
@@ -127,12 +188,19 @@ class Exercise : AppCompatActivity() {
         }
         imageProcessor =
             try {
+//                val poseDetectorOptions = PreferenceUtils.getPoseDetectorOptionsForLivePreview(this)
+//                val shouldShowInFrameLikelihood =
+//                    PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this)
+//                val visualizeZ = PreferenceUtils.shouldPoseDetectionVisualizeZ(this)
+//                val rescaleZ = PreferenceUtils.shouldPoseDetectionRescaleZForVisualization(this)
+//                val runClassification = PreferenceUtils.shouldPoseDetectionRunClassification(this)
+
                 val poseDetectorOptions = PreferenceUtils.getPoseDetectorOptionsForLivePreview(this)
-                val shouldShowInFrameLikelihood =
-                    PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this)
-                val visualizeZ = PreferenceUtils.shouldPoseDetectionVisualizeZ(this)
-                val rescaleZ = PreferenceUtils.shouldPoseDetectionRescaleZForVisualization(this)
-                val runClassification = PreferenceUtils.shouldPoseDetectionRunClassification(this)
+                val shouldShowInFrameLikelihood = true
+                val visualizeZ = true
+                val rescaleZ = true
+                val runClassification = true
+
                 PoseDetectorProcessor(
                     this,
                     poseDetectorOptions!!,
@@ -194,7 +262,6 @@ class Exercise : AppCompatActivity() {
         Log.d(TAG,"Died after binding")
     }
 
-
     private fun bindPreviewUseCase() {
 
         if (!PreferenceUtils.isCameraLiveViewportEnabled(this)) {
@@ -217,292 +284,6 @@ class Exercise : AppCompatActivity() {
         cameraProvider!!.bindToLifecycle(/* lifecycleOwner= */ this, cameraSelector!!, previewUseCase)
     }
 
-//    //starting camera
-//    private fun startCamera() {
-//        val cameraProviderFuture = ProcessCameraProvider.getInstance(this)
-//
-//        cameraProviderFuture.addListener({
-//            // Used to bind the lifecycle of cameras to the lifecycle owner
-//            val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
-//
-//            // Preview
-//            val preview = Preview.Builder()
-//                .build()
-//                .also {
-//                    it.setSurfaceProvider(binding.viewFinder.surfaceProvider)
-//                }
-//
-//            imageCapture = ImageCapture.Builder()
-//                .build()
-//
-//            // Select back camera as a default
-//            val cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA
-//
-//            val imageAnalyzer = ImageAnalysis.Builder()
-//                .build()
-//                .also {
-//                    //PoseAnalyzer(::onTextFound) passing onTextFound function to poseAnalyzer
-//                    it.setAnalyzer(cameraExecutor, PoseAnalyzer(::onTextFound,runClassification,isStreamMode,this))
-//                }
-//
-//            try {
-//                // Unbind use cases before rebinding
-//                cameraProvider.unbindAll()
-//
-//                // Bind use cases to camera
-//                cameraProvider.bindToLifecycle(
-//                    this, cameraSelector, preview, imageCapture, imageAnalyzer)
-//
-//
-//            } catch(exc: Exception) {
-//                Log.e(TAG, "Use case binding failed", exc)
-//            }
-//
-//        }, ContextCompat.getMainExecutor(this))
-//    }
-
-
-//    fun getProcessCameraProvider(): LiveData<ProcessCameraProvider?>? {
-//        if (cameraProviderLiveData == null) {
-//            cameraProviderLiveData = MutableLiveData()
-//            val cameraProviderFuture = ProcessCameraProvider.getInstance(
-//                application
-//            )
-//            cameraProviderFuture.addListener(
-//                {
-//                    try {
-//                        cameraProviderLiveData.setValue(cameraProviderFuture.get())
-//                    } catch (e: ExecutionException) {
-//                        // Handle any errors (including cancellation) here.
-//                        Log.e(TAG, "Unhandled exception", e)
-//                    } catch (e: InterruptedException) {
-//                        Log.e(TAG, "Unhandled exception", e)
-//                    }
-//                },
-//                ContextCompat.getMainExecutor(application)
-//            )
-//        }
-//        return cameraProviderLiveData
-//    }
-
-    private fun getAngle(firstPoint: PoseLandmark, midPoint: PoseLandmark, lastPoint: PoseLandmark): Double {
-
-        var result = Math.toDegrees(
-            kotlinMathAtan2( lastPoint.position.y.toDouble() - midPoint.position.y,
-                lastPoint.position.x.toDouble() - midPoint.position.x)
-                - kotlinMathAtan2(firstPoint.position.y - midPoint.position.y,
-            firstPoint.position.x - midPoint.position.x)
-        )
-        result = abs(result) // Angle should never be negative
-        if (result > 180) {
-            result = 360.0 - result // Always get the acute representation of the angle
-        }
-        return result
-    }
-
-    private fun getNeckAngle(
-        ear: PoseLandmark, shoulder: PoseLandmark
-    ): Double {
-
-        var result = Math.toDegrees(
-            kotlinMathAtan2( shoulder.position.y.toDouble() - shoulder.position.y,
-                (shoulder.position.x + 100 ).toDouble() - shoulder.position.x)
-                - kotlinMathAtan2(ear.position.y - shoulder.position.y,
-                ear.position.x - shoulder.position.x)
-        )
-
-        result = abs(result) // Angle should never be negative
-
-        if (result > 180) {
-            result = 360.0 - result // Always get the acute representation of the angle
-        }
-        return result
-    }
-
-    //landmark
-//    private fun onTextFound(pose:Pose){
-//        try {
-//            val leftShoulder = pose.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
-//            val rightShoulder = pose.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)
-//            val leftElbow = pose.getPoseLandmark(PoseLandmark.LEFT_ELBOW)
-//            val rightElbow = pose.getPoseLandmark(PoseLandmark.RIGHT_ELBOW)
-//            val leftWrist = pose.getPoseLandmark(PoseLandmark.LEFT_WRIST)
-//            val rightWrist = pose.getPoseLandmark(PoseLandmark.RIGHT_WRIST)
-//            val leftHip = pose.getPoseLandmark(PoseLandmark.LEFT_HIP)
-//            val rightHip = pose.getPoseLandmark(PoseLandmark.RIGHT_HIP)
-//            val leftKnee = pose.getPoseLandmark(PoseLandmark.LEFT_KNEE)
-//            val rightKnee = pose.getPoseLandmark(PoseLandmark.RIGHT_KNEE)
-//            val leftAnkle = pose.getPoseLandmark(PoseLandmark.LEFT_ANKLE)
-//            val rightAnkle = pose.getPoseLandmark(PoseLandmark.RIGHT_ANKLE)
-//
-//            val leftPinky = pose.getPoseLandmark(PoseLandmark.LEFT_PINKY)
-//            val rightPinky = pose.getPoseLandmark(PoseLandmark.RIGHT_PINKY)
-//            val leftIndex = pose.getPoseLandmark(PoseLandmark.LEFT_INDEX)
-//            val rightIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_INDEX)
-//            val leftThumb = pose.getPoseLandmark(PoseLandmark.LEFT_THUMB)
-//            val rightThumb = pose.getPoseLandmark(PoseLandmark.RIGHT_THUMB)
-//            val leftHeel = pose.getPoseLandmark(PoseLandmark.LEFT_HEEL)
-//            val rightHeel = pose.getPoseLandmark(PoseLandmark.RIGHT_HEEL)
-//            val leftFootIndex = pose.getPoseLandmark(PoseLandmark.LEFT_FOOT_INDEX)
-//            val rightFootIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX)
-//
-//            val eyeSx = pose.getPoseLandmark(PoseLandmark.LEFT_EYE)
-//            val eyeDx = pose.getPoseLandmark(PoseLandmark.RIGHT_EYE)
-//
-//            val earDx = pose.getPoseLandmark(PoseLandmark.RIGHT_EAR)
-//            val earSx = pose.getPoseLandmark(PoseLandmark.LEFT_EAR)
-//
-//            val builder = StringBuilder()
-//            binding.rectOverlay.clear()
-//
-//            if( eyeSx != null && eyeDx != null && leftShoulder != null && rightShoulder != null  ){
-//                binding.rectOverlay.drawNeck(eyeSx, eyeDx, leftShoulder, rightShoulder)
-//            }
-//
-//            if(earSx != null && leftShoulder != null){
-//                binding.rectOverlay.drawLine(earSx, leftShoulder)
-//                val neckAngle = getNeckAngle(earSx, leftShoulder)
-//                builder.append("${90 - neckAngle.toInt()} collo (da sx) \n")
-//            }
-//
-//            if(earDx != null && rightShoulder != null){
-//                binding.rectOverlay.drawLine(earDx, rightShoulder)
-//                val neckAngle = getNeckAngle(earDx, rightShoulder)
-//                builder.append("${90 - neckAngle.toInt()} collo (da dx) \n")
-//            }
-//
-//            if(rightShoulder != null && rightHip != null && rightKnee != null){
-//                val neckAngle = getAngle(rightShoulder, rightHip, rightKnee)
-//                builder.append("${ 180 - neckAngle.toInt()} busto (da dx) \n")
-//            }
-//
-//            if(leftShoulder != null && leftHip != null && leftKnee != null){
-//                val neckAngle = getAngle(leftShoulder, leftHip, leftKnee)
-//                builder.append("${180 - neckAngle.toInt()} busto (da sx) \n")
-//            }
-//
-//            if( rightHip != null && rightKnee != null  && rightAnkle != null){
-//                val neckAngle = getAngle( rightHip, rightKnee, rightAnkle)
-//                builder.append("${ 180 - neckAngle.toInt()} gamba (da dx) \n")
-//            }
-//
-//            // angolo gamba sinistra
-//            if( leftHip != null && leftKnee != null  && leftAnkle != null){
-//                val neckAngle = getAngle( leftHip, leftKnee,leftAnkle)
-//                builder.append("${ 180 - neckAngle.toInt()} gamba (da sx) \n")
-//            }
-//
-//
-//            if(leftShoulder != null && rightShoulder != null){
-//                binding.rectOverlay.drawLine(leftShoulder, rightShoulder)
-//            }
-//
-//            if(leftHip != null &&  rightHip != null){
-//                binding.rectOverlay.drawLine(leftHip, rightHip)
-//            }
-//
-//            if(leftShoulder != null &&  leftElbow != null){
-//                binding.rectOverlay.drawLine(leftShoulder, leftElbow)
-//            }
-//
-//            if(leftElbow != null &&  leftWrist != null){
-//                binding.rectOverlay.drawLine(leftElbow, leftWrist)
-//            }
-//
-//            if(leftShoulder != null &&  leftHip != null){
-//                binding.rectOverlay.drawLine(leftShoulder, leftHip)
-//            }
-//
-//            if(leftHip != null &&  leftKnee != null){
-//                binding.rectOverlay.drawLine(leftHip, leftKnee)
-//            }
-//
-//            if(leftKnee != null &&  leftAnkle != null){
-//                binding.rectOverlay.drawLine(leftKnee, leftAnkle)
-//            }
-//
-//            if(leftWrist != null &&  leftThumb != null){
-//                binding.rectOverlay.drawLine(leftWrist, leftThumb)
-//            }
-//
-//            if(leftWrist != null &&  leftPinky != null){
-//                binding.rectOverlay.drawLine(leftWrist, leftPinky)
-//            }
-//
-//            if(leftWrist != null &&  leftIndex != null){
-//                binding.rectOverlay.drawLine(leftWrist, leftIndex)
-//            }
-//
-//            if(leftIndex != null &&  leftPinky != null){
-//                binding.rectOverlay.drawLine(leftIndex, leftPinky)
-//            }
-//
-//            if(leftAnkle != null &&  leftHeel != null){
-//                binding.rectOverlay.drawLine(leftAnkle, leftHeel)
-//            }
-//
-//            if(leftHeel != null &&  leftFootIndex != null){
-//                binding.rectOverlay.drawLine(leftHeel, leftFootIndex)
-//            }
-//
-//            if(rightShoulder != null &&  rightElbow != null){
-//                binding.rectOverlay.drawLine(rightShoulder, rightElbow)
-//            }
-//
-//            if(rightElbow != null &&  rightWrist != null){
-//                binding.rectOverlay.drawLine(rightElbow, rightWrist)
-//            }
-//
-//            if(rightShoulder != null &&  rightHip != null){
-//                binding.rectOverlay.drawLine(rightShoulder, rightHip)
-//            }
-//
-//            if(rightHip != null &&  rightKnee != null){
-//                binding.rectOverlay.drawLine(rightHip, rightKnee)
-//            }
-//
-//            if(rightKnee != null &&  rightAnkle != null){
-//                binding.rectOverlay.drawLine(rightKnee, rightAnkle)
-//            }
-//
-//            if(rightWrist != null &&  rightThumb != null){
-//                binding.rectOverlay.drawLine(rightWrist, rightThumb)
-//            }
-//
-//            if(rightWrist != null &&  rightPinky != null){
-//                binding.rectOverlay.drawLine(rightWrist, rightPinky)
-//            }
-//
-//            if(rightWrist != null &&  rightIndex != null){
-//                binding.rectOverlay.drawLine(rightWrist, rightIndex)
-//            }
-//
-//            if(rightIndex != null &&  rightPinky != null){
-//                binding.rectOverlay.drawLine(rightIndex, rightPinky)
-//            }
-//
-//            if(rightAnkle != null &&  rightHeel != null){
-//                binding.rectOverlay.drawLine(rightAnkle, rightHeel)
-//            }
-//
-//            if(rightHeel != null &&  rightFootIndex != null){
-//                binding.rectOverlay.drawLine(rightHeel, rightFootIndex)
-//            }
-//
-//
-//            binding.textViewId.text = "$builder"
-//
-//        } catch (e: java.lang.Exception) {
-//            Toast.makeText(this, "Error", Toast.LENGTH_SHORT).show()
-//        }
-//    }
-
-    //end camera activity
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        cameraExecutor.shutdown()
-//    }
-
     //other details
     companion object {
         const val TAG = "ExerciseLog"
@@ -521,6 +302,22 @@ class Exercise : AppCompatActivity() {
                     add(Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 }
             }.toTypedArray()
+    }
+
+    public override fun onResume() {
+        super.onResume()
+        bindAllCameraUseCases()
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        imageProcessor?.run { this.stop() }
+    }
+
+    public override fun onDestroy() {
+        super.onDestroy()
+        imageProcessor?.run { this.stop() }
     }
 }
 

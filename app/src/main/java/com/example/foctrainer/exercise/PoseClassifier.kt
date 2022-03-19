@@ -54,7 +54,7 @@ class PoseClassifier {
         return classify(extractPoseLandmarks(pose))
     }
 
-    fun classify(landmarks: MutableList<PointF3D>): ClassificationResult? {
+    private fun classify(landmarks: MutableList<PointF3D>): ClassificationResult? {
         val result = ClassificationResult()
         // Return early if no landmarks detected.
         if (landmarks.isEmpty()) {

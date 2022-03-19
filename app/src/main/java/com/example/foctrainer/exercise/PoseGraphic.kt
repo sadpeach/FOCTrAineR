@@ -139,7 +139,7 @@ class PoseGraphic internal constructor(
                     POSE_CLASSIFICATION_TEXT_SIZE * 1.5f * (poseClassification.size - i).toFloat()
                     )
             canvas.drawText(
-                poseClassification[i],
+                "identified pose: "+poseClassification[i],
                 classificationX,
                 classificationY,
                 classificationTextPaint

@@ -50,6 +50,7 @@ class PoseDetectorProcessor(
     }
 
     override fun detectInImage(image: InputImage): Task<PoseWithClassification> {
+        Log.d(TAG, "processing image detection, runClassification$runClassification")
         return detector
             .process(image)
             .continueWith(
@@ -58,10 +59,13 @@ class PoseDetectorProcessor(
                     val pose = task.getResult()
                     var classificationResult: List<String> = ArrayList()
                     if (runClassification) {
+                        Log.d(TAG,"running classification with inputImg")
                         if (poseClassifierProcessor == null) {
+                            Log.d(TAG,"poseClassifierProcessor is null")
                             poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode)
                         }
                         classificationResult = poseClassifierProcessor!!.getPoseResult(pose) as List<String>
+                        Log.d(TAG,"classificationResult"+classificationResult)
                     }
                     PoseWithClassification(pose, classificationResult)
                 }
@@ -69,28 +73,40 @@ class PoseDetectorProcessor(
     }
 
     override fun detectInImage(image: MlImage): Task<PoseWithClassification> {
+        Log.d(TAG, "processing MLimage detection, runClassification $runClassification")
+
         return detector
             .process(image)
             .continueWith(
                 classificationExecutor,
                 { task ->
                     val pose = task.getResult()
+                    Log.d(TAG, "task.getresult: ${pose.getPoseLandmark(1)}")
                     var classificationResult: List<String> = ArrayList()
+                    Log.d(TAG,"running classification with MLimage..")
+
                     if (runClassification) {
+                        Log.d(TAG,"runClassification enabled")
                         if (poseClassifierProcessor == null) {
+                            Log.d(TAG,"setting poseClassifierProcessor")
                             poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode)
+                            Log.d(TAG, "poseClassifierProcessor setting completed $poseClassifierProcessor")
                         }
-                        classificationResult = poseClassifierProcessor!!.getPoseResult(pose) as List<String>
+                        classificationResult = poseClassifierProcessor?.getPoseResult(pose) as List<String>
+
                     }
+                    Log.d(TAG,"ending classification " + classificationResult)
                     PoseWithClassification(pose, classificationResult)
                 }
             )
     }
 
     override fun onSuccess(
+
         poseWithClassification: PoseWithClassification,
         graphicOverlay: GraphicOverlay
     ) {
+        Log.d(TAG,"onsuccess")
         graphicOverlay.add(
             PoseGraphic(
                 graphicOverlay,

@@ -7,9 +7,11 @@
         <entry key="..\:/Users/Rachelina/AndroidStudioProjects/FOCTrAineR/app/src/main/res/layout/activity_main.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_camerax_live_preview.xml" value="0.14166666666666666" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.19427083333333334" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.10638297872340426" />
         <entry key="app/src/main/res/layout/settings_style.xml" value="0.14166666666666666" />
         <entry key="app/src/main/res/layout/toggle_style.xml" value="0.14166666666666666" />
+        <entry key="app/src/main/res/xml/preference_live_preview_quickstart.xml" value="0.16822916666666668" />
       </map>
     </option>
   </component>

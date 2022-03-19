@@ -18,6 +18,7 @@
 //import android.Manifest;
 //import android.content.Context;
 //import android.graphics.ImageFormat;
+//import android.hardware.camera2.CameraCharacteristics
 //import android.hardware.camera2.CameraManager;
 //import androidx.annotation.Nullable;
 //import android.util.Log;
@@ -266,7 +267,7 @@
 //        }
 //        val camera: Camera = Camera.open(requestedCameraId)
 //        var sizePair: SizePair? =
-//            PreferenceUtils.getCameraPreviewSizePair(activity, requestedCameraId)
+//            activity?.let { PreferenceUtils.getCameraPreviewSizePair(it, requestedCameraId) }
 //        if (sizePair == null) {
 //            sizePair = selectSizePair(
 //                camera,
@@ -287,7 +288,7 @@
 //            Log.v(TAG, "Camera picture size: $pictureSize")
 //            parameters.setPictureSize(pictureSize.getWidth(), pictureSize.getHeight())
 //        }
-//        parameters.setPreviewSize(previewSize.getWidth(), previewSize.getHeight())
+//        parameters.setPreviewSize(previewSize!!.getWidth(), previewSize!!.getHeight())
 //        parameters.setPreviewFpsRange(
 //            previewFpsRange[Camera.Parameters.PREVIEW_FPS_MIN_INDEX],
 //            previewFpsRange[Camera.Parameters.PREVIEW_FPS_MAX_INDEX]
@@ -333,7 +334,7 @@
 //     * @param facing the desired camera (front-facing or rear-facing)
 //     */
 //    private fun getIdForRequestedCamera(facing: Int): Int {
-//        val cameraInfo = CameraInfo()
+//        val cameraInfo = Camera.CameraInfo()
 //        for (i in 0 until Camera.getNumberOfCameras()) {
 //            Camera.getCameraInfo(i, cameraInfo)
 //            if (cameraInfo.facing === facing) {
