@@ -43,7 +43,7 @@ class Exercise : AppCompatActivity()  {
         super.onCreate(savedInstanceState)
         binding = ActivityCameraxLivePreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        setUpPreference()
+
         cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
 
         graphicOverlay = binding.graphicOverlay
@@ -74,23 +74,6 @@ class Exercise : AppCompatActivity()  {
             )
         }
 
-    }
-
-    private fun setUpPreference(){
-        try {
-            Log.d(Exercise.TAG,"Setting up cameraX preference")
-            val mFragmentManager: FragmentManager = supportFragmentManager
-            val mFragmentTransaction: FragmentTransaction = mFragmentManager
-                .beginTransaction()
-            val mPrefsFragment = CameraXLivePreviewPreferenceFragment()
-            mFragmentTransaction.replace(android.R.id.content, mPrefsFragment)
-            mFragmentTransaction.commit()
-            Log.d(Exercise.TAG,"cameraX preference set up completed")
-
-        } catch (e: java.lang.Exception) {
-            Log.d(Exercise.TAG,"Setting up cameraX preference $e")
-            throw RuntimeException(e)
-        }
     }
 
     override fun onSaveInstanceState(bundle: Bundle) {
@@ -187,14 +170,8 @@ class Exercise : AppCompatActivity()  {
             imageProcessor!!.stop()
         }
         imageProcessor =
-            try {
-//                val poseDetectorOptions = PreferenceUtils.getPoseDetectorOptionsForLivePreview(this)
-//                val shouldShowInFrameLikelihood =
-//                    PreferenceUtils.shouldShowPoseDetectionInFrameLikelihoodLivePreview(this)
-//                val visualizeZ = PreferenceUtils.shouldPoseDetectionVisualizeZ(this)
-//                val rescaleZ = PreferenceUtils.shouldPoseDetectionRescaleZForVisualization(this)
-//                val runClassification = PreferenceUtils.shouldPoseDetectionRunClassification(this)
 
+            try {
                 val poseDetectorOptions = PreferenceUtils.getPoseDetectorOptionsForLivePreview(this)
                 val shouldShowInFrameLikelihood = true
                 val visualizeZ = true
