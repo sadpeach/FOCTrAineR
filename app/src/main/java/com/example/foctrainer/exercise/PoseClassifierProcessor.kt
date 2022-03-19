@@ -87,6 +87,7 @@ class PoseClassifierProcessor {
             Log.e(TAG, "Error when loading pose samples from file.\n$e")
         }
         Log.d(TAG,"poseSamples: ${poseSamples.size}")
+        Log.d(TAG,"poseSamples name: ${poseSamples[1]?.getClassName()}")
         poseClassifier = PoseClassifier(poseSamples)
         if (isStreamMode) {
             for (className in POSE_CLASSES) {
@@ -98,6 +99,7 @@ class PoseClassifierProcessor {
     }
 
     private fun getPoseSample(csvRecord:CSVRecord): PoseSample? {
+
         if (csvRecord.size() != NUM_LANDMARKS * NUM_DIMS + 2) {
             Log.e(TAG, "Invalid number of tokens for PoseSample")
             return null
