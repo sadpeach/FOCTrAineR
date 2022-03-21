@@ -220,7 +220,7 @@
     <!-- Nested Scroll view -->
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="fill_parent">
 
         <!-- Linear layout to contain 2 text view and button -->
         <LinearLayout
@@ -231,7 +231,7 @@
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/BarChart"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:layout_margin="25dp"/>
     <TextView
         android:layout_width="wrap_content"
@@ -250,14 +250,14 @@
         tools:listitem="@layout/card_view"
         android:overScrollMode="always"/>
 
-    <Button
-        android:id="@+id/selectButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select"
-        android:onClick="selectButtonOnClick"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="345dp" />
+<!--    <Button-->
+<!--        android:id="@+id/selectButton"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Select"-->
+<!--        android:onClick="selectButtonOnClick"-->
+<!--        tools:layout_editor_absoluteX="163dp"-->
+<!--        tools:layout_editor_absoluteY="345dp" />-->
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </LinearLayout>

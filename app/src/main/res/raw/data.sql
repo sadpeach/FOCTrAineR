@@ -24,6 +24,7 @@ INSERT INTO ScheduleTable (user_id, exercise_id,startDateTime,notes,no_of_sets,t
 INSERT INTO ScheduleTable (user_id, exercise_id,startDateTime,notes,no_of_sets,title) VALUES(1,2,"2016-12-21 00:00:00.000","Must do workout!",2,"arms");
 INSERT INTO ScheduleTable (user_id, exercise_id,startDateTime,notes,no_of_sets,title) VALUES(1,1,"2016-12-21 00:00:00.000","Must do workout!",8,"abs");
 INSERT INTO CompletedExerciseTable (user_id, exercise_id,completed_dateTime,total_calories,no_completed_sets) VALUES(1,1,"2016-12-21 00:00:00.000",112,4);
+INSERT INTO CompletedExerciseTable (user_id, exercise_id,completed_dateTime,total_calories,no_completed_sets) VALUES(1,1,"2016-12-21 00:00:00.000",100,3);
 INSERT INTO CompletedExerciseTable (user_id, exercise_id,completed_dateTime,total_calories,no_completed_sets) VALUES(2,1,"2016-12-21 00:00:00.000",192,77);
 INSERT INTO CompletedExerciseTable (user_id, exercise_id,completed_dateTime,total_calories,no_completed_sets) VALUES(1,2,"2016-12-21 00:00:00.000",132,4);
 INSERT INTO CompletedExerciseCalendarTable(schedule_id,user_id,exercise_id,completed_dateTime,isCompleted) VALUES (1,1,1,"2016-12-21 00:00:00.000",1);
