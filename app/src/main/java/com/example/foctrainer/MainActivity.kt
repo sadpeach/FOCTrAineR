@@ -76,13 +76,6 @@ class MainActivity : AppCompatActivity() {
 //            true
 //        }
 
-        //database testing: data insertion
-        val user = UserModel(4,"jiayi","123",155.3f,45f,18.9f)
-        userViewModel.createNewUser(user = user)
-
-        userViewModel.allUsers.observe(this, Observer{ users ->
-            Log.d("db insertion testing", users[3].userName)
-        })
 
 //        completeExerciseModel.chartSummary.observe(this, Observer { ex->
 //            Log.d("Chart", ex.toString())
@@ -138,6 +131,7 @@ class MainActivity : AppCompatActivity() {
 //        }
     fun selectButtonOnClick(view: View){
         val intent = Intent(this, Exercise::class.java)
+        intent.putExtra("exerciseId",1)
         startActivity(intent)
     }
 
@@ -219,3 +213,17 @@ class MainActivity : AppCompatActivity() {
         })
     }
 }
+
+//reference:
+//        //database testing: data insertion
+//        val user = UserModel(4,"jiayi","123",155.3f,45f,18.9f)
+//        userViewModel.createNewUser(user = user)
+//
+//        val userstest = ""
+//
+//        userViewModel.allUsers.observe(this, Observer{ users ->
+////            Log.d("db insertion testing", users[3].userName)
+////            userstest = user[1]
+//
+////            binding.BarChart = valuefromdb
+//        })

@@ -42,38 +42,39 @@ class SignUpDialog : DialogFragment() {
         Log.d(TAG,"Starting Sign Up Form")
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_sign_up_dialog, container)
+        return view
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         if (dialog != null && dialog?.window != null) {
             dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
             dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE);
         }
-        return view
-    }
 
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//
-//        val userName = view.findViewById<TextInputEditText>(R.id.name).text.toString()
-//        val userPassword = view.findViewById<TextInputEditText>(R.id.password).text.toString()
-//        val height = view.findViewById<TextInputEditText>(R.id.height).text as Float
-//        val weight = view.findViewById<TextInputEditText>(R.id.weight).text as Float
-//        val bmi = view.findViewById<TextInputEditText>(R.id.bmi).text as Float
-////        val age = view.findViewById<TextView>(R.id.age).text
-//
-//        view.findViewById<Button>(R.id.signUpButton).setOnClickListener{
-//
-//            try{
-//                var user = UserModel(userName = userName,password = userPassword,height = height,weight = weight,bmi = bmi)
-//                userViewModel.createNewUser(user = user)
-//
-//                Toast.makeText(activity, "Account successfully created", Toast.LENGTH_SHORT).show()
-//
-//            }catch (e:Exception){
-//                Log.e(TAG,"Error occurred when creating new user")
-//            }
-//
-//
-//        }
-//    }
+        val userName = view.findViewById<TextInputEditText>(R.id.name).text.toString()
+        val userPassword = view.findViewById<TextInputEditText>(R.id.password).text.toString()
+        val height = view.findViewById<TextInputEditText>(R.id.height).text as Float
+        val weight = view.findViewById<TextInputEditText>(R.id.weight).text as Float
+        val bmi = view.findViewById<TextInputEditText>(R.id.bmi).text as Float
+//        val age = view.findViewById<TextView>(R.id.age).text
+
+        view.findViewById<Button>(R.id.signUpButton).setOnClickListener{
+
+            try{
+                var user = UserModel(userName = userName,password = userPassword,height = height,weight = weight,bmi = bmi)
+                userViewModel.createNewUser(user = user)
+
+                Toast.makeText(activity, "Account successfully created", Toast.LENGTH_SHORT).show()
+
+            }catch (e:Exception){
+                Log.e(TAG,"Error occurred when creating new user")
+            }
+
+
+        }
+    }
 
 
     companion object {
