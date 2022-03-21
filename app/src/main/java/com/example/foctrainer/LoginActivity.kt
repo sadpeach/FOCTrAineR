@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.SignUpButton.setOnClickListener{
-            SignUpDialog().show(supportFragmentManager, "Sign Up Form")
+//            SignUpDialog().show(supportFragmentManager, "Sign Up Form")
         }
     }
 }

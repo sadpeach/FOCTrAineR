@@ -124,9 +124,9 @@ class Exercise : AppCompatActivity()  {
                 .setMessage("You have completed ${binding.counter.text} $title")
                 .setPositiveButton("YES") { dialog, whichButton ->
                     Log.d(TAG,"Saving workout result to database")
-                    val counter = binding.counter.text as Int
+                    val counter = binding.counter.text.toString().toInt()
                     val date = getCurrentDateTime()
-                    val dateTime = date.toString("yyyy/MM/dd HH:mm:ss")
+                    val dateTime = date.toString("yyyy-MM-dd HH:mm:ss")
 
                     val completedExercise = CompletedExerciseModel(userId = userId, exerciseId = selectedExerciseId, completed_dateTime = dateTime,no_completed_sets = counter,total_calories = 111.1f)
                     completeExerciseModel.insertNewCompletedExercise(completedExercise = completedExercise )
