@@ -16,4 +16,7 @@ interface UserMapper {
     @Query("SELECT * FROM UserTable")
     fun getAllUsers(): Flow<List<UserModel>>
 
+    @Query("SELECT * FROM UserTable WHERE userName=:userName AND password=:password ")
+    fun checkIfUserExistByNameAndPassword(userName:String,password:String): UserModel
+
 }

@@ -14,6 +14,10 @@ class UserViewModel(private val repository: UserRepository):ViewModel() {
         repository.createNewUser(user)
     }
 
+    fun checkIfUserExistByNameAndPassword(userName:String,password:String): UserModel {
+        return repository.checkIfUserExistByNameAndPassword(userName,password)
+    }
+
 }
 
 class UserViewModelFactory(private val repository: UserRepository) : ViewModelProvider.Factory {

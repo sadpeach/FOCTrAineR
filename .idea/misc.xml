@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.19427083333333334" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.10638297872340426" />
+        <entry key="app/src/main/res/layout/fragment_schedule.xml" value="0.17527173913043478" />
         <entry key="app/src/main/res/layout/fragment_sign_up_dialog.xml" value="0.1" />
         <entry key="app/src/main/res/layout/settings_style.xml" value="0.14166666666666666" />
         <entry key="app/src/main/res/layout/toggle_style.xml" value="0.14166666666666666" />
