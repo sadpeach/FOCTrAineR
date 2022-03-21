@@ -49,6 +49,7 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
     private var totalDetectorMs = 0L
     private var maxDetectorMs = 0L
     private var minDetectorMs = Long.MAX_VALUE
+    private var exerciseCounter = 199
 
 
     // Frame count that have been processed so far in an one second interval to calculate FPS.
@@ -279,6 +280,9 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
         )
     }
 
+    override fun getCounter():Int{
+        return exerciseCounter
+    }
     protected abstract fun onSuccess(results: T, graphicOverlay: GraphicOverlay)
 
     protected abstract fun onFailure(e: Exception)

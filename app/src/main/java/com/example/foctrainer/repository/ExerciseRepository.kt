@@ -8,15 +8,18 @@ import kotlinx.coroutines.flow.Flow
 
 class ExerciseRepository (private val exerciseMapper: ExerciseMapper) {
 
+
+
     val allExercise:  Flow<List<ExerciseModel>> = exerciseMapper.getAllExercises()
 
-    fun getExerciseNameById(exerciseId:Int): Flow<String> {
-        return exerciseMapper.getExerciseNameById(exerciseId)
-    }
-
-
-//     fun getExerciseNameById (exerciseId:Int):String{
+//    fun getExerciseNameById(exerciseId:Int): Flow<String> {
 //        return exerciseMapper.getExerciseNameById(exerciseId)
 //    }
+
+//    @Suppress("RedundantSuspendModifier")
+//    @WorkerThread
+        fun getExerciseNameById (exerciseId:Int):String {
+         return exerciseMapper.getExerciseNameById(exerciseId)
+    }
 
 }

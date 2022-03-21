@@ -12,17 +12,27 @@ import androidx.core.content.ContextCompat
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import android.os.Build
+import android.widget.Button
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.camera.view.PreviewView
-import com.example.foctrainer.MainActivity
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
 import com.example.foctrainer.databinding.ActivityCameraxLivePreviewBinding
 import com.example.foctrainer.viewModel.ExerciseViewModel
 import com.example.foctrainer.viewModel.ExerciseViewModelFactory
 import com.google.mlkit.common.MlKitException
-import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.*
+import android.widget.TextView
+import androidx.camera.video.Quality
+import androidx.camera.video.QualitySelector
+import androidx.camera.video.Recorder
+import com.example.foctrainer.MainActivity
+import com.example.foctrainer.entity.CompletedExerciseModel
+import com.example.foctrainer.viewModel.CompletedExerciseViewModel
+import com.example.foctrainer.viewModel.CompletedExerciseViewModelFactory
+import java.time.LocalDate
+
 
 class Exercise : AppCompatActivity()  {
 
@@ -38,9 +48,14 @@ class Exercise : AppCompatActivity()  {
     private var needUpdateGraphicOverlayImageSourceInfo = false
     private var graphicOverlay: GraphicOverlay? = null
     private var selectedExerciseId: Int = -1
+    private val userId = 1 // need to change
 
     private val exerciseViewModel: ExerciseViewModel by viewModels {
         ExerciseViewModelFactory((application as FocTrainerApplication).exerciseRepository)
+    }
+
+    private val completeExerciseModel: CompletedExerciseViewModel by viewModels {
+        CompletedExerciseViewModelFactory((application as FocTrainerApplication).completedExerciseRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,10 +66,26 @@ class Exercise : AppCompatActivity()  {
         //get exerciseId
         selectedExerciseId = intent.getIntExtra("exerciseId",-1)
 
-       exerciseViewModel.getExerciseNameById(selectedExerciseId).observe(this, { exerciseName ->
+        Log.d(TAG,"selectedexerciseId"+selectedExerciseId)
+
+//       GlobalScope.launch{
+//            val exerciseName  = getExerciseNameAsync()
+//            title = exerciseName
+//            Log.d(TAG, "async check$exerciseName")
+//        }
+
+        GlobalScope.launch{
+            val exerciseName  = async { getExerciseNameAsync()}.await()
             title = exerciseName
-            Log.d(TAG,"retrieve $exerciseName from database")
-        })
+            Log.d("TAG","gotten $exerciseName")
+        }
+
+//       exerciseViewModel.getExerciseNameById(selectedExerciseId).observe(this, { exerciseName ->
+//            title = exerciseName
+//           exerciseName?.let { test = it }
+//
+//            Log.d(TAG,"retrieve $exerciseName from database")
+//        })
 
         cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
         graphicOverlay = binding.graphicOverlay
@@ -88,18 +119,35 @@ class Exercise : AppCompatActivity()  {
         binding.endWorkout.setOnClickListener() {
             val dialog = AlertDialog.Builder(this)
             dialog.setTitle("Workout Ending")
-                .setMessage("Yout have completed xx ")
+                .setMessage("You have completed ${binding.counter.text} $title")
                 .setPositiveButton("YES") { dialog, whichButton ->
+                    Log.d(TAG,"Saving workout result to database")
+
+//                    val completedExercise = CompletedExerciseModel(userId,selectedExerciseId, LocalDate.now().toString(),)
+//                    completeExerciseModel.insertNewCompletedExercise(completedExercise = )
+
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
+
+                    Toast.makeText(applicationContext, "Workout Result Saved", Toast.LENGTH_SHORT).show()
+
                 }
                 .setNegativeButton("NO") { dialog, whichButton ->
-
                 }
 
             dialog.show()
         }
 
+    }
+
+
+//    suspend fun getExerciseNameAsync(): String = coroutineScope {
+//        val exerciseName = async {exerciseViewModel.getExerciseNameById(selectedExerciseId) }
+//        exerciseName.await()
+//    }
+
+    suspend fun getExerciseNameAsync(): String {
+        return exerciseViewModel.getExerciseNameById(selectedExerciseId)
     }
 
 
@@ -204,6 +252,7 @@ class Exercise : AppCompatActivity()  {
                 val visualizeZ = true
                 val rescaleZ = true
                 val runClassification = true
+                val selectedExerciseName = title as String
 
                 PoseDetectorProcessor(
                     this,
@@ -213,7 +262,8 @@ class Exercise : AppCompatActivity()  {
                     rescaleZ,
                     runClassification,
                     /* isStreamMode = */ true,
-                    selectedExerciseId
+                    selectedExerciseId ,
+                    selectedExerciseName
                 )
 
             } catch (e: Exception) {
@@ -253,18 +303,20 @@ class Exercise : AppCompatActivity()  {
                 }
                 try {
                     graphicOverlay?.let { imageProcessor!!.processImageProxy(imageProxy, it) }
+                    Log.d(TAG," updating counter to: "+imageProcessor?.getCounter())
+                    binding.counter.text = imageProcessor?.getCounter().toString()
+
                 } catch (e: MlKitException) {
                     Log.e(TAG, "Failed to process image. Error: " + e.localizedMessage)
                     Toast.makeText(applicationContext, e.localizedMessage, Toast.LENGTH_SHORT).show()
                 }
             }
+
         )
-        Log.d(TAG,"Died here")
         if (cameraSelector == null) Log.d(TAG,"cameraSelector null")
         if (analysisUseCase == null) Log.d(TAG,"cameraSelector null")
         if (this == null) Log.d(TAG,"context null")
         cameraProvider!!.bindToLifecycle(/* lifecycleOwner= */ this, cameraSelector!!, analysisUseCase)
-        Log.d(TAG,"Died after binding")
     }
 
     private fun bindPreviewUseCase() {
@@ -292,7 +344,6 @@ class Exercise : AppCompatActivity()  {
     //other details
     companion object {
         const val TAG = "ExerciseLog"
-        private const val FILENAME_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         private const val POSE_DETECTION = "Pose Detection"
         private const val STATE_SELECTED_MODEL = "selected_model"
