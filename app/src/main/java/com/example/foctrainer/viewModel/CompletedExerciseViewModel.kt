@@ -10,7 +10,7 @@ class CompletedExerciseViewModel(private val repository: CompletedExerciseReposi
 //    val chartSummary: LiveData<List<CompletedExerciseModel>> = repository.chartSummary.asLiveData()
     val completedExercise: LiveData<List<CompletedExerciseModel>> = repository.completedExercise.asLiveData()
 
-    fun insertNewCompletedExercise(completedExercise: CompletedExerciseMapper) = viewModelScope.launch {
+    fun insertNewCompletedExercise(completedExercise: CompletedExerciseModel) = viewModelScope.launch {
         repository.insertNewCompletedExercise(completedExercise)
     }
 

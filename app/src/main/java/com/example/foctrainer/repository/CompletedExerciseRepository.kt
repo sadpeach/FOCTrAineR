@@ -13,7 +13,7 @@ class CompletedExerciseRepository (private val completedExerciseMapper: Complete
 
     @Suppress("RedundantSuspendModifier")
     @WorkerThread
-    suspend fun insertNewCompletedExercise(completedExercise: CompletedExerciseMapper) {
+    suspend fun insertNewCompletedExercise(completedExercise: CompletedExerciseModel) {
         completedExerciseMapper.insertNewCompletedExercise(completedExercise)
     }
 //    val chartSummary: Flow<List<String>> = completedExerciseMapper.getChartSummary()
