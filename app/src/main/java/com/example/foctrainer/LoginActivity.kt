@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
 import com.example.foctrainer.databinding.ActivityLoginBinding
@@ -15,6 +14,10 @@ import com.example.foctrainer.fragments.SignUpDialog
 import com.example.foctrainer.viewModel.UserViewModel
 import com.example.foctrainer.viewModel.UserViewModelFactory
 import kotlinx.coroutines.*
+import android.content.SharedPreferences
+
+
+
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -25,6 +28,7 @@ class LoginActivity : AppCompatActivity() {
 
     companion object{
         private val TAG = "LoginActivity"
+        private val PREFS_NAME = "SharedPreferenceFile"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,42 +38,61 @@ class LoginActivity : AppCompatActivity() {
 
         supportActionBar?.hide()
 
-        binding.LoginButton.setOnClickListener{
+        val settings = getSharedPreferences(PREFS_NAME, 0)
+        val hasLoggedIn = settings.getBoolean("hasLoggedIn", false)
 
-            var userName = binding.userName.text.toString()
-            var password = binding.userPassword.text.toString()
-            Log.d(TAG,"checking user from UI -1: $userName, $password")
+        if (hasLoggedIn) {
+            val intent = Intent(this,MainActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
+        else {
 
-            //add in identity check
-            lifecycleScope.launch(Dispatchers.IO){
+            binding.LoginButton.setOnClickListener {
 
-                Log.d(TAG,"checking user from UI: $userName, $password")
-                val user:UserModel  = getExerciseNameAsync(userName = userName,password = password)
-                Log.d(TAG,"checking user: $user")
-                if (user!=null){
-                    Log.d(TAG,"$user exists")
-                    val intent = Intent(this@LoginActivity,MainActivity::class.java)
-                    startActivity(intent)
-                }
-                else{
+                var userName = binding.userName.text.toString()
+                var password = binding.userPassword.text.toString()
+                Log.d(TAG, "checking user from UI -1: $userName, $password")
 
-                    this@LoginActivity.runOnUiThread(java.lang.Runnable {
-                        binding.userName.text?.clear()
-                        binding.userPassword.text?.clear()
+                //add in identity check
+                lifecycleScope.launch(Dispatchers.IO) {
 
-                        Toast.makeText(
-                            this@LoginActivity,
-                            "$userName does not exists",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    })
+                    Log.d(TAG, "checking user from UI: $userName, $password")
+                    val user: UserModel =
+                        getExerciseNameAsync(userName = userName, password = password)
+                    Log.d(TAG, "checking user: $user")
+                    if (user != null) {
+                        Log.d(TAG, "$user exists")
 
+                        //saving user login to sharedPref
+                        val settings =
+                            getSharedPreferences(PREFS_NAME, 0) // 0 - for private mode
+                        val editor = settings.edit()
+                        editor.putBoolean("hasLoggedIn", true)
+                        editor.commit()
+
+                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        startActivity(intent)
+                    } else {
+
+                        this@LoginActivity.runOnUiThread(java.lang.Runnable {
+                            binding.userName.text?.clear()
+                            binding.userPassword.text?.clear()
+
+                            Toast.makeText(
+                                this@LoginActivity,
+                                "$userName does not exists",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        })
+
+                    }
                 }
             }
-        }
 
-        binding.SignUpButton.setOnClickListener{
-            SignUpDialog().show(supportFragmentManager, "Sign Up Form")
+            binding.SignUpButton.setOnClickListener {
+                SignUpDialog().show(supportFragmentManager, "Sign Up Form")
+            }
         }
     }
 

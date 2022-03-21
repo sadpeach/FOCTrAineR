@@ -3,6 +3,7 @@ package com.example.foctrainer.viewModel
 import androidx.lifecycle.*
 import com.example.foctrainer.entity.ExerciseModel
 import com.example.foctrainer.entity.UserModel
+import com.example.foctrainer.repository.ScheduleRepository
 import com.example.foctrainer.repository.UserRepository
 import kotlinx.coroutines.launch
 
@@ -29,4 +30,6 @@ class UserViewModelFactory(private val repository: UserRepository) : ViewModelPr
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
+
+
 }
