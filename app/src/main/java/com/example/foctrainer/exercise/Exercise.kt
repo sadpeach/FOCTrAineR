@@ -31,7 +31,9 @@ import com.example.foctrainer.MainActivity
 import com.example.foctrainer.entity.CompletedExerciseModel
 import com.example.foctrainer.viewModel.CompletedExerciseViewModel
 import com.example.foctrainer.viewModel.CompletedExerciseViewModelFactory
+import java.text.SimpleDateFormat
 import java.time.LocalDate
+import java.util.*
 
 
 class Exercise : AppCompatActivity()  {
@@ -122,9 +124,12 @@ class Exercise : AppCompatActivity()  {
                 .setMessage("You have completed ${binding.counter.text} $title")
                 .setPositiveButton("YES") { dialog, whichButton ->
                     Log.d(TAG,"Saving workout result to database")
+                    val counter = binding.counter.text as Int
+                    val date = getCurrentDateTime()
+                    val dateTime = date.toString("yyyy/MM/dd HH:mm:ss")
 
-//                    val completedExercise = CompletedExerciseModel(userId,selectedExerciseId, LocalDate.now().toString(),)
-//                    completeExerciseModel.insertNewCompletedExercise(completedExercise = )
+                    val completedExercise = CompletedExerciseModel(userId = userId, exerciseId = selectedExerciseId, completed_dateTime = dateTime,no_completed_sets = counter,total_calories = 111.1f)
+                    completeExerciseModel.insertNewCompletedExercise(completedExercise = completedExercise )
 
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
@@ -374,6 +379,15 @@ class Exercise : AppCompatActivity()  {
     public override fun onDestroy() {
         super.onDestroy()
         imageProcessor?.run { this.stop() }
+    }
+
+    fun Date.toString(format: String, locale: Locale = Locale.getDefault()): String {
+        val formatter = SimpleDateFormat(format, locale)
+        return formatter.format(this)
+    }
+
+    fun getCurrentDateTime(): Date {
+        return Calendar.getInstance().time
     }
 }
 
