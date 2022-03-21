@@ -15,6 +15,8 @@ import com.example.foctrainer.entity.UserModel
 import com.example.foctrainer.viewModel.*
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
+import com.example.foctrainer.databinding.ActivityExerciseBinding
+import com.github.mikephil.charting.data.Entry
 
 class ExerciseActivity : AppCompatActivity() {
     var title = ""
@@ -23,21 +25,13 @@ class ExerciseActivity : AppCompatActivity() {
     var userID = 0
     var notes = ""
 
+    private var layoutManager: RecyclerView.LayoutManager? = null
+    private var adapter: RecyclerView.Adapter<ScheduleRecyclerAdapter.ViewHolder>? = null
 
-    private val exerciseViewModel: ExerciseViewModel by viewModels {
-        ExerciseViewModelFactory((application as FocTrainerApplication).exerciseRepository)
-    }
 
     private val scheduleViewModel: ScheduleViewModel by viewModels {
         ScheduleViewModelFactory((application as FocTrainerApplication).scheduleRepository)
     }
-
-    private val userViewModel: UserViewModel by viewModels {
-        UserViewModelFactory((application as FocTrainerApplication).userRepository)
-    }
-
-    private var layoutManager: RecyclerView.LayoutManager? = null
-    private var adapter: RecyclerView.Adapter<ScheduleRecyclerAdapter.ViewHolder>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +39,7 @@ class ExerciseActivity : AppCompatActivity() {
         //val exercise = ExerciseModel(1, "Push ups", 1)
         //exerciseViewModel.createNewExercise(exercise = exercise)
 
-        displayExerciseList()
+
 
         layoutManager = LinearLayoutManager(this)
 
@@ -74,12 +68,12 @@ class ExerciseActivity : AppCompatActivity() {
                 scheduleList.add("$title")
             }
         })
-        adapter = ScheduleRecyclerAdapter(scheduleList)
+       // adapter = ScheduleRecyclerAdapter(scheduleList)
         
         
-
-        recyclerView.adapter = adapter
-        recyclerView.apply {
+        val recyclerViewSchedule = findViewById<RecyclerView>(R.id.recyclerViewSchedule)
+        recyclerViewSchedule.adapter = adapter
+        recyclerViewSchedule.apply {
             layoutManager = LinearLayoutManager(this@ExerciseActivity)
             adapter = ScheduleRecyclerAdapter(scheduleList)
         }
@@ -87,6 +81,7 @@ class ExerciseActivity : AppCompatActivity() {
         val it = intent
         val startDateTime = it.getStringExtra("startDateTime")
 
+        displayExerciseList()
     }
 
     fun displayExerciseList(){
@@ -112,14 +107,14 @@ class ExerciseActivity : AppCompatActivity() {
         // 5.
         scheduleViewModel.allDates.observe(this, Observer<List<ScheduleModel>>(){
             entries ->
-           // tvExerciseName.append(entries[0].title)
-            tvExerciseName.text = entries[0].title
-            //tvDate.append(entries[0].startDateTime)
-            tvDate.text = entries[0].startDateTime
-           // tvNoSets.append(entries[0].no_of_sets.toString())
-            tvNotes.text = entries[0].notes
-           // tvNotes.setText(entries[0].notes)
-            tvNoSets.text = entries[0].no_of_sets.toString()
+            tvExerciseName.append(entries[0].title)
+           // tvExerciseName.text = entries[1].title
+            tvDate.append(entries[0].startDateTime)
+           // tvDate.text = entries[1].startDateTime
+            tvNoSets.append(entries[0].no_of_sets.toString())
+           // tvNotes.text = entries[1].notes
+            tvNotes.setText(entries[0].notes)
+           // tvNoSets.text = entries[1].no_of_sets.toString()
             Log.d("hello", entries[0].toString())
         })
     }
