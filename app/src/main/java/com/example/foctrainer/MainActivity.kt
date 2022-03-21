@@ -80,6 +80,7 @@ class MainActivity : AppCompatActivity() {
         val user = UserModel(4,"jiayi","123",155.3f,45f,18.9f)
         userViewModel.createNewUser(user = user)
 
+
         userViewModel.allUsers.observe(this, Observer{ users ->
             Log.d("db insertion testing", users[3].userName)
         })
@@ -139,6 +140,11 @@ class MainActivity : AppCompatActivity() {
     fun selectButtonOnClick(view: View){
         val intent = Intent(this, Exercise::class.java)
         startActivity(intent)
+    }
+
+    fun scheduleButtonOnClick(view:View){
+        val myIntent = Intent(this, ExerciseActivity::class.java)
+        startActivity(myIntent)
     }
 
     fun displayUserDetails() {

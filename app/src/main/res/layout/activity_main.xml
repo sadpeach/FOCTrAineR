@@ -124,7 +124,8 @@
                             android:layout_below="@+id/height"
                             android:layout_alignParentEnd="true"
                             android:minHeight="5dp"
-                            android:text="Schedule WorkOut" />
+                            android:text="Schedule WorkOut"
+                            android:onClick="scheduleButtonOnClick"/>
 
                     </RelativeLayout>
                 </LinearLayout>

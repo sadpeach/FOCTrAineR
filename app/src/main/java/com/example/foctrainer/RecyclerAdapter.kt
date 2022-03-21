@@ -1,5 +1,4 @@
 package com.example.foctrainer
-
 import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
