@@ -3,14 +3,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:clickable="true"
+    android:id="@+id/card_view_exercise">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/relativeLayout"
         android:padding="16dp"
-        tools:ignore="MissingConstraints">
+        tools:ignore="MissingConstraints"
+        >
 
         <TextView
             android:layout_width="150dp"
@@ -19,7 +22,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent"
             android:layout_marginStart="16dp"
-            android:textSize="30dp"
+            android:textSize="20dp"
+            android:text="title"
             />
 
         <TextView
@@ -29,7 +33,8 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/itemTitle"
             android:layout_marginStart="16dp"
-            android:textSize="30dp"
+            android:textSize="20dp"
+            android:text="3"
             />
 
         <TextView
@@ -39,17 +44,20 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toRightOf="@id/no_of_sets"
             android:layout_marginStart="16dp"
-            android:textSize="30dp"
+            android:textSize="15dp"
+            android:text="march 30th 2022"
             />
 
         <TextView
             android:id="@+id/tvNotes"
-            android:layout_width="wrap_content"
+            android:layout_width="350dp"
+            android:textSize="20dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/itemTitle"
             tools:layout_editor_absoluteX="16dp"
-            tools:ignore="MissingConstraints" />
+            tools:ignore="MissingConstraints"
+            android:text="lets go"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

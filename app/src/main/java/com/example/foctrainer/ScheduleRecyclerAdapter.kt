@@ -19,7 +19,7 @@ class ScheduleRecyclerAdapter(private val scheduleList: ArrayList<String>): Recy
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         Log.d("IDK", scheduleList[position].toString())
 
-        val myList = scheduleList[position]
+        val myList = scheduleList
         holder.textScheduleTitles.text = myList.toString()
         holder.textScheduldeSets.text = myList.toString()
         holder.textScheduleNotes.text = myList.toString()

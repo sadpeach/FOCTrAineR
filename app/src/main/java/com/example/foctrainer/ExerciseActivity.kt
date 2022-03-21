@@ -15,7 +15,6 @@ import com.example.foctrainer.entity.UserModel
 import com.example.foctrainer.viewModel.*
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
-import com.example.foctrainer.databinding.ActivityExerciseBinding
 import com.github.mikephil.charting.data.Entry
 
 class ExerciseActivity : AppCompatActivity() {
@@ -24,6 +23,7 @@ class ExerciseActivity : AppCompatActivity() {
     var date = ""
     var userID = 0
     var notes = ""
+    var exerciseId = 0
 
     private var layoutManager: RecyclerView.LayoutManager? = null
     private var adapter: RecyclerView.Adapter<ScheduleRecyclerAdapter.ViewHolder>? = null
@@ -54,14 +54,14 @@ class ExerciseActivity : AppCompatActivity() {
             schedule ->
             for (i in schedule){
                 userID = i.userId
-                var exerciseid = i.exerciseId
+                exerciseId = i.exerciseId
                 date = i.startDateTime
                 notes = i.notes.toString()
                 noSet = i.no_of_sets
                 title = i.title
 
                 scheduleList.add("$userID")
-                scheduleList.add("$exerciseid")
+                scheduleList.add("$exerciseId")
                 scheduleList.add("$date")
                 scheduleList.add("$notes")
                 scheduleList.add("$noSet")
