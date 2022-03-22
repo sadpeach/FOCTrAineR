@@ -61,9 +61,11 @@ class LoginActivity : AppCompatActivity() {
                             getSharedPreferences(PREFS_NAME, 0) // 0 - for private mode
                         val editor = settings.edit()
                         editor.putBoolean("hasLoggedIn", true)
+                        editor.putInt("userId",user.id)
                         editor.commit()
 
                         val intent = Intent(this@LoginActivity, MainActivity::class.java)
+
                         startActivity(intent)
                     } else {
 
