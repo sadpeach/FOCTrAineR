@@ -8,22 +8,24 @@ import android.view.animation.Animation
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
+import com.example.foctrainer.entity.ExerciseModel
 import com.example.foctrainer.exercise.Exercise
 
-class RecyclerAdapter(private val exerciseList: ArrayList<String>): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(private val exerciseList: ArrayList<ExerciseModel>): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        Log.d("Setup view1", exerciseList[0].name)
+        Log.d("Setup view2", "yoyo")
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.card_view, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("IDK", exerciseList[position].toString())
-
+        Log.d("Setup view3", "hihi")
         val ex = exerciseList[position]
-        holder.textExCategories.text = ex.toString()
+        holder.textExCategories.text = ex.name
 
         holder.itemView.setOnClickListener { v: View ->
             val intent = Intent(v.context, Exercise::class.java)
-            intent.putExtra("exerciseId", exerciseList[position])
+            intent.putExtra("exerciseId", exerciseList[position].id)
             v.context.startActivity(Intent(v.context, Exercise::class.java))
         }
     }

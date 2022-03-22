@@ -16,5 +16,5 @@ class CompletedExerciseRepository (private val completedExerciseMapper: Complete
     suspend fun insertNewCompletedExercise(completedExercise: CompletedExerciseModel) {
         completedExerciseMapper.insertNewCompletedExercise(completedExercise)
     }
-//    val chartSummary: Flow<List<String>> = completedExerciseMapper.getChartSummary()
+    //val chartSummary: Flow<List<String>> = completedExerciseMapper.getChartSummary()
 }

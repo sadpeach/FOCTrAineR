@@ -66,8 +66,7 @@ class Exercise : AppCompatActivity()  {
         setContentView(binding.root)
 
         //get exerciseId
-        selectedExerciseId = intent.getIntExtra("exerciseId",-1)
-
+        selectedExerciseId = intent.getStringExtra("exerciseId")?.toInt() ?:
         Log.d(TAG,"selectedexerciseId"+selectedExerciseId)
 
 //       GlobalScope.launch{

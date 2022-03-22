@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var  caloriesList: ArrayList<BarEntry>
     lateinit var exNameList : ArrayList<String>
     var userID = 0
-    var exerciseName = ""
+    var exerciseId = -1
 
     private val exerciseViewModel: ExerciseViewModel by viewModels {
         ExerciseViewModelFactory((application as FocTrainerApplication).exerciseRepository)
@@ -63,19 +63,36 @@ class MainActivity : AppCompatActivity() {
         CompletedExerciseViewModelFactory((application as FocTrainerApplication).completedExerciseRepository)
     }
 
+    private val PREFS_UserID = "SharedPreferenceFile"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 //        setContentView(R.layout.activity_main)
 
+//        val settings = getSharedPreferences(PREFS_UserID, 0)
+//        val userID = settings.getInt("userId", -1)
+
         // Initialize and assign variable
         val bottomNavigationView: BottomNavigationView = findViewById<View>(R.id.bottom_navigation) as BottomNavigationView
         bottomNavigationView.setSelectedItemId(R.id.home)
 
+        val catlist = ArrayList<ExerciseModel>()
+        exerciseViewModel.allExercise.observe(this, Observer<List<ExerciseModel>>(){ exercise->
+            for (ex in exercise){
+                exerciseId = ex.id
+                val exerciseName = ex.name
+                catlist.add(ex)
+            }})
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
+        recyclerView.apply {
+            Log.d("Setup4", "qq")
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = RecyclerAdapter(catlist)
+        }
         // Perform ItemSelectedListener
-
-
         bottomNavigationView.setOnItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.home -> {
@@ -106,18 +123,6 @@ class MainActivity : AppCompatActivity() {
 //            true
 //        }
 
-
-        //database testing: data insertion
-        val user = UserModel(4,"jiayi","123",155.3f,45f,18.9f)
-        userViewModel.createNewUser(user = user)
-
-
-        userViewModel.allUsers.observe(this, Observer{ users ->
-            Log.d("db insertion testing", users[3].userName)
-        })
-
-
-
 //        completeExerciseModel.chartSummary.observe(this, Observer { ex->
 //            Log.d("Chart", ex.toString())
 //        })
@@ -141,18 +146,6 @@ class MainActivity : AppCompatActivity() {
         myBarChart = findViewById(R.id.BarChart)
         populateBarChart()
 
-        val catlist = ArrayList<String>()
-         exerciseViewModel.allExercise.observe(this, Observer<List<ExerciseModel>>(){ exercise->
-            for (ex in exercise){
-                exerciseName = ex.name
-                catlist.add("$exerciseName")
-            }})
-
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = RecyclerAdapter(catlist)
-        }
     }
 
 //    private fun makeCurrentFragment(fragment: Fragment) =

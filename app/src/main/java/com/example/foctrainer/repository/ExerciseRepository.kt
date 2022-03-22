@@ -8,17 +8,9 @@ import kotlinx.coroutines.flow.Flow
 
 class ExerciseRepository (private val exerciseMapper: ExerciseMapper) {
 
-
-
     suspend fun createNewExercise(exercise: ExerciseModel){
         exerciseMapper.createNewExercise(exercise)
     }
-
-    fun getExerciseNameById(exerciseId:Int): Flow<String> {
-        return exerciseMapper.getExerciseNameById(exerciseId)
-    }
-
-
 
     val allExercise:  Flow<List<ExerciseModel>> = exerciseMapper.getAllExercises()
 
