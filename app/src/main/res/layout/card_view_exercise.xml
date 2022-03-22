@@ -1,45 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/card_view"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/card_view"
     android:layout_margin="5dp"
-    app:cardBackgroundColor="@color/purple_200"
+    android:clickable="true"
+    app:cardBackgroundColor="#D86572"
     app:cardCornerRadius="12dp"
     app:cardElevation="3dp"
-    app:contentPadding="4dp"
-    android:clickable="true">
+    app:contentPadding="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/relativeLayout"
         android:padding="16dp">
 
         <TextView
             android:id="@+id/title"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            android:layout_marginStart="16dp"
-            android:textSize="20dp"
-            android:text="title"
             android:layout_width="150dp"
             android:layout_height="39dp"
-            />
+            android:layout_marginStart="16dp"
+            android:text="title"
+            android:textSize="20dp"
+            android:textColor="#FFFFFF"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:layout_width="50dp"
-            android:layout_height="39dp"
             android:id="@+id/notes"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toRightOf="@id/title"
-            android:layout_marginStart="16dp"
+            android:layout_width="172dp"
+            android:layout_height="38dp"
+            android:textColor="#FFFFFF"
+            android:text="notes"
             android:textSize="20dp"
-            android:text="3"
-            />
-
+            app:layout_constraintLeft_toRightOf="@id/title"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -17,31 +17,32 @@ import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import com.github.mikephil.charting.data.Entry
 
-class ExerciseActivity : AppCompatActivity() {
+class Workout : AppCompatActivity() {
 
     companion object{
-        val TAG = "ExerciseActivity"
+        val TAG = "WorkoutActivity"
     }
 
-    private val scheduleViewModel: ScheduleViewModel by viewModels {
-        ScheduleViewModelFactory((application as FocTrainerApplication).scheduleRepository)
+    private val exerciseViewModel: ExerciseViewModel by viewModels {
+        ExerciseViewModelFactory((application as FocTrainerApplication).exerciseRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_exercise2)
+        setContentView(R.layout.activity_workout)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewSchedule)
-        val adapter = ScheduleRecyclerAdapter()
+        val it = intent
+        val date = it.getStringExtra("startDateTime")
+
+        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewWorkout)
+        val adapter = WorkoutRecyclerAdapter()
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        scheduleViewModel.allDates.observe(this) { schedules ->
-            schedules.let { adapter.submitList(it) }
+        exerciseViewModel.allExercise.observe(this) { exercises ->
+            exercises.let {adapter.submitList(it)}
+
         }
 
-
-
-    }}
-
-
+    }
+}
