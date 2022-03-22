@@ -66,7 +66,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/welcome"
-                            android:text="John Doe"
+                            android:text=""
                             android:textColor="@color/white"
                             android:textSize="20dp"
                             android:textStyle="bold" />
@@ -80,16 +80,16 @@
                             android:textColor="@color/white"
                             android:textSize="20dp" />
 
-                        <EditText
-                            android:id="@+id/editHeight"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/name"
-                            android:layout_toRightOf="@id/height"
-                            android:backgroundTint="@color/white"
-                            android:ems="5"
-                            android:padding="5dp"
-                            android:textColor="@color/white" />
+<!--                        <EditText-->
+<!--                            android:id="@+id/editHeight"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_below="@+id/name"-->
+<!--                            android:layout_toRightOf="@id/height"-->
+<!--                            android:backgroundTint="@color/white"-->
+<!--                            android:ems="5"-->
+<!--                            android:padding="5dp"-->
+<!--                            android:textColor="@color/white" />-->
 
                         <TextView
                             android:id="@+id/weight"
@@ -100,16 +100,16 @@
                             android:textColor="@color/white"
                             android:textSize="20dp" />
 
-                        <EditText
-                            android:id="@+id/editWeight"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/height"
-                            android:layout_toRightOf="@id/weight"
-                            android:backgroundTint="@color/white"
-                            android:ems="5"
-                            android:padding="5dp"
-                            android:textColor="@color/white" />
+<!--                        <EditText-->
+<!--                            android:id="@+id/editWeight"-->
+<!--                            android:layout_width="wrap_content"-->
+<!--                            android:layout_height="wrap_content"-->
+<!--                            android:layout_below="@+id/height"-->
+<!--                            android:layout_toRightOf="@id/weight"-->
+<!--                            android:backgroundTint="@color/white"-->
+<!--                            android:ems="5"-->
+<!--                            android:padding="5dp"-->
+<!--                            android:textColor="@color/white" />-->
 
                         <Button
                             android:id="@+id/btnSchedule"
@@ -164,9 +164,9 @@
                             android:id="@+id/bmi"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="20"
+                            android:text=""
                             android:textSize="20dp"
-                            android:layout_marginLeft="40dp"
+                            android:layout_marginLeft="34dp"
                             android:layout_marginRight="20dp"
                             android:layout_marginTop="20dp"
                             android:textColor="@color/black"/>

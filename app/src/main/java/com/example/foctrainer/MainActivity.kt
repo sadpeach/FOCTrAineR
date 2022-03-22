@@ -29,7 +29,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationBarView
 import java.util.*
 
-
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
@@ -48,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
     lateinit var  caloriesList: ArrayList<BarEntry>
     lateinit var exNameList : ArrayList<String>
-    var userID = 0
+    var userID = -1
     var exerciseId = -1
 
     private val exerciseViewModel: ExerciseViewModel by viewModels {
@@ -71,8 +70,8 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 //        setContentView(R.layout.activity_main)
 
-//        val settings = getSharedPreferences(PREFS_UserID, 0)
-//        val userID = settings.getInt("userId", -1)
+        val settings = getSharedPreferences(PREFS_UserID, 0)
+        userID = settings.getInt("userId", -1)
 
         // Initialize and assign variable
         val bottomNavigationView: BottomNavigationView = findViewById<View>(R.id.bottom_navigation) as BottomNavigationView
@@ -82,22 +81,20 @@ class MainActivity : AppCompatActivity() {
         exerciseViewModel.allExercise.observe(this, Observer<List<ExerciseModel>>(){ exercise->
             for (ex in exercise){
                 exerciseId = ex.id
-                val exerciseName = ex.name
                 catlist.add(ex)
             }})
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
         recyclerView.apply {
-            Log.d("Setup4", "qq")
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = RecyclerAdapter(catlist)
         }
+
         // Perform ItemSelectedListener
         bottomNavigationView.setOnItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.home -> {
                     true
-
                 }
                 R.id.schedule -> {
                     // Respond to navigation item 2 click
@@ -167,20 +164,19 @@ class MainActivity : AppCompatActivity() {
 
     fun displayUserDetails() {
         val tvName = findViewById<TextView>(R.id.name)
-        val textEditHeight = findViewById<EditText>(R.id.editHeight)
-        val textEditWeight = findViewById<EditText>(R.id.editWeight)
+        val textHeight = findViewById<TextView>(R.id.height)
+        val textWeight = findViewById<TextView>(R.id.weight)
         val tvBmi = findViewById<TextView>(R.id.bmi)
 
-        tvName?.text = ""
-        tvBmi?.text = ""
-
         userViewModel.allUsers.observe(this, Observer<List<UserModel>>() { users ->
-            userID = users[0].id
-            tvName.append(users[0].userName)
-            textEditHeight.setText(users[0].height.toString())
-            textEditWeight.setText(users[0].weight.toString())
-            tvBmi.append(users[0].bmi.toString())
-            Log.d("WHY", users[0].toString())
+            for (user in users) {
+                if(user.id.equals(userID)) {
+                    tvName.append(user.userName)
+                    textHeight.append(user.height.toString())
+                    textWeight.append(user.weight.toString())
+                    tvBmi.append(user.bmi.toString())
+                }
+            }
         })
     }
 
@@ -191,8 +187,7 @@ class MainActivity : AppCompatActivity() {
         tvTotalCalories.text = ""
         completeExerciseModel.completedExercise.observe(this, Observer<List<CompletedExerciseModel>>(){ completedExercise->
             for ( comEx in completedExercise){
-                val exUserId = comEx.userId
-                if (exUserId == userID){
+                if (comEx.userId.equals(userID)){
                     totalCalories += comEx.total_calories
                 }
             }
@@ -210,10 +205,9 @@ class MainActivity : AppCompatActivity() {
         completeExerciseModel.completedExercise.observe(this, Observer<List<CompletedExerciseModel>>() { completedExercise ->
             yValue.put(1, 100F)
             for (eachEx in completedExercise) {
-                val comExUserId = eachEx.userId
                 val comExExerciseId = eachEx.exerciseId
                 val calories = eachEx.total_calories
-                if (comExUserId == userID) {
+                if (eachEx.userId.equals(userID)) {
                     if (yValue.containsKey(comExExerciseId)) {
                         val totalCal = calories + yValue.getValue(comExExerciseId)
                         yValue.put(comExExerciseId, totalCal)
@@ -239,14 +233,10 @@ class MainActivity : AppCompatActivity() {
                 for ((keyEntries, valueEntries) in yValue){
                     caloriesList.add(BarEntry(valueEntries, keyEntries-1))
                 }
-//                Log.d("q4X", xValue.toString())
-//                Log.d("q5Y", yValue.toString())
-//                Log.d("q6CaloriesList", caloriesList.toString())
-//                Log.d("q7ExerciseName", exNameList.toString())
+
                 val barDataSet = BarDataSet(caloriesList, "${exNameList.toString()}")
                 //set a template coloring
                 barDataSet.setColors(ColorTemplate.COLORFUL_COLORS)
-                //[Ex1 , Ex2 ]
                 val data = BarData(exNameList, barDataSet)
                 myBarChart.data = data
                 //setting the x-axis
@@ -254,13 +244,12 @@ class MainActivity : AppCompatActivity() {
                 //calling methods to hide x-axis gridlines
                 myBarChart.axisLeft.setDrawGridLines(false)
                 xAxis.setDrawGridLines(false)
+                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM)
+                myBarChart.getAxisRight().setEnabled(false);
                 //xAxis.setDrawAxisLine(false)
                 myBarChart.setBackgroundColor(resources.getColor(R.color.white))
                 //remove legend
                 myBarChart.legend.isEnabled = true
-
-                //remove description label
-//            myBarChart.description.isEnabled = false
 
                 //add animation
                 myBarChart.animateY(3000)

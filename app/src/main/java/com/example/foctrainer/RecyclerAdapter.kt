@@ -13,13 +13,10 @@ import com.example.foctrainer.exercise.Exercise
 
 class RecyclerAdapter(private val exerciseList: ArrayList<ExerciseModel>): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        Log.d("Setup view1", exerciseList[0].name)
-        Log.d("Setup view2", "yoyo")
         return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.card_view, parent, false))
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("Setup view3", "hihi")
         val ex = exerciseList[position]
         holder.textExCategories.text = ex.name
 
