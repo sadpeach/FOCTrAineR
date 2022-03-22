@@ -29,11 +29,11 @@ class ScheduleRecyclerAdapter : ListAdapter<ScheduleModel, ScheduleRecyclerAdapt
 
         holder.itemView.setOnClickListener { v: View ->
             Log.d(TAG, "clicking recyclerView item")
-            v.context.startActivity(Intent(v.context, Workout::class.java))
+            v.context.startActivity(Intent(v.context, Exercise::class.java))
 
             //TODO: pass schedule ID to exercise activity here
 
-            Toast.makeText(v.context,"clicked", Toast.LENGTH_LONG).show()
+            //Toast.makeText(v.context,"clicked", Toast.LENGTH_LONG).show()
         }
     }
 

@@ -16,6 +16,7 @@ import com.example.foctrainer.exercise.Exercise
 
 class WorkoutRecyclerAdapter : ListAdapter<ExerciseModel, WorkoutRecyclerAdapter.WorkoutRecyclerViewHolder>(WorkoutComparator()) {
 
+
     companion object {
         val TAG = "WorkoutRecyclerAdapter"
     }
@@ -32,11 +33,10 @@ class WorkoutRecyclerAdapter : ListAdapter<ExerciseModel, WorkoutRecyclerAdapter
             Log.d(TAG, "clicking recyclerView item")
             val myIntent = Intent(v.context, InformationActivity::class.java)
             //v.context.startActivity(Intent(v.context, Exercise::class.java))
+
             v.context.startActivity(myIntent)
 
-            //TODO: pass schedule ID to exercise activity here
-
-            Toast.makeText(v.context,"clicked", Toast.LENGTH_LONG).show()
+            //Toast.makeText(v.context,"clicked", Toast.LENGTH_LONG).show()
         }
     }
 

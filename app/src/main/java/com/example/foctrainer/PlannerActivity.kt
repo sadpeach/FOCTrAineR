@@ -56,7 +56,6 @@ class PlannerActivity : AppCompatActivity() {
             updateLabel(dateTime)
         }
 
-
         btnDatePicker.setOnClickListener {
             DatePickerDialog(this, datePicker, dateTime.get(Calendar.YEAR), dateTime.get(
                 Calendar.MONTH),

@@ -19,6 +19,7 @@ import com.github.mikephil.charting.data.Entry
 
 class ExerciseActivity : AppCompatActivity() {
 
+
     companion object{
         val TAG = "ExerciseActivity"
     }
@@ -36,12 +37,17 @@ class ExerciseActivity : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
+        val dateText = findViewById<TextView>(R.id.dateText)
+        //dateText.setText("22-03-2022 10:00")
+
         scheduleViewModel.allDates.observe(this) { schedules ->
-            schedules.let { adapter.submitList(it) }
+            schedules.let { adapter.submitList(it)}
+           //     dateText.append(schedules[0].startDateTime)
+
         }
 
 
-
-    }}
+    }
+    }
 
 

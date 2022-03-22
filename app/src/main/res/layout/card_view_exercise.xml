@@ -15,7 +15,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="110dp"
         android:padding="16dp">
 
         <TextView
@@ -24,17 +24,28 @@
             android:layout_height="39dp"
             android:layout_marginStart="16dp"
             android:text="title"
-            android:textSize="20dp"
             android:textColor="#FFFFFF"
+            android:textSize="20dp"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/dateText"
+            android:layout_width="150dp"
+            android:layout_height="39dp"
+            android:layout_marginLeft="16dp"
+            android:text="date"
+            android:textColor="#FFFFFF"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent" />
 
         <TextView
             android:id="@+id/notes"
             android:layout_width="172dp"
             android:layout_height="38dp"
-            android:textColor="#FFFFFF"
             android:text="notes"
+            android:textColor="#FFFFFF"
             android:textSize="20dp"
             app:layout_constraintLeft_toRightOf="@id/title"
             app:layout_constraintTop_toTopOf="parent" />
