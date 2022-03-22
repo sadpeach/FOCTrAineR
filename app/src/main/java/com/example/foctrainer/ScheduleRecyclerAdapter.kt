@@ -5,48 +5,65 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.animation.Animation
 import android.widget.TextView
 import android.widget.Toast
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.foctrainer.entity.ScheduleModel
 import com.example.foctrainer.exercise.Exercise
 
-class ScheduleRecyclerAdapter(private val scheduleList: ArrayList<String>): RecyclerView.Adapter<ScheduleRecyclerAdapter.ViewHolder>() {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        return ViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.card_view_exercise, parent, false))
+class ScheduleRecyclerAdapter : ListAdapter<ScheduleModel, ScheduleRecyclerAdapter.ScheduleRecyclerViewHolder>(ScheduleComparator()) {
+
+    companion object {
+        val TAG = "ScheduleRecyclerAdapter"
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        Log.d("IDK", scheduleList[position].toString())
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleRecyclerViewHolder {
+        return ScheduleRecyclerViewHolder.create(parent)
+    }
 
-        val myList = scheduleList
-        holder.textScheduleTitles.text = myList.toString()
-        holder.textScheduldeSets.text = myList.toString()
-        holder.textScheduleNotes.text = myList.toString()
-        holder.textScheduleDates.text = myList.toString()
-
+    override fun onBindViewHolder(holder: ScheduleRecyclerViewHolder, position: Int) {
+        val current = getItem(position)
+        holder.bind(current)
 
         holder.itemView.setOnClickListener { v: View ->
-            Log.d("Click", "U have click")
-            v.context.startActivity(Intent(v.context, PlannerActivity::class.java))
-            Toast.makeText(v.context,"Click", Toast.LENGTH_LONG).show()
+            Log.d(TAG, "clicking recyclerView item")
+            v.context.startActivity(Intent(v.context, Exercise::class.java))
+
+            //TODO: pass schedule ID to exercise activity here
+
+            Toast.makeText(v.context,"clicked", Toast.LENGTH_LONG).show()
         }
     }
 
-    override fun getItemCount(): Int {
-        return scheduleList.size
+    class ScheduleRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        private val exerciseTitleTextView: TextView = itemView.findViewById(R.id.title)
+        private val exerciseNotesTextView: TextView = itemView.findViewById(R.id.notes)
+
+
+        fun bind(schedule: ScheduleModel) {
+            exerciseTitleTextView.text = schedule.title
+            exerciseNotesTextView.text = schedule.notes
+
+        }
+
+        companion object {
+            fun create(parent: ViewGroup): ScheduleRecyclerViewHolder {
+                val view: View = LayoutInflater.from(parent.context)
+                    .inflate(R.layout.card_view_exercise, parent, false)
+                return ScheduleRecyclerViewHolder(view)
+            }
+        }
     }
 
-    inner class ViewHolder (view : View): RecyclerView.ViewHolder(view){
-        var textScheduleTitles : TextView
-        var textScheduleDates : TextView
-        var textScheduleNotes : TextView
-        var textScheduldeSets : TextView
-        init {
-            textScheduleTitles = view.findViewById(R.id.itemTitle)
-            textScheduleDates = view.findViewById(R.id.dateText)
-            textScheduleNotes = view.findViewById(R.id.tvNotes)
-            textScheduldeSets = view.findViewById(R.id.no_of_sets)
+    class ScheduleComparator : DiffUtil.ItemCallback<ScheduleModel>() {
+        override fun areItemsTheSame(oldItem: ScheduleModel, newItem: ScheduleModel): Boolean {
+            return oldItem === newItem
+        }
+
+        override fun areContentsTheSame(oldItem: ScheduleModel, newItem: ScheduleModel): Boolean {
+            return oldItem.exerciseId == newItem.exerciseId
         }
     }
 }
