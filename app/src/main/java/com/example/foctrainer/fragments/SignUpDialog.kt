@@ -1,5 +1,6 @@
 package com.example.foctrainer.fragments
 
+import android.app.Application
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -19,26 +20,29 @@ import com.example.foctrainer.entity.UserModel
 import com.google.android.material.textfield.TextInputEditText
 import java.lang.Exception
 import androidx.lifecycle.ViewModelProvider
-
-
-
+import androidx.lifecycle.ViewModelProviders
+import com.example.foctrainer.databaseConfig.FocTrainerApplication
+import com.example.foctrainer.mapper.UserMapper
+import com.example.foctrainer.repository.UserRepository
 
 
 class SignUpDialog : DialogFragment() {
-
-    var userViewModel: UserViewModel = ViewModelProvider(viewModelStore, defaultViewModelProviderFactory).get(
-        UserViewModel::class.java
-    )
+    private lateinit var userViewModel:UserViewModel
+    private lateinit var application:Application
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
 
+        application = activity!!.application as FocTrainerApplication
         if (dialog != null && dialog?.window != null) {
             dialog?.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT));
             dialog?.window?.requestFeature(Window.FEATURE_NO_TITLE);
         }
+
+        userViewModel = ViewModelProvider(this, UserViewModelFactory((application as FocTrainerApplication).userRepository))
+            .get(UserViewModel::class.java)
 
         return inflater.inflate(R.layout.fragment_sign_up_dialog, container,false)
 
@@ -65,6 +69,9 @@ class SignUpDialog : DialogFragment() {
             }catch (e:Exception){
                 Log.e(TAG,"Error occurred when creating new user: $e")
             }
+            finally {
+                dismiss()
+            }
 
 
         }
@@ -73,6 +80,10 @@ class SignUpDialog : DialogFragment() {
 
     companion object {
         private val TAG = "SignUpDialog"
+    }
+
+    fun addSignUpUserToSharePref(){
+
     }
 
 }

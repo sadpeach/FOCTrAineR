@@ -3,7 +3,6 @@ package com.example.foctrainer
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -14,10 +13,6 @@ import com.example.foctrainer.fragments.SignUpDialog
 import com.example.foctrainer.viewModel.UserViewModel
 import com.example.foctrainer.viewModel.UserViewModelFactory
 import kotlinx.coroutines.*
-import android.content.SharedPreferences
-
-
-
 
 class LoginActivity : AppCompatActivity() {
     private lateinit var binding: ActivityLoginBinding
@@ -52,17 +47,14 @@ class LoginActivity : AppCompatActivity() {
 
                 var userName = binding.userName.text.toString()
                 var password = binding.userPassword.text.toString()
-                Log.d(TAG, "checking user from UI -1: $userName, $password")
 
                 //add in identity check
                 lifecycleScope.launch(Dispatchers.IO) {
 
-                    Log.d(TAG, "checking user from UI: $userName, $password")
                     val user: UserModel =
                         getExerciseNameAsync(userName = userName, password = password)
-                    Log.d(TAG, "checking user: $user")
+
                     if (user != null) {
-                        Log.d(TAG, "$user exists")
 
                         //saving user login to sharedPref
                         val settings =
