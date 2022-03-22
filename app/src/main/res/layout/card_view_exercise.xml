@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<<<<<<< Updated upstream
     xmlns:app="http://schemas.android.com/apk/res-auto"
+=======
+>>>>>>> Stashed changes
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view"
     android:layout_width="match_parent"
@@ -115,4 +118,8 @@
 
 <!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
+<<<<<<< Updated upstream
 <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
+=======
+</androidx.cardview.widget.CardView>
+>>>>>>> Stashed changes

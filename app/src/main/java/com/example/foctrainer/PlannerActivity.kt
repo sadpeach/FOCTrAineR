@@ -67,9 +67,14 @@ class PlannerActivity : AppCompatActivity() {
             Calendar.MONTH),
             dateTime.get(Calendar.DAY_OF_MONTH)).toString()
 
+<<<<<<< Updated upstream
         val user2 = UserModel(5, "hannah", "abc", 175f, 70f, 22.86f)
         userViewModel.createNewUser(user = user2)
 
+=======
+        val date = ScheduleModel(1, 5, 1, startDateTime, "", 5, "")
+        scheduleViewModel.createNewDate(date = date)
+>>>>>>> Stashed changes
 
         btnSchedule.setOnClickListener {
             val myIntent = Intent(this, Workout::class.java)
@@ -77,16 +82,23 @@ class PlannerActivity : AppCompatActivity() {
             startActivity(myIntent)
         }
 
+<<<<<<< Updated upstream
         btnPlannedWorkouts.setOnClickListener{
             val myIntent = Intent(this, ExerciseActivity::class.java)
             startActivity(myIntent)
         }
 
+=======
+>>>>>>> Stashed changes
     }
 /*
     fun onButtonClick(view: View){
         val myIntent = Intent(this, ExerciseActivity::class.java)
+<<<<<<< Updated upstream
         //myIntent.putExtra("startDateTime", startDateTime)
+=======
+        myIntent.putExtra("startDateTime", date)
+>>>>>>> Stashed changes
         startActivity(myIntent)
     }*/
 

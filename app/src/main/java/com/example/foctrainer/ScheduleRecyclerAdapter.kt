@@ -19,9 +19,17 @@ class ScheduleRecyclerAdapter : ListAdapter<ScheduleModel, ScheduleRecyclerAdapt
         val TAG = "ScheduleRecyclerAdapter"
     }
 
+<<<<<<< Updated upstream
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScheduleRecyclerViewHolder {
         return ScheduleRecyclerViewHolder.create(parent)
     }
+=======
+        val myList = scheduleList[position]
+        holder.textScheduleTitles.text = myList.toString()
+        holder.textScheduldeSets.text = myList.toString()
+        holder.textScheduleNotes.text = myList.toString()
+        holder.textScheduleDates.text = myList.toString()
+>>>>>>> Stashed changes
 
     override fun onBindViewHolder(holder: ScheduleRecyclerViewHolder, position: Int) {
         val current = getItem(position)

@@ -31,6 +31,11 @@ class ExerciseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_exercise2)
+<<<<<<< Updated upstream
+=======
+
+        layoutManager = LinearLayoutManager(this)
+>>>>>>> Stashed changes
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewSchedule)
         val adapter = ScheduleRecyclerAdapter()
@@ -48,6 +53,29 @@ class ExerciseActivity : AppCompatActivity() {
 
 
     }
+<<<<<<< Updated upstream
+=======
+
+    private fun displayExerciseList(){
+        val tvTitle = findViewById<TextView>(R.id.itemTitle)
+        val tvNoSets = findViewById<TextView>(R.id.no_of_sets)
+        val tvDate = findViewById<TextView>(R.id.dateText)
+        val tvNotes = findViewById<TextView>(R.id.tvNotes)
+
+        tvTitle!!.text = ""
+        tvNoSets!!.text = ""
+        tvDate!!.text = ""
+        tvNotes!!.text = ""
+
+        scheduleViewModel.allDates.observe(this, Observer<List<ScheduleModel>>(){
+            entries ->
+            tvTitle.append(entries[0].title)
+            tvDate.append(entries[0].startDateTime)
+            tvNoSets.append(entries[0].no_of_sets.toString())
+            tvNotes.setText(entries[0].notes)
+            Log.d("hello", entries[0].toString())
+        })
+>>>>>>> Stashed changes
     }
 
 
