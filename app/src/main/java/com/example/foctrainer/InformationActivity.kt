@@ -40,7 +40,7 @@ class InformationActivity : AppCompatActivity() {
         val workoutNotes = etNotes.text.toString()
         //val workoutDate = tvDatePicked.text.toString()
 
-        val date = ScheduleModel(1, 5, 1, workoutDate, workoutNotes,  workoutSets, "Push Ups")
+        val date = ScheduleModel(5, 2, 1, workoutDate, workoutNotes,  workoutSets, "Push Ups")
         scheduleViewModel.createNewDate(date = date)
 
         val intent = Intent(this, ExerciseActivity::class.java)
