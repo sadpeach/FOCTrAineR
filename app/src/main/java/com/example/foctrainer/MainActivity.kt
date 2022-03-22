@@ -1,33 +1,33 @@
 package com.example.foctrainer
 
 import android.content.Intent
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.example.foctrainer.exercise.Exercise
-import com.example.foctrainer.databinding.ActivityMainBinding
 import android.widget.*
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.adapters.AdapterViewBindingAdapter.setOnItemSelectedListener
+import androidx.databinding.adapters.AutoCompleteTextViewBindingAdapter.setOnItemSelectedListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
+import com.example.foctrainer.databinding.ActivityMainBinding
 import com.example.foctrainer.entity.CompletedExerciseModel
 import com.example.foctrainer.entity.ExerciseModel
 import com.example.foctrainer.entity.UserModel
+import com.example.foctrainer.exercise.Exercise
 import com.example.foctrainer.fragments.HomeFragment
 import com.example.foctrainer.fragments.ScheduleFragment
 import com.example.foctrainer.viewModel.*
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.utils.ColorTemplate
-
-import android.widget.TextView
 import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.utils.ColorTemplate
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class MainActivity : AppCompatActivity() {
@@ -43,8 +43,8 @@ class MainActivity : AppCompatActivity() {
     //BarChart
     private lateinit var myBarChart: BarChart
 
-    val homeFragment = HomeFragment()
-    val scheduleFragment = ScheduleFragment()
+//    val homeFragment = HomeFragment()
+//    val scheduleFragment = ScheduleFragment()
 
     lateinit var  caloriesList: ArrayList<BarEntry>
     lateinit var exNameList : ArrayList<String>
@@ -67,13 +67,38 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 //        setContentView(R.layout.activity_main)
+
+        // Initialize and assign variable
+        val bottomNavigationView: BottomNavigationView = findViewById<View>(R.id.bottom_navigation) as BottomNavigationView
+        bottomNavigationView.setSelectedItemId(R.id.home)
+
+        // Perform ItemSelectedListener
+
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.home -> {
+                    true
+
+                }
+                R.id.schedule -> {
+                    // Respond to navigation item 2 click
+                    Log.d("Schedule", "schedulewoo")
+                    val intent = Intent(this, ScheduleTest::class.java)
+                    startActivity(intent)
+                    true
+                }
+
+                else -> false
+            }
+        }
+
 
         //Navigation Bar -Fragment
 //        makeCurrentFragment(homeFragment)
-//        val bottomNavView = findViewById<BottomNavigationView>(R.id.bottom_navigation_bar)
-//        bottomNavView.setOnNavigationItemSelectedListener{ it ->
+//        val bottomNavView = findViewById<BottomNavigationView>(R.id.bottom_navigation_menu)
+//        NavigationBarView.OnItemSelectedListener{ it ->
 //            when(it.itemId){
 //                R.id.home -> makeCurrentFragment(homeFragment)
 //                R.id.schedule -> makeCurrentFragment(scheduleFragment)
@@ -118,6 +143,12 @@ class MainActivity : AppCompatActivity() {
             adapter = RecyclerAdapter(catlist)
         }
     }
+
+//    private fun makeCurrentFragment(fragment: Fragment) =
+//        supportFragmentManager.beginTransaction().apply {
+//            replace(R.id.fl_wrapper, fragment)
+//            commit()
+//        }
 
     fun selectButtonOnClick(view: View){
         val intent = Intent(this, Exercise::class.java)
@@ -199,10 +230,10 @@ class MainActivity : AppCompatActivity() {
                 for ((keyEntries, valueEntries) in yValue){
                     caloriesList.add(BarEntry(valueEntries, keyEntries-1))
                 }
-                Log.d("q4X", xValue.toString())
-                Log.d("q5Y", yValue.toString())
-                Log.d("q6CaloriesList", caloriesList.toString())
-                Log.d("q7ExerciseName", exNameList.toString())
+//                Log.d("q4X", xValue.toString())
+//                Log.d("q5Y", yValue.toString())
+//                Log.d("q6CaloriesList", caloriesList.toString())
+//                Log.d("q7ExerciseName", exNameList.toString())
                 val barDataSet = BarDataSet(caloriesList, "${exNameList.toString()}")
                 //set a template coloring
                 barDataSet.setColors(ColorTemplate.COLORFUL_COLORS)
