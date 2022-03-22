@@ -21,7 +21,26 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FOCTrAineR">
         <activity
+
+            android:name=".InformationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WorkoutRecyclerAdapter"
+            android:exported="false" />
+        <activity
+            android:name=".Workout"
+            android:exported="false" />
+        <activity
+            android:name=".ExerciseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".PlannerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".exercise.Exercise"
+
             android:name=".ScheduleTest"
+
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

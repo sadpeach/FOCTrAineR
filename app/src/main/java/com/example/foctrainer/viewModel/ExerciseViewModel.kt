@@ -18,6 +18,12 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
     fun getExerciseNameById(exerciseId: Int): String {
         return repository.getExerciseNameById(exerciseId)
     }
+    fun createNewExercise(exercise: ExerciseModel) = viewModelScope.launch{
+        repository.createNewExercise(exercise)
+    }
+
+
+
 
 }
 

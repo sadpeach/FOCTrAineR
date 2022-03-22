@@ -107,6 +107,17 @@ class MainActivity : AppCompatActivity() {
 //        }
 
 
+        //database testing: data insertion
+        val user = UserModel(4,"jiayi","123",155.3f,45f,18.9f)
+        userViewModel.createNewUser(user = user)
+
+
+        userViewModel.allUsers.observe(this, Observer{ users ->
+            Log.d("db insertion testing", users[3].userName)
+        })
+
+
+
 //        completeExerciseModel.chartSummary.observe(this, Observer { ex->
 //            Log.d("Chart", ex.toString())
 //        })
@@ -154,6 +165,11 @@ class MainActivity : AppCompatActivity() {
         val intent = Intent(this, Exercise::class.java)
         intent.putExtra("exerciseId",1)
         startActivity(intent)
+    }
+
+    fun scheduleButtonOnClick(view:View){
+        val myIntent = Intent(this, PlannerActivity::class.java)
+        startActivity(myIntent)
     }
 
     fun displayUserDetails() {

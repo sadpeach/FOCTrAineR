@@ -17,13 +17,13 @@ import androidx.room.PrimaryKey
         )
     ]
 )
-data class ScheduleModel (
+data class ScheduleModel(
     @PrimaryKey (autoGenerate = true) val id:Int,
-    @ColumnInfo(name="user_id")val userId: Int,
-    @ColumnInfo(name="exercise_id")val exerciseId:Int,
-    @ColumnInfo(name="startDateTime")val startDateTime:String,
-    @ColumnInfo(name="notes")val notes:String?,
-    @ColumnInfo(name="no_of_sets")val no_of_sets:Int,
-    @ColumnInfo(name="title")val title:String) {
+    @ColumnInfo(name="user_id") val userId: Int,
+    @ColumnInfo(name="exercise_id") val exerciseId:Int,
+    @ColumnInfo(name="startDateTime") val startDateTime:String,
+    @ColumnInfo(name="notes") val notes:String?,
+    @ColumnInfo(name="no_of_sets") val no_of_sets: Int,
+    @ColumnInfo(name="title") val title:String) {
 
 }
