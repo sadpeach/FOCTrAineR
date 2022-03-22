@@ -8,10 +8,15 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 
 class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel() {
+
     val allExercise: LiveData<List<ExerciseModel>> = repository.allExercise.asLiveData()
 
-    fun getExerciseNameById(exerciseId: Int): LiveData<String> {
-        return repository.getExerciseNameById(exerciseId).asLiveData()
+//    fun getExerciseNameById(exerciseId: Int): LiveData<String> {
+//        return repository.getExerciseNameById(exerciseId).asLiveData()
+//    }
+
+    fun getExerciseNameById(exerciseId: Int): String {
+        return repository.getExerciseNameById(exerciseId)
     }
     fun createNewExercise(exercise: ExerciseModel) = viewModelScope.launch{
         repository.createNewExercise(exercise)
@@ -20,9 +25,6 @@ class ExerciseViewModel(private val repository: ExerciseRepository) : ViewModel(
 
 
 
-//     fun getExerciseNameById(exerciseId: Int): String {
-//         return repository.getExerciseNameById(exerciseId)
-//    }
 }
 
 class ExerciseViewModelFactory(private val repository: ExerciseRepository) : ViewModelProvider.Factory {

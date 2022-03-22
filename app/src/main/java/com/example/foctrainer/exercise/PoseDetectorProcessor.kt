@@ -30,11 +30,13 @@ class PoseDetectorProcessor(
     private val rescaleZForVisualization: Boolean,
     private val runClassification: Boolean,
     private val isStreamMode: Boolean,
-    private val selectedExerciseId: Int
+    private val selectedExerciseId: Int,
+    private val selectedExerciseName:String
 ) : VisionProcessorBase<PoseDetectorProcessor.PoseWithClassification>(context) {
 
     private val detector: PoseDetector = PoseDetection.getClient(options)
     private val classificationExecutor: Executor
+    private var counter: Int? = 0;
 
     private var poseClassifierProcessor: PoseClassifierProcessor? = null
 
@@ -60,13 +62,11 @@ class PoseDetectorProcessor(
                     val pose = task.getResult()
                     var classificationResult: List<String> = ArrayList()
                     if (runClassification) {
-                        Log.d(TAG,"running classification with inputImg")
                         if (poseClassifierProcessor == null) {
-                            Log.d(TAG,"poseClassifierProcessor is null")
-                            poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode,selectedExerciseId)
+                            poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode,selectedExerciseId,selectedExerciseName)
                         }
                         classificationResult = poseClassifierProcessor!!.getPoseResult(pose) as List<String>
-                        Log.d(TAG,"classificationResult"+classificationResult)
+                        counter = poseClassifierProcessor!!.getCounter()
                     }
                     PoseWithClassification(pose, classificationResult)
                 }
@@ -82,21 +82,16 @@ class PoseDetectorProcessor(
                 classificationExecutor,
                 { task ->
                     val pose = task.getResult()
-                    Log.d(TAG, "task.getresult: ${pose.getPoseLandmark(1)}")
                     var classificationResult: List<String> = ArrayList()
-                    Log.d(TAG,"running classification with MLimage..")
 
                     if (runClassification) {
-                        Log.d(TAG,"runClassification enabled")
                         if (poseClassifierProcessor == null) {
-                            Log.d(TAG,"setting poseClassifierProcessor")
-                            poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode,selectedExerciseId)
-                            Log.d(TAG, "poseClassifierProcessor setting completed $poseClassifierProcessor")
+                            poseClassifierProcessor = PoseClassifierProcessor(context, isStreamMode,selectedExerciseId,selectedExerciseName)
                         }
                         classificationResult = poseClassifierProcessor?.getPoseResult(pose) as List<String>
-
+                        counter = poseClassifierProcessor!!.getCounter()
+                        Log.d(TAG,"Detecting count:$counter")
                     }
-                    Log.d(TAG,"ending classification " + classificationResult)
                     PoseWithClassification(pose, classificationResult)
                 }
             )
@@ -107,7 +102,8 @@ class PoseDetectorProcessor(
         poseWithClassification: PoseWithClassification,
         graphicOverlay: GraphicOverlay
     ) {
-        Log.d(TAG,"onsuccess")
+        //print counter on screen
+//        Log.d(TAG,"onsuccess"+poseWithClassification.get)
         graphicOverlay.add(
             PoseGraphic(
                 graphicOverlay,
@@ -132,6 +128,10 @@ class PoseDetectorProcessor(
 
     override fun processBitmap(bitmap: Bitmap, graphicOverlay: GraphicOverlay) {
         TODO("Not yet implemented")
+    }
+
+    override fun getCounter(): Int {
+        return counter!!
     }
 
     companion object {

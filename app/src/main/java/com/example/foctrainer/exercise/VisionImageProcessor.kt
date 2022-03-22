@@ -18,6 +18,9 @@ interface VisionImageProcessor {
         @RequiresApi(VERSION_CODES.KITKAT)
         @Throws(MlKitException::class) fun processImageProxy( image:ImageProxy, graphicOverlay:GraphicOverlay )
 
+        //getting counter
+        fun getCounter():Int
+
         /** Stops the underlying machine learning model and release resources. */
         fun stop();
     }

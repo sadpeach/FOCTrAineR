@@ -16,4 +16,8 @@ class UserRepository (private val userMapper: UserMapper) {
 
     val allUsers: Flow<List<UserModel>> = userMapper.getAllUsers()
 
+    fun checkIfUserExistByNameAndPassword(userName:String,password:String): UserModel {
+        return userMapper.checkIfUserExistByNameAndPassword(userName,password)
+    }
+
 }

@@ -7,20 +7,14 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-<!--    <FrameLayout-->
-<!--        android:id="@+id/wrapper"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        android:layout_above="@id/bottom_navigation_bar"/>-->
-
 <!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--        android:id="@+id/bottom_navigation_bar"-->
+<!--        android:id="@+id/bottom_navigation"-->
 <!--        android:layout_width="match_parent"-->
 <!--        android:layout_height="wrap_content"-->
 <!--        android:layout_alignParentBottom="true"-->
 <!--        android:background="?android:attr/windowBackground"-->
 <!--        android:clickable="true"-->
-<!--        app:menu="@menu/nav_menu" />-->
+<!--        app:menu="@menu/bottom_navigation_menu" />-->
 
 <!--    <FrameLayout-->
 <!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
@@ -219,9 +213,11 @@
                 </LinearLayout>
             </RelativeLayout>
     <!-- Nested Scroll view -->
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="300dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation">
 
         <!-- Linear layout to contain 2 text view and button -->
         <LinearLayout
@@ -229,38 +225,54 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-    <com.github.mikephil.charting.charts.BarChart
-        android:id="@+id/BarChart"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_margin="25dp"/>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Work out categories"
-        android:textSize="15dp"
-        android:layout_margin="20dp"
-        android:textStyle="bold"
-        android:textColor="@color/black"/>
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/BarChart"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_margin="25dp" />
 
-        <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:itemCount="5"
-        tools:listitem="@layout/card_view"
-        android:overScrollMode="always"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:text="Work out categories"
+                android:textColor="@color/black"
+                android:textSize="15dp"
+                android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/selectButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select"
-        android:onClick="selectButtonOnClick"
-        tools:layout_editor_absoluteX="163dp"
-        tools:layout_editor_absoluteY="345dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:overScrollMode="always"
+                tools:itemCount="5"
+                tools:listitem="@layout/card_view" />
+
+
+            <!--    <Button-->
+            <!--        android:id="@+id/selectButton"-->
+            <!--        android:layout_width="wrap_content"-->
+            <!--        android:layout_height="wrap_content"-->
+            <!--        android:text="Select"-->
+            <!--        android:onClick="selectButtonOnClick"-->
+            <!--        tools:layout_editor_absoluteX="163dp"-->
+            <!--        tools:layout_editor_absoluteY="345dp" />-->
         </LinearLayout>
+
     </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:menu="@menu/bottom_navigation_menu"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
+
 </LinearLayout>
 
 

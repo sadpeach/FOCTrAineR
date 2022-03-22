@@ -22,9 +22,9 @@ class RecyclerAdapter(private val exerciseList: ArrayList<String>): RecyclerView
         holder.textExCategories.text = ex.toString()
 
         holder.itemView.setOnClickListener { v: View ->
-            Log.d("Click", "U have click")
+            val intent = Intent(v.context, Exercise::class.java)
+            intent.putExtra("exerciseId", exerciseList[position])
             v.context.startActivity(Intent(v.context, Exercise::class.java))
-            Toast.makeText(v.context,"Click", Toast.LENGTH_LONG).show()
         }
     }
 

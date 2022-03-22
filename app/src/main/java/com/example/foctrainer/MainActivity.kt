@@ -1,30 +1,33 @@
 package com.example.foctrainer
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.example.foctrainer.exercise.Exercise
-import com.example.foctrainer.databinding.ActivityMainBinding
 import android.widget.*
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.adapters.AdapterViewBindingAdapter.setOnItemSelectedListener
+import androidx.databinding.adapters.AutoCompleteTextViewBindingAdapter.setOnItemSelectedListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
+import com.example.foctrainer.databinding.ActivityMainBinding
 import com.example.foctrainer.entity.CompletedExerciseModel
 import com.example.foctrainer.entity.ExerciseModel
 import com.example.foctrainer.entity.UserModel
+import com.example.foctrainer.exercise.Exercise
 import com.example.foctrainer.fragments.HomeFragment
 import com.example.foctrainer.fragments.ScheduleFragment
 import com.example.foctrainer.viewModel.*
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
-import com.github.mikephil.charting.utils.ColorTemplate
-
-import android.widget.TextView
 import com.github.mikephil.charting.data.*
+import com.github.mikephil.charting.utils.ColorTemplate
+import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationBarView
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -40,9 +43,11 @@ class MainActivity : AppCompatActivity() {
     //BarChart
     private lateinit var myBarChart: BarChart
 
-    val homeFragment = HomeFragment()
-    val scheduleFragment = ScheduleFragment()
+//    val homeFragment = HomeFragment()
+//    val scheduleFragment = ScheduleFragment()
 
+    lateinit var  caloriesList: ArrayList<BarEntry>
+    lateinit var exNameList : ArrayList<String>
     var userID = 0
     var exerciseName = ""
 
@@ -62,19 +67,45 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
 //        setContentView(R.layout.activity_main)
+
+        // Initialize and assign variable
+        val bottomNavigationView: BottomNavigationView = findViewById<View>(R.id.bottom_navigation) as BottomNavigationView
+        bottomNavigationView.setSelectedItemId(R.id.home)
+
+        // Perform ItemSelectedListener
+
+
+        bottomNavigationView.setOnItemSelectedListener { item ->
+            when(item.itemId) {
+                R.id.home -> {
+                    true
+
+                }
+                R.id.schedule -> {
+                    // Respond to navigation item 2 click
+                    Log.d("Schedule", "schedulewoo")
+                    val intent = Intent(this, ScheduleTest::class.java)
+                    startActivity(intent)
+                    true
+                }
+
+                else -> false
+            }
+        }
+
 
         //Navigation Bar -Fragment
 //        makeCurrentFragment(homeFragment)
-//        val bottomNavView = findViewById<BottomNavigationView>(R.id.bottom_navigation_bar)
-//        bottomNavView.setOnNavigationItemSelectedListener{ it ->
+//        val bottomNavView = findViewById<BottomNavigationView>(R.id.bottom_navigation_menu)
+//        NavigationBarView.OnItemSelectedListener{ it ->
 //            when(it.itemId){
 //                R.id.home -> makeCurrentFragment(homeFragment)
 //                R.id.schedule -> makeCurrentFragment(scheduleFragment)
 //            }
 //            true
 //        }
+
 
         //database testing: data insertion
         val user = UserModel(4,"jiayi","123",155.3f,45f,18.9f)
@@ -84,6 +115,8 @@ class MainActivity : AppCompatActivity() {
         userViewModel.allUsers.observe(this, Observer{ users ->
             Log.d("db insertion testing", users[3].userName)
         })
+
+
 
 //        completeExerciseModel.chartSummary.observe(this, Observer { ex->
 //            Log.d("Chart", ex.toString())
@@ -102,16 +135,8 @@ class MainActivity : AppCompatActivity() {
 //            Log.d("obj", myObj.arguments.toString())
 //        })
 
-
-//        val recyclerView: RecyclerView = findViewById(R.id.recyclerview)
-//        exerciseAdapter = RecyclerAdapter(exList)
-//        val layoutManager = LinearLayoutManager(applicationContext)
-//        recyclerView.layoutManager = layoutManager
-//        recyclerView.itemAnimator = DefaultItemAnimator()
-//        recyclerView.adapter = exerciseAdapter
-
         displayUserDetails()
-//        exerciseDetails()
+        exerciseDetails()
         //Barchart
         myBarChart = findViewById(R.id.BarChart)
         populateBarChart()
@@ -128,17 +153,17 @@ class MainActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@MainActivity)
             adapter = RecyclerAdapter(catlist)
         }
-
     }
 
-    //Remove For Fragment
 //    private fun makeCurrentFragment(fragment: Fragment) =
 //        supportFragmentManager.beginTransaction().apply {
-//            replace(R.id.wrapper, fragment)
+//            replace(R.id.fl_wrapper, fragment)
 //            commit()
 //        }
+
     fun selectButtonOnClick(view: View){
         val intent = Intent(this, Exercise::class.java)
+        intent.putExtra("exerciseId",1)
         startActivity(intent)
     }
 
@@ -185,43 +210,84 @@ class MainActivity : AppCompatActivity() {
 
     //Barchart
     fun populateBarChart() {
-        //adding values
-        val myBarEntries: ArrayList<BarEntry> = ArrayList()
-        var i = 0
-        val xAxis: ArrayList<String> = ArrayList()
+        val caloriesList: ArrayList<BarEntry> = ArrayList()
+        val yValue: MutableMap<Int, Float> = TreeMap()
+        val xValue: MutableMap<Int, String> = TreeMap()
+        exNameList = ArrayList()
         completeExerciseModel.completedExercise.observe(this, Observer<List<CompletedExerciseModel>>() { completedExercise ->
+            yValue.put(1, 100F)
             for (eachEx in completedExercise) {
-                Log.d("PLS", eachEx.toString())
                 val comExUserId = eachEx.userId
                 val comExExerciseId = eachEx.exerciseId
                 val calories = eachEx.total_calories
                 if (comExUserId == userID) {
-                    myBarEntries.add(BarEntry(comExExerciseId.toFloat(), calories))
+                    if (yValue.containsKey(comExExerciseId)) {
+                        val totalCal = calories + yValue.getValue(comExExerciseId)
+                        yValue.put(comExExerciseId, totalCal)
+                    } else {
+                        yValue.put(comExExerciseId, calories);
+                    }
                 }
             }
+            exerciseViewModel.allExercise.observe(this, Observer<List<ExerciseModel>>() { exercise ->
+                for ( ex in exercise){
+                    val exId = ex.id
+                    val exName = ex.name
+                    xValue.put(exId, exName)
+                }
+                for ((keyY,valueY) in yValue){
+                    for((keyX,valueX) in xValue) {
+                        if (keyY.equals(keyX)){
+                            exNameList.add(valueX)
+                        }
+                    }
+                }
 
-            val barDataSet = BarDataSet(myBarEntries, "Work Out Summary")
-            //set a template coloring
-            barDataSet.setColors(*ColorTemplate.COLORFUL_COLORS)
-            val data = BarData(barDataSet)
-            myBarChart.data = data
-            //setting the x-axis
-            val xAxis: XAxis = myBarChart.xAxis
-            //calling methods to hide x-axis gridlines
-            myBarChart.axisLeft.setDrawGridLines(false)
-            xAxis.setDrawGridLines(false)
-            //xAxis.setDrawAxisLine(false)
-            myBarChart.setBackgroundColor(resources.getColor(R.color.white))
-            //remove legend
-            myBarChart.legend.isEnabled = true
+                for ((keyEntries, valueEntries) in yValue){
+                    caloriesList.add(BarEntry(valueEntries, keyEntries-1))
+                }
+//                Log.d("q4X", xValue.toString())
+//                Log.d("q5Y", yValue.toString())
+//                Log.d("q6CaloriesList", caloriesList.toString())
+//                Log.d("q7ExerciseName", exNameList.toString())
+                val barDataSet = BarDataSet(caloriesList, "${exNameList.toString()}")
+                //set a template coloring
+                barDataSet.setColors(ColorTemplate.COLORFUL_COLORS)
+                //[Ex1 , Ex2 ]
+                val data = BarData(exNameList, barDataSet)
+                myBarChart.data = data
+                //setting the x-axis
+                val xAxis: XAxis = myBarChart.xAxis
+                //calling methods to hide x-axis gridlines
+                myBarChart.axisLeft.setDrawGridLines(false)
+                xAxis.setDrawGridLines(false)
+                //xAxis.setDrawAxisLine(false)
+                myBarChart.setBackgroundColor(resources.getColor(R.color.white))
+                //remove legend
+                myBarChart.legend.isEnabled = true
 
-            //remove description label
-            myBarChart.description.isEnabled = false
+                //remove description label
+//            myBarChart.description.isEnabled = false
 
-            //add animation
-            myBarChart.animateY(3000)
-            //refresh the chart
-            myBarChart.invalidate()
+                //add animation
+                myBarChart.animateY(3000)
+                //refresh the chart
+                myBarChart.invalidate()
+            })
         })
     }
 }
+
+//reference:
+//        //database testing: data insertion
+//        val user = UserModel(4,"jiayi","123",155.3f,45f,18.9f)
+//        userViewModel.createNewUser(user = user)
+//
+//        val userstest = ""
+//
+//        userViewModel.allUsers.observe(this, Observer{ users ->
+////            Log.d("db insertion testing", users[3].userName)
+////            userstest = user[1]
+//
+////            binding.BarChart = valuefromdb
+//        })

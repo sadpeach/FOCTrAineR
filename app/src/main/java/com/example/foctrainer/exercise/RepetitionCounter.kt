@@ -45,6 +45,7 @@ class RepetitionCounter {
         }
         Log.d(TAG, className + " count: " + numRepeats)
 
+        //saving numRepeats to database when yes in dialog us clicked
         return numRepeats
     }
 

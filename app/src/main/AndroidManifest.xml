@@ -21,6 +21,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FOCTrAineR">
         <activity
+
             android:name=".InformationActivity"
             android:exported="false" />
         <activity
@@ -37,9 +38,12 @@
             android:exported="false" />
         <activity
             android:name=".exercise.Exercise"
+
+            android:name=".ScheduleTest"
+
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -47,6 +51,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".exercise.Exercise"
+            android:exported="false" /> <!-- <activity -->
+        <!-- android:name=".MainActivity" -->
+        <!-- android:exported="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MAIN" /> -->
+        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+        <!-- </intent-filter> -->
+        <!-- </activity> -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

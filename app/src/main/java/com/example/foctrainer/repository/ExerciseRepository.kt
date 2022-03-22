@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 
 class ExerciseRepository (private val exerciseMapper: ExerciseMapper) {
 
-    val allExercise:  Flow<List<ExerciseModel>> = exerciseMapper.getAllExercises()
+
 
     suspend fun createNewExercise(exercise: ExerciseModel){
         exerciseMapper.createNewExercise(exercise)
@@ -19,8 +19,17 @@ class ExerciseRepository (private val exerciseMapper: ExerciseMapper) {
     }
 
 
-//     fun getExerciseNameById (exerciseId:Int):String{
+
+    val allExercise:  Flow<List<ExerciseModel>> = exerciseMapper.getAllExercises()
+
+//    fun getExerciseNameById(exerciseId:Int): Flow<String> {
 //        return exerciseMapper.getExerciseNameById(exerciseId)
 //    }
+
+//    @Suppress("RedundantSuspendModifier")
+//    @WorkerThread
+        fun getExerciseNameById (exerciseId:Int):String {
+         return exerciseMapper.getExerciseNameById(exerciseId)
+    }
 
 }

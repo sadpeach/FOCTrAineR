@@ -7,7 +7,12 @@ import android.media.AudioManager
 
 import android.os.Looper
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.annotation.WorkerThread
+import androidx.appcompat.app.AppCompatActivity
+import com.example.foctrainer.databaseConfig.FocTrainerApplication
+import com.example.foctrainer.viewModel.ExerciseViewModel
+import com.example.foctrainer.viewModel.ExerciseViewModelFactory
 import com.google.mlkit.vision.common.PointF3D
 
 import com.google.mlkit.vision.pose.Pose
@@ -21,6 +26,14 @@ import java.lang.NullPointerException
 import java.lang.NumberFormatException
 import java.util.*
 import kotlin.collections.ArrayList
+import com.example.foctrainer.R
+
+import android.widget.TextView
+import com.example.foctrainer.MainActivity
+import android.app.Activity
+
+
+
 
 
 class PoseClassifierProcessor {
@@ -45,10 +58,11 @@ class PoseClassifierProcessor {
     private var poseClassifier: PoseClassifier? = null
     private var lastRepResult: String? = null
     private var selectedExerciseId: Int = -1
+    private var selectedExerciseName : String? = null
+    private var count: Int = 0;
 
     @WorkerThread
-    constructor(context: Context, isStreamMode: Boolean,selectedExerciseId:Int) {
-        Log.d(TAG,"starting configuration for poseClassifierProcessor...")
+    constructor(context: Context, isStreamMode: Boolean,selectedExerciseId:Int,selectedExerciseName:String) {
         //precondition -> throws illegalArgument
         //return the app's main looper
         com.google.common.base.Preconditions.checkState(Looper.myLooper() != Looper.getMainLooper())
@@ -59,8 +73,8 @@ class PoseClassifierProcessor {
             lastRepResult = ""
         }
         this.selectedExerciseId = selectedExerciseId
-        loadPoseSamples(context,selectedExerciseId)
-        Log.d(TAG,"completed configuration for poseClassifierProcessor..")
+        this.selectedExerciseName = selectedExerciseName
+        loadPoseSamples(context,selectedExerciseId,selectedExerciseName)
     }
 
     /**
@@ -71,25 +85,27 @@ class PoseClassifierProcessor {
      * @param context
      * @return void
      */
-    private fun loadPoseSamples(context: Context,selectedExerciseId: Int) {
+    private fun loadPoseSamples(context: Context,selectedExerciseId: Int,selectedExerciseName: String) {
+        Log.d(TAG, "Loading pose sample..$selectedExerciseName")
         val poseSamples: MutableList<PoseSample?> = ArrayList()
 
         //load from csv
         try {
-            Log.d(TAG, "starting to load samples from file.\n")
             val reader = BufferedReader(InputStreamReader(context.assets.open(POSE_SAMPLES_FILE)))
             val csvParser = CSVParser(reader, CSVFormat.DEFAULT)
-
+            var name = ""
             for (csvRecord in csvParser){
 
-                var poseSample : PoseSample = getPoseSample(csvRecord)!!
-                poseSamples.add(poseSample)
+                name = csvRecord[1].split("_")[0]
+
+                if (name == selectedExerciseName) {
+                    var poseSample: PoseSample = getPoseSample(csvRecord)!!
+                    poseSamples.add(poseSample)
+                }
             }
         } catch (e: IOException) {
             Log.e(TAG, "Error when loading pose samples from file.\n$e")
         }
-        Log.d(TAG,"poseSamples: ${poseSamples.size}")
-        Log.d(TAG,"poseSamples name: ${poseSamples[1]?.getClassName()}")
         poseClassifier = PoseClassifier(poseSamples)
         if (isStreamMode) {
             for (className in POSE_CLASSES) {
@@ -109,7 +125,6 @@ class PoseClassifierProcessor {
 
         val name = csvRecord[0]
         val className = csvRecord[1]
-        Log.d(TAG,"className retrieved:"+className)
         val landmarks: MutableList<PointF3D> = ArrayList()
 
         var i =2
@@ -147,19 +162,15 @@ class PoseClassifierProcessor {
      */
     @WorkerThread
     fun getPoseResult(pose: Pose): List<String?>? {
-        Log.d(TAG,"getting pose result...")
         com.google.common.base.Preconditions.checkState(Looper.myLooper() != Looper.getMainLooper())
         val result: MutableList<String?> = ArrayList()
         var classification: ClassificationResult? = poseClassifier?.classify(pose)
 
-        Log.d(TAG,"getting pose result -> classification: $classification")
-
         // Update {@link RepetitionCounter}s if {@code isStreamMode}.
         if (isStreamMode) {
-            Log.d(TAG,"stream mode set")
             // Feed pose to smoothing even if no pose found.
             classification = emaSmoothing?.getSmoothedResult(classification)
-            Log.d(TAG,"smoothing classification" + classification)
+
             // Return early without updating repCounter if no pose found.
             if (pose.allPoseLandmarks.isEmpty()) {
                 result.add(lastRepResult)
@@ -175,6 +186,7 @@ class PoseClassifierProcessor {
                         // Play a fun beep when rep counter updates.
                         val tg = ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100)
                         tg.startTone(ToneGenerator.TONE_PROP_BEEP)
+                        count = repsAfter
                         lastRepResult = java.lang.String.format(
                             Locale.US, "%s : %d reps", repCounter.getClassName(), repsAfter
                         )
@@ -182,7 +194,7 @@ class PoseClassifierProcessor {
                     }
                 }
             }
-            Log.d(TAG,"lastRepResult:"+lastRepResult)
+            Log.d(TAG, "lastRepResult:$lastRepResult")
             result.add(lastRepResult)
         }
 
@@ -200,6 +212,10 @@ class PoseClassifierProcessor {
         return result
     }
 
+    //return represult to a function so that processor can call from it, slowly pass it back to exercise
+    fun getCounter():Int{
+        return count
+    }
 
 
 }

@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity (tableName = "UserTable")
 data class UserModel (
-    @PrimaryKey (autoGenerate = true) val id:Int,
+    @PrimaryKey (autoGenerate = true) val id:Int = 0,
     @ColumnInfo(name="userName") val userName:String,
     @ColumnInfo(name="password") val password:String,
     @ColumnInfo(name="height") val height:Float,
