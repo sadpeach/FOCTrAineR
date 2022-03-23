@@ -30,9 +30,11 @@ class ScheduleCalendar : AppCompatActivity() {
         val TAG = "Schedule"
         var selectedDate :String = getTodayDate()
 
+
         private fun getTodayDate() : String{
             val sdf = SimpleDateFormat("yyyy-MM-dd")
             val calendarDate = Calendar.getInstance().time
+            Log.d(TAG,"CalendarDate:$calendarDate")
             val currentDate = sdf.format(calendarDate)
             Log.d(TAG,"today's date is -> $currentDate")
             return currentDate
@@ -57,9 +59,7 @@ class ScheduleCalendar : AppCompatActivity() {
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
 
-        scheduleViewModel.allDates.observe(this) { schedules ->
-            schedules.let { adapter.submitList(it) }
-        }
+        changeEventViewBySelectedDate(selectedDate)
 
     }
 
@@ -68,29 +68,23 @@ class ScheduleCalendar : AppCompatActivity() {
         val calendarView = findViewById<CalendarView>(R.id.datePicker)
         var date: Long = calendarView.date;
 
-        Log.d(TAG,"calendar: $date")
-
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
 
-            Log.d(TAG,"selected calendar: $dayOfMonth/$month/$year")
-            if (calendarView.date !== date) {
-                date = calendarView.date
-                Toast.makeText(
-                    view.context,
-                    "Year=$year Month=$month Day=$dayOfMonth",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
+            val sdf = SimpleDateFormat("yyyy-MM-dd")
+            val calendar = Calendar.getInstance()
+            calendar[year, month] = dayOfMonth
+            val selectedDate = sdf.format(calendar.time)
+            changeEventViewBySelectedDate(selectedDate)
+
         }
     }
 
-    private fun changeEventBySelectedDate(selectedDate:String){
-        Log.d(TAG,"selectedDate -> $selectedDate")
-//        scheduleViewModel.getScheduleByDate(selectedDate).observe(this) { schedules ->
-//            schedules.let { adapter.submitList(it) }
-//        }
-    }
+    private fun changeEventViewBySelectedDate(selectedDate:String){
 
+        scheduleViewModel.getScheduleByDate(selectedDate).observe(this) { schedules ->
+            schedules.let { adapter.submitList(it) }
+        }
+    }
 
     private fun menu(){
 

@@ -1,5 +1,6 @@
 package com.example.foctrainer.repository
 
+import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.foctrainer.entity.ScheduleModel
 import com.example.foctrainer.entity.UserModel
