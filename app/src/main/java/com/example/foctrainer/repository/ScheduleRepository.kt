@@ -1,10 +1,7 @@
 package com.example.foctrainer.repository
 
-import android.util.Log
 import androidx.annotation.WorkerThread
 import com.example.foctrainer.entity.ScheduleModel
-import com.example.foctrainer.entity.UserModel
-import com.example.foctrainer.mapper.ExerciseMapper
 import com.example.foctrainer.mapper.ScheduleMapper
 import kotlinx.coroutines.flow.Flow
 

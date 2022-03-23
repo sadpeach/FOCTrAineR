@@ -1,9 +1,7 @@
 package com.example.foctrainer.viewModel
 
-import android.util.Log
 import androidx.lifecycle.*
 import com.example.foctrainer.entity.ScheduleModel
-import com.example.foctrainer.repository.ExerciseRepository
 import com.example.foctrainer.repository.ScheduleRepository
 import kotlinx.coroutines.launch
 

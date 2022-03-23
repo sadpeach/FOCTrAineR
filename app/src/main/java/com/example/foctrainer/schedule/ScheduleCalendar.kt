@@ -30,7 +30,6 @@ class ScheduleCalendar : AppCompatActivity() {
         val TAG = "Schedule"
         var selectedDate :String = getTodayDate()
 
-
         private fun getTodayDate() : String{
             val sdf = SimpleDateFormat("yyyy-MM-dd")
             val calendarDate = Calendar.getInstance().time
@@ -63,10 +62,16 @@ class ScheduleCalendar : AppCompatActivity() {
 
     }
 
+    //TODO: when clicking on button direct to form for user schedule input
+    fun addButtonSetOnClick(view: View){
+
+        Log.d(TAG,"selectedDate: $selectedDate")
+
+    }
+
     private fun calendar(){
 
         val calendarView = findViewById<CalendarView>(R.id.datePicker)
-        var date: Long = calendarView.date;
 
         calendarView.setOnDateChangeListener { view, year, month, dayOfMonth ->
 
@@ -80,6 +85,7 @@ class ScheduleCalendar : AppCompatActivity() {
     }
 
     private fun changeEventViewBySelectedDate(selectedDate:String){
+
 
         scheduleViewModel.getScheduleByDate(selectedDate).observe(this) { schedules ->
             schedules.let { adapter.submitList(it) }
@@ -95,8 +101,6 @@ class ScheduleCalendar : AppCompatActivity() {
         bottomNavigationView.setOnItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.home -> {
-                    // Respond to navigation item 1 click
-                    Log.d("Home", "homewoo")
                     val intent = Intent(this, MainActivity::class.java)
                     startActivity(intent)
                     true

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foctrainer.R
 import com.example.foctrainer.entity.ScheduleModel
+import com.example.foctrainer.exercise.Exercise
 
 class ScheduleCalendarAdapter :
     ListAdapter<ScheduleModel, ScheduleCalendarAdapter.ScheduleRecyclerViewHolder>(ScheduleComparator()) {
@@ -29,10 +30,10 @@ class ScheduleCalendarAdapter :
         holder.bind(current)
 
         holder.itemView.setOnClickListener { v: View ->
-            Log.d(TAG, "clicking recyclerView item")
-//            v.context.startActivity(Intent(v.context, CreateScheduleActivity::class.java))
-
-            Toast.makeText(v.context,"clicked", Toast.LENGTH_LONG).show()
+            Log.d(TAG, "clicking ${current.exerciseId}")
+            val intent = Intent(v.context, Exercise::class.java)
+            intent.putExtra("exerciseId", current.exerciseId)
+            v.context.startActivity(Intent(v.context, Exercise::class.java))
         }
     }
 
