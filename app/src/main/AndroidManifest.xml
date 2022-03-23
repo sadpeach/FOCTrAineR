@@ -22,7 +22,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FOCTrAineR">
         <activity
-
             android:name=".InformationActivity"
             android:exported="false" />
         <activity
@@ -40,6 +39,12 @@
             android:exported="false" />
         <activity
             android:name=".exercise.Exercise"
+            android:exported="false" />
+        <activity
+            android:name=".schedule.CreateScheduleActivity"
+            android:exported="false" />
+        <activity
+            android:name=".schedule.ScheduleCalendar"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"

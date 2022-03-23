@@ -7,8 +7,6 @@ import android.view.View
 import android.widget.*
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.adapters.AdapterViewBindingAdapter.setOnItemSelectedListener
-import androidx.databinding.adapters.AutoCompleteTextViewBindingAdapter.setOnItemSelectedListener
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,15 +16,13 @@ import com.example.foctrainer.entity.CompletedExerciseModel
 import com.example.foctrainer.entity.ExerciseModel
 import com.example.foctrainer.entity.UserModel
 import com.example.foctrainer.exercise.Exercise
-import com.example.foctrainer.fragments.HomeFragment
-import com.example.foctrainer.fragments.ScheduleFragment
+import com.example.foctrainer.schedule.ScheduleCalendar
 import com.example.foctrainer.viewModel.*
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.utils.ColorTemplate
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.navigation.NavigationBarView
 import java.util.*
 
 class MainActivity : AppCompatActivity() {
@@ -99,7 +95,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.schedule -> {
                     // Respond to navigation item 2 click
                     Log.d("Schedule", "schedulewoo")
-                    val intent = Intent(this, ScheduleTest::class.java)
+                    val intent = Intent(this, ScheduleCalendar::class.java)
                     startActivity(intent)
                     true
                 }

@@ -7,7 +7,12 @@ import com.example.foctrainer.repository.ScheduleRepository
 import kotlinx.coroutines.launch
 
 class ScheduleViewModel (private val repository: ScheduleRepository):ViewModel() {
+
     val allDates: LiveData<List<ScheduleModel>> = repository.allDates.asLiveData()
+
+    fun getScheduleByDate(selectedDate:String): LiveData<List<ScheduleModel>> {
+        return repository.getScheduleByDate(selectedDate).asLiveData()
+    }
 
     fun createNewDate(date: ScheduleModel) = viewModelScope.launch {
         repository.createNewDate(date)

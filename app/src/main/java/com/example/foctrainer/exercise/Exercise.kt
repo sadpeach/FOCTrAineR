@@ -81,13 +81,6 @@ class Exercise : AppCompatActivity()  {
             Log.d("TAG","gotten $exerciseName")
         }
 
-//       exerciseViewModel.getExerciseNameById(selectedExerciseId).observe(this, { exerciseName ->
-//            title = exerciseName
-//           exerciseName?.let { test = it }
-//
-//            Log.d(TAG,"retrieve $exerciseName from database")
-//        })
-
         cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
         graphicOverlay = binding.graphicOverlay
         previewView = binding.previewView
@@ -143,7 +136,6 @@ class Exercise : AppCompatActivity()  {
         }
 
     }
-
 
 //    suspend fun getExerciseNameAsync(): String = coroutineScope {
 //        val exerciseName = async {exerciseViewModel.getExerciseNameById(selectedExerciseId) }
