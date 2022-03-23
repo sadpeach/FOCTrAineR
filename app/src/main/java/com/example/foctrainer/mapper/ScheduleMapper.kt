@@ -6,6 +6,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.foctrainer.entity.ScheduleModel
 import kotlinx.coroutines.flow.Flow
+import java.util.*
 
 @Dao
 interface ScheduleMapper {
@@ -17,4 +18,7 @@ interface ScheduleMapper {
 
     @Query("SELECT * FROM ScheduleTable WHERE date(startDateTime) =:selectedDate")
     fun getScheduleByDate(selectedDate:String): Flow<List<ScheduleModel>>
+
+    @Query("SELECT startDateTime FROM ScheduleTable")
+    fun getDates(): Flow<List<String>>
 }

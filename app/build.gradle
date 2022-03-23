@@ -124,6 +124,8 @@ dependencies {
     //sharedPreference
     implementation "androidx.preference:preference-ktx:1.1.1"
 
-
+    //calendar
+    def calendar_version = "1.6.0"
+    implementation "com.github.prolificinteractive:material-calendarview:$calendar_version"
 
 }

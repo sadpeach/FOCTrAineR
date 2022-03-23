@@ -9,4 +9,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="home">#32CADD</color>
     <color name="schedule">#DFBC52</color>
+    <color name="button_white">#FFFFFF</color>
 </resources>

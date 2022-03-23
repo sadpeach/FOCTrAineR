@@ -4,6 +4,7 @@ import androidx.lifecycle.*
 import com.example.foctrainer.entity.ScheduleModel
 import com.example.foctrainer.repository.ScheduleRepository
 import kotlinx.coroutines.launch
+import java.util.*
 
 class ScheduleViewModel (private val repository: ScheduleRepository):ViewModel() {
 
@@ -16,6 +17,8 @@ class ScheduleViewModel (private val repository: ScheduleRepository):ViewModel()
     fun createNewDate(date: ScheduleModel) = viewModelScope.launch {
         repository.createNewDate(date)
     }
+
+    val getDates: LiveData<List<String>> = repository.getDates.asLiveData()
 }
 class ScheduleViewModelFactory(private val repository: ScheduleRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

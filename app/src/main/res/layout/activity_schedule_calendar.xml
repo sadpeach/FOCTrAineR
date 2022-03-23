@@ -15,11 +15,21 @@
         app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
         >
 
-        <CalendarView
+<!--        <CalendarView-->
+<!--            android:id="@+id/datePicker"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--          />-->
+
+        <com.prolificinteractive.materialcalendarview.MaterialCalendarView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/datePicker"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-          />
+            app:mcv_tileHeight="45dp"
+            app:mcv_selectionColor="#00F"
+            app:mcv_showOtherDates="other_months"
+            />
 
         <Button
             style="@style/Widget.MaterialComponents.Button.Icon"
