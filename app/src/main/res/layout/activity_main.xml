@@ -216,7 +216,7 @@
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="350dp"
+        android:layout_height="300dp"
         app:layout_constraintBottom_toTopOf="@+id/bottom_navigation">
 
         <!-- Linear layout to contain 2 text view and button -->
