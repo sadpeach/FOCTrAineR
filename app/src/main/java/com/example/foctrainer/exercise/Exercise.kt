@@ -12,27 +12,21 @@ import androidx.core.content.ContextCompat
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import android.os.Build
-import android.widget.Button
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.camera.view.PreviewView
+import androidx.lifecycle.lifecycleScope
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
 import com.example.foctrainer.databinding.ActivityCameraxLivePreviewBinding
-import com.example.foctrainer.viewModel.ExerciseViewModel
-import com.example.foctrainer.viewModel.ExerciseViewModelFactory
 import com.google.mlkit.common.MlKitException
 import kotlinx.coroutines.*
-import android.widget.TextView
-import androidx.camera.video.Quality
-import androidx.camera.video.QualitySelector
-import androidx.camera.video.Recorder
 import com.example.foctrainer.MainActivity
 import com.example.foctrainer.entity.CompletedExerciseModel
-import com.example.foctrainer.viewModel.CompletedExerciseViewModel
-import com.example.foctrainer.viewModel.CompletedExerciseViewModelFactory
+import com.example.foctrainer.entity.ScheduleModel
+import com.example.foctrainer.utils.CaloriesCalculator
+import com.example.foctrainer.viewModel.*
 import java.text.SimpleDateFormat
-import java.time.LocalDate
 import java.util.*
 
 
@@ -49,9 +43,11 @@ class Exercise : AppCompatActivity()  {
     private var selectedModel = OBJECT_DETECTION
     private var needUpdateGraphicOverlayImageSourceInfo = false
     private var graphicOverlay: GraphicOverlay? = null
-    private var selectedExerciseId: Int = -1
+    private var selectedExerciseId: Int = 0
+    private var scheduleId: Int = 0
     private val userId = 1 // need to change
 
+    //all database
     private val exerciseViewModel: ExerciseViewModel by viewModels {
         ExerciseViewModelFactory((application as FocTrainerApplication).exerciseRepository)
     }
@@ -60,35 +56,33 @@ class Exercise : AppCompatActivity()  {
         CompletedExerciseViewModelFactory((application as FocTrainerApplication).completedExerciseRepository)
     }
 
+    private val scheduleModel: ScheduleViewModel by viewModels {
+        ScheduleViewModelFactory((application as FocTrainerApplication).scheduleRepository)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityCameraxLivePreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         //get exerciseId
-        selectedExerciseId = intent.getStringExtra("exerciseId")?.toInt() ?:
-        Log.d(TAG,"selectedexerciseId"+selectedExerciseId)
+        selectedExerciseId = intent.getIntExtra("exerciseId",0)
+        Log.d(TAG, "Selected Exercise Id: $selectedExerciseId")
 
-//       GlobalScope.launch{
-//            val exerciseName  = getExerciseNameAsync()
-//            title = exerciseName
-//            Log.d(TAG, "async check$exerciseName")
-//        }
+        //get scheduleId if any
+        scheduleId = intent.getIntExtra("scheduleId",0)
+        Log.d(TAG,"Selected Schedule ID: $scheduleId")
 
-        GlobalScope.launch{
-            val exerciseName  = async { getExerciseNameAsync()}.await()
+        //get exerciseName
+        exerciseViewModel.getExerciseNameById(selectedExerciseId).observe(this, { exerciseName ->
             title = exerciseName
-            Log.d("TAG","gotten $exerciseName")
-        }
+            Log.d(TAG,"Retrieved exercise name from DB: $exerciseName")
+        })
 
         cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
         graphicOverlay = binding.graphicOverlay
         previewView = binding.previewView
 
-//        val facingSwitch = binding.facingSwitch
-//        facingSwitch.setOnCheckedChangeListener(this)
-
-        //check graphic overlay / previewView / saved instance
         if (previewView == null) {
             Log.d(TAG, "previewView is null")
         }
@@ -96,6 +90,7 @@ class Exercise : AppCompatActivity()  {
         if (graphicOverlay == null) {
             Log.d(TAG, "graphicOverlay is null")
         }
+
         if (savedInstanceState != null) {
             selectedModel = savedInstanceState.getString(STATE_SELECTED_MODEL, OBJECT_DETECTION)
         }
@@ -110,7 +105,10 @@ class Exercise : AppCompatActivity()  {
             )
         }
 
+        if (scheduleId != 0) getScheduledWorkOutCount()
+
         binding.endWorkout.setOnClickListener() {
+            val exeName = title.toString()
             val dialog = AlertDialog.Builder(this)
             dialog.setTitle("Workout Ending")
                 .setMessage("You have completed ${binding.counter.text} $title")
@@ -118,9 +116,18 @@ class Exercise : AppCompatActivity()  {
                     Log.d(TAG,"Saving workout result to database")
                     val counter = binding.counter.text.toString().toInt()
                     val date = getCurrentDateTime()
-                    val dateTime = date.toString("yyyy-MM-dd HH:mm:ss")
+                    val dateTime = date.toString("yyyy-MM-dd HH:mm")
 
-                    val completedExercise = CompletedExerciseModel(userId = userId, exerciseId = selectedExerciseId, completed_dateTime = dateTime,no_completed_sets = counter,total_calories = 111.1f)
+                    val completedExercise = CompletedExerciseModel(
+                        userId = userId,
+                        exerciseId = selectedExerciseId,
+                        completed_dateTime = dateTime,
+                        no_completed_sets = counter,
+                        total_calories = CaloriesCalculator(
+                            weight = 12.3f,
+                            exerciseName = exeName,
+                            noOfExerciseCompleted = counter
+                        ).getCalories())
                     completeExerciseModel.insertNewCompletedExercise(completedExercise = completedExercise )
 
                     val intent = Intent(this, MainActivity::class.java)
@@ -129,60 +136,36 @@ class Exercise : AppCompatActivity()  {
                     Toast.makeText(applicationContext, "Workout Result Saved", Toast.LENGTH_SHORT).show()
 
                 }
-                .setNegativeButton("NO") { dialog, whichButton ->
+                .setNegativeButton("CANCEL") { dialog, whichButton ->
+                    dialog.dismiss()
                 }
 
             dialog.show()
         }
 
+//        Log.d(TAG,"count:${binding.counter.text}, scheduleGoal:${binding.scheduledGoal.text}")
+//        if (binding.counter.text.toString().toInt() == binding.scheduledGoal.text.toString().toInt()){
+//            val popdialog = AlertDialog.Builder(this)
+//            popdialog.setTitle("Congratulations")
+//                .setMessage("Scheduled workout event completed!")
+//
+//            popdialog.show()
+//
+//            val t = Timer()
+//            t.schedule(object : TimerTask() {
+//                override fun run() {
+//                    popdialog.setCancelable(true)
+//                    t.cancel()
+//                }
+//            }, 2000)
+//        }
+
     }
-
-//    suspend fun getExerciseNameAsync(): String = coroutineScope {
-//        val exerciseName = async {exerciseViewModel.getExerciseNameById(selectedExerciseId) }
-//        exerciseName.await()
-//    }
-
-    suspend fun getExerciseNameAsync(): String {
-        return exerciseViewModel.getExerciseNameById(selectedExerciseId)
-    }
-
 
     override fun onSaveInstanceState(bundle: Bundle) {
         super.onSaveInstanceState(bundle)
         bundle.putString(STATE_SELECTED_MODEL, selectedModel)
     }
-
-    //toggle between front and back camera
-//    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-//        Log.d(TAG,"on checkedchanged")
-//        if (cameraProvider == null) {
-//            return
-//        }
-//        val newLensFacing =
-//            if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
-//                CameraSelector.LENS_FACING_BACK
-//            } else {
-//                CameraSelector.LENS_FACING_FRONT
-//            }
-//        val newCameraSelector = CameraSelector.Builder().requireLensFacing(newLensFacing).build()
-//        try {
-//            if (cameraProvider!!.hasCamera(newCameraSelector)) {
-//                Log.d(TAG, "Set facing to $newLensFacing")
-//                lensFacing = newLensFacing
-//                cameraSelector = newCameraSelector
-//                bindAllCameraUseCases()
-//                return
-//            }
-//        } catch (e: CameraInfoUnavailableException) {
-//            // Falls through
-//        }
-//        Toast.makeText(
-//            applicationContext,
-//            "This device does not have lens with facing: $newLensFacing",
-//            Toast.LENGTH_SHORT
-//        )
-//            .show()
-//    }
 
     //grant media access permission
     override fun onRequestPermissionsResult(
@@ -191,7 +174,6 @@ class Exercise : AppCompatActivity()  {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (allPermissionsGranted()) {
-//                startCamera()
                 cameraProvider()
 
             } else {
@@ -202,14 +184,15 @@ class Exercise : AppCompatActivity()  {
             }
         }
     }
+
     private fun cameraProvider () {
-        ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
+        ViewModelProvider(this)
             .get(CameraXViewModel::class.java)
             .getProcessCameraProvider()
             ?.observe(
                 this,
-                { provider: ProcessCameraProvider? ->
-                    cameraProvider = provider
+                {
+                    cameraProvider = it
                     bindAllCameraUseCases()
                 }
             )
@@ -225,6 +208,7 @@ class Exercise : AppCompatActivity()  {
         if (cameraProvider != null) {
             // As required by CameraX API, unbinds all use cases before trying to re-bind any of them.
             cameraProvider!!.unbindAll()
+
             bindPreviewUseCase()
             bindAnalysisUseCase()
         }
@@ -248,7 +232,8 @@ class Exercise : AppCompatActivity()  {
                 val visualizeZ = true
                 val rescaleZ = true
                 val runClassification = true
-                val selectedExerciseName = title as String
+//                val selectedExerciseName = title as String
+                val selectedExerciseName = title.toString()
 
                 PoseDetectorProcessor(
                     this,
@@ -320,21 +305,18 @@ class Exercise : AppCompatActivity()  {
         if (!PreferenceUtils.isCameraLiveViewportEnabled(this)) {
             return
         }
-        if (cameraProvider == null) {
-            return
-        }
         if (previewUseCase != null) {
             cameraProvider!!.unbind(previewUseCase)
         }
 
         val builder = Preview.Builder();
-        val targetResolution = PreferenceUtils.getCameraXTargetResolution(this, lensFacing)
-        if (targetResolution != null) {
-            builder.setTargetResolution(targetResolution)
-        }
+//        val targetResolution = PreferenceUtils.getCameraXTargetResolution(this, lensFacing)
+//        if (targetResolution != null) {
+//            builder.setTargetResolution(targetResolution)
+//        }
         previewUseCase = builder.build()
         previewUseCase!!.setSurfaceProvider(previewView!!.surfaceProvider)
-        cameraProvider!!.bindToLifecycle(/* lifecycleOwner= */ this, cameraSelector!!, previewUseCase)
+        cameraProvider?.bindToLifecycle(/* lifecycleOwner= */ this, cameraSelector!!, previewUseCase)
     }
 
     //other details
@@ -380,6 +362,46 @@ class Exercise : AppCompatActivity()  {
     fun getCurrentDateTime(): Date {
         return Calendar.getInstance().time
     }
+
+    private fun getScheduledWorkOutCount(){
+        scheduleModel.getScheduledCountById(scheduleId).observe(this,{ scheduledCount ->
+            binding.scheduledGoal.text = scheduledCount.toString()
+        })
+    }
 }
+
+
+
+//toggle between front and back camera
+//    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
+//        Log.d(TAG,"on checkedchanged")
+//        if (cameraProvider == null) {
+//            return
+//        }
+//        val newLensFacing =
+//            if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
+//                CameraSelector.LENS_FACING_BACK
+//            } else {
+//                CameraSelector.LENS_FACING_FRONT
+//            }
+//        val newCameraSelector = CameraSelector.Builder().requireLensFacing(newLensFacing).build()
+//        try {
+//            if (cameraProvider!!.hasCamera(newCameraSelector)) {
+//                Log.d(TAG, "Set facing to $newLensFacing")
+//                lensFacing = newLensFacing
+//                cameraSelector = newCameraSelector
+//                bindAllCameraUseCases()
+//                return
+//            }
+//        } catch (e: CameraInfoUnavailableException) {
+//            // Falls through
+//        }
+//        Toast.makeText(
+//            applicationContext,
+//            "This device does not have lens with facing: $newLensFacing",
+//            Toast.LENGTH_SHORT
+//        )
+//            .show()
+//    }
 
 

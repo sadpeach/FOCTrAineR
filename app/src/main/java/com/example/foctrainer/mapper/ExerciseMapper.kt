@@ -22,5 +22,5 @@ interface ExerciseMapper{
 //    fun getExerciseNameById(exerciseId:Int): Flow<String>
 
     @Query("SELECT name FROM ExerciseTable WHERE id=:exerciseId ")
-    fun getExerciseNameById(exerciseId:Int): String
+    fun getExerciseNameById(exerciseId:Int): Flow<String>
 }

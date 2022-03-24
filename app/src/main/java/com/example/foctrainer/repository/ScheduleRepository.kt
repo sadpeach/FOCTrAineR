@@ -21,4 +21,8 @@ class ScheduleRepository (private val scheduleMapper: ScheduleMapper) {
     val allDates: Flow<List<ScheduleModel>> = scheduleMapper.getAllDates()
 
     val getDates: Flow<List<String>> = scheduleMapper.getDates()
+
+    fun getScheduledCountById (scheduleId:Int) : Flow<Int>  {
+        return scheduleMapper.getScheduledCountById(scheduleId)
+    }
 }

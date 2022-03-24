@@ -71,6 +71,8 @@ class ScheduleCalendar : AppCompatActivity() {
     fun addButtonSetOnClick(view: View){
 
         Log.d(TAG,"selectedDate for add button: $selectedDate")
+        val intent = Intent(this, CreateScheduleActivity::class.java)
+        startActivity(intent)
 
     }
 
@@ -105,7 +107,7 @@ class ScheduleCalendar : AppCompatActivity() {
         scheduleViewModel.getDates.observe(this) { allDates ->
             //trying event dot
             val eventDates = HashSet <CalendarDay>()
-            val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+            val dateFormatter = SimpleDateFormat("yyyy-MM-dd HH:mm")
             for (date in allDates){
                     val dateC : CalendarDay = CalendarDay.from(dateFormatter.parse(date))
                     eventDates.add(dateC)

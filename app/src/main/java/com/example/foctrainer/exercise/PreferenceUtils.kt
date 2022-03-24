@@ -37,6 +37,7 @@ object PreferenceUtils {
                     lensfacing == CameraSelector.LENS_FACING_BACK
                             || lensfacing == CameraSelector.LENS_FACING_FRONT)
         )
+        Log.d(TAG,"checking lensfacing ")
         val prefKey: String =
             if (lensfacing == CameraSelector.LENS_FACING_BACK) context.getString(R.string.pref_key_camerax_rear_camera_target_resolution) else context.getString(
                 R.string.pref_key_camerax_front_camera_target_resolution

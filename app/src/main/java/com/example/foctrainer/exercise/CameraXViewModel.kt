@@ -39,7 +39,6 @@ class CameraXViewModel
                 ContextCompat.getMainExecutor(getApplication())
             )
         }
-        Log.d(TAG,"provider live data is null")
         return cameraProviderLiveData
     }
 }

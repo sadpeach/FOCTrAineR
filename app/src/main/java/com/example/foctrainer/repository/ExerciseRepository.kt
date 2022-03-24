@@ -20,7 +20,7 @@ class ExerciseRepository (private val exerciseMapper: ExerciseMapper) {
 
 //    @Suppress("RedundantSuspendModifier")
 //    @WorkerThread
-        fun getExerciseNameById (exerciseId:Int):String {
+        fun getExerciseNameById (exerciseId:Int): Flow<String> {
          return exerciseMapper.getExerciseNameById(exerciseId)
     }
 

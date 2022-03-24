@@ -19,6 +19,11 @@ class ScheduleViewModel (private val repository: ScheduleRepository):ViewModel()
     }
 
     val getDates: LiveData<List<String>> = repository.getDates.asLiveData()
+
+    fun getScheduledCountById(scheduleId:Int):LiveData<Int> {
+        return repository.getScheduledCountById(scheduleId).asLiveData()
+    }
+
 }
 class ScheduleViewModelFactory(private val repository: ScheduleRepository) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnLongClickListener
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
@@ -33,8 +34,19 @@ class ScheduleCalendarAdapter :
             Log.d(TAG, "clicking ${current.exerciseId}")
             val intent = Intent(v.context, Exercise::class.java)
             intent.putExtra("exerciseId", current.exerciseId)
-            v.context.startActivity(Intent(v.context, Exercise::class.java))
+            intent.putExtra("scheduleId", current.id)
+            v.context.startActivity(intent)
         }
+
+
+        holder.itemView.setOnLongClickListener(OnLongClickListener {
+            Log.d(TAG,"LongClick: ${current.exerciseId}")
+            val intent = Intent(it.context, CreateScheduleActivity::class.java)
+            intent.putExtra("scheduleId", current.id)
+            it.context.startActivity(intent)
+            true // returning true instead of false, works for me
+        })
+
     }
 
     class ScheduleRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -67,3 +79,4 @@ class ScheduleCalendarAdapter :
         }
     }
 }
+
