@@ -154,7 +154,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun scheduleButtonOnClick(view:View){
-        val myIntent = Intent(this, PlannerActivity::class.java)
+        val myIntent = Intent(this, ScheduleCalendar::class.java)
         startActivity(myIntent)
     }
 

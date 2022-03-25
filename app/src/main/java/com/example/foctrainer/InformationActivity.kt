@@ -10,14 +10,18 @@ import androidx.activity.viewModels
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
 import com.example.foctrainer.databinding.ActivityInformationBinding
 import com.example.foctrainer.entity.ScheduleModel
+import com.example.foctrainer.schedule.ScheduleCalendar
 import com.example.foctrainer.viewModel.ScheduleViewModel
 import com.example.foctrainer.viewModel.ScheduleViewModelFactory
 
 class InformationActivity : AppCompatActivity() {
     private lateinit var tvDatePicked: TextView
+    //private lateinit var etNotes: EditText
+    //private lateinit var etSets: EditText
+    //private lateinit var etName: EditText
 
     //hardcoding this part for now
-    val workoutDate = "22-03-2022 10:00"
+    //val workoutDate = "22-03-2022 10:00"
 
     //val etSets = findViewById<EditText>(R.id.etSets)
     private val scheduleViewModel: ScheduleViewModel by viewModels {
@@ -31,19 +35,23 @@ class InformationActivity : AppCompatActivity() {
         binding = ActivityInformationBinding.inflate(layoutInflater)
         setContentView(binding.root)
         tvDatePicked = findViewById(R.id.tvPickedDate)
-        tvDatePicked.setText(workoutDate)
+
+        val it = intent
+        val selectedDate = it.getStringExtra("selectedDate")
+
+        tvDatePicked.setText(selectedDate)
     }
 
     fun addWorkoutClick(view: View){
-        val etNotes = findViewById<EditText>(R.id.etNotes)
-        val workoutSets = 2
-        val workoutNotes = etNotes.text.toString()
-        //val workoutDate = tvDatePicked.text.toString()
+        val workoutSets = binding.etSets.text.toString().toInt()
+        val workoutNotes = binding.etNotes.text.toString()
+        val workoutDate = tvDatePicked.text.toString()
+        val title = binding.etName.text.toString()
 
-        val date = ScheduleModel(5, 2, 1, workoutDate, workoutNotes,  workoutSets, "Push Ups")
+        val date = ScheduleModel(0, 1, 1, workoutDate, workoutNotes,  workoutSets, title)
         scheduleViewModel.createNewDate(date = date)
 
-        val intent = Intent(this, ExerciseActivity::class.java)
+        val intent = Intent(this, ScheduleCalendar::class.java)
         startActivity(intent)
     }
 
