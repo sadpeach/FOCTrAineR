@@ -18,7 +18,7 @@ import androidx.room.PrimaryKey
     ]
 )
 data class ScheduleModel(
-    @PrimaryKey (autoGenerate = true) val id:Int,
+    @PrimaryKey (autoGenerate = true) val id:Int = 0,
     @ColumnInfo(name="user_id") val userId: Int,
     @ColumnInfo(name="exercise_id") val exerciseId:Int,
     @ColumnInfo(name="startDateTime") val startDateTime:String,
