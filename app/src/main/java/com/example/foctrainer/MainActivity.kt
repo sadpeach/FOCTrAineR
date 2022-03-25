@@ -17,6 +17,7 @@ import com.example.foctrainer.entity.ExerciseModel
 import com.example.foctrainer.entity.UserModel
 import com.example.foctrainer.exercise.Exercise
 import com.example.foctrainer.schedule.ScheduleCalendar
+import com.example.foctrainer.schedule.ScheduleCalendarAdapter
 import com.example.foctrainer.viewModel.*
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
@@ -28,12 +29,7 @@ import java.util.*
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var lineValuesList: ArrayList<Entry>
-    private val exList = ArrayList<ExerciseModel>()
-    private lateinit var exerciseAdapter: RecyclerAdapter
-
-    private var layoutManager : RecyclerView.LayoutManager? = null
-    private var adapter: RecyclerView.Adapter<RecyclerView.ViewHolder>? = null
+    private lateinit var adapter: MainRecyclerAdapter
 
     //BarChart
     private lateinit var myBarChart: BarChart
@@ -73,18 +69,23 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView: BottomNavigationView = findViewById<View>(R.id.bottom_navigation) as BottomNavigationView
         bottomNavigationView.setSelectedItemId(R.id.home)
 
-        val catlist = ArrayList<ExerciseModel>()
-        exerciseViewModel.allExercise.observe(this, Observer<List<ExerciseModel>>(){ exercise->
-            for (ex in exercise){
-                exerciseId = ex.id
-                catlist.add(ex)
-            }})
-
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerview)
-        recyclerView.apply {
-            layoutManager = LinearLayoutManager(this@MainActivity)
-            adapter = RecyclerAdapter(catlist)
+        adapter = MainRecyclerAdapter()
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        exerciseViewModel.allExercise.observe(this) { exercise ->
+            exercise.let { adapter.submitList(it) }
         }
+
+
+//        val catlist = ArrayList<ExerciseModel>()
+//        exerciseViewModel.allExercise.observe(this, Observer<List<ExerciseModel>>(){ exercise->
+//            for (ex in exercise){
+//                exerciseId = ex.id
+//                catlist.add(ex)
+//            }})
+
+
 
         // Perform ItemSelectedListener
         bottomNavigationView.setOnItemSelectedListener { item ->
