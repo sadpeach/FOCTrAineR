@@ -4,8 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InformationActivity">
-
+    tools:context=".InformationActivity"
+    android:layout_gravity="center"
+    >
 
     <TextView
         android:id="@+id/tvInformation"
@@ -15,74 +16,110 @@
         android:text="Enter Your Workout Details Below!"
         android:textColor="#223770"
         android:textSize="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/etSets"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.516"
+        app:layout_constraintTop_toTopOf="etNam"
         tools:layout_editor_absoluteX="0dp" />
 
-    <EditText
-        android:id="@+id/etSets"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="112dp"
-        android:hint="Enter Number of Sets"
-        android:textColor="#223770"
-        android:textSize="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/etNotes"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.503"
-        app:layout_constraintStart_toStartOf="parent" />
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="412dp"
+        android:layout_height="890dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        >
 
-    <EditText
-        android:id="@+id/etName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Enter Name of Your Workout!"
-        android:textSize="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/etNotes"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etSets"
-        app:layout_constraintVertical_bias="0.517" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/etNotes"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
-        android:hint="Notes"
-        android:textColor="#223770"
-        android:textSize="25dp"
-        app:layout_constraintBottom_toTopOf="@+id/tvPickedDate"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btnAddWorkout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="112dp"
-        android:backgroundTint="#D86572"
-        android:onClick="addWorkoutClick"
-        android:padding="15dp"
-        android:text="Add Workout"
-        android:textAllCaps="false"
-        android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/bottom_navigation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:menu="@menu/bottom_navigation_menu" />
 
-    <TextView
-        android:id="@+id/tvPickedDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:text="Workout Date"
-        android:textColor="#223770"
-        android:textSize="30dp"
-        app:layout_constraintBottom_toTopOf="@+id/btnAddWorkout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
-        app:layout_constraintStart_toStartOf="parent" />
+            <EditText
+                android:id="@+id/etName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Enter Name of Your Workout!"
+                android:textSize="25dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.467"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="160dp" />
+
+            <EditText
+                android:id="@+id/etSets"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Enter Number of Sets"
+                android:textColor="#223770"
+                android:textSize="25dp"
+                app:layout_constraintBottom_toTopOf="@+id/tvPickedDate"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.557"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etNotes"
+                app:layout_constraintVertical_bias="1.0" />
+
+            <TextView
+                android:id="@+id/tvPickedDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Workout Date"
+                android:textColor="#223770"
+                android:textSize="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.528"
+                app:layout_constraintStart_toStartOf="parent"
+                tools:layout_editor_absoluteY="312dp" />
+
+            <Button
+                android:id="@+id/btnAddWorkout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="268dp"
+                android:backgroundTint="#D86572"
+                android:onClick="addWorkoutClick"
+                android:padding="15dp"
+                android:text="Add Workout"
+                android:textAllCaps="false"
+                android:textSize="20dp"
+                app:layout_constraintBottom_toBottomOf="@id/exerciseList"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.557"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <EditText
+                android:id="@+id/etNotes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="144dp"
+                android:hint="Notes"
+                android:textColor="#223770"
+                android:textSize="25dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.523"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/etName" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/exerciseList"
+                android:layout_width="match_parent"
+                android:layout_height="164dp"
+                android:clipToPadding="false"
+                app:layout_constrainedHeight="true"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/btnAddWorkout"
+                tools:layout_editor_absoluteY="401dp"
+                tools:listitem="@layout/card_view" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

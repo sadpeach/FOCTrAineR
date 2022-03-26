@@ -2,45 +2,42 @@ package com.example.foctrainer
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.widget.EditText
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
 import com.example.foctrainer.entity.ExerciseModel
-import com.example.foctrainer.entity.ScheduleModel
-import com.example.foctrainer.entity.UserModel
+import com.example.foctrainer.exercise.Exercise
+import com.example.foctrainer.schedule.ScheduleCalendarAdapter
 import com.example.foctrainer.viewModel.*
-import androidx.activity.viewModels
+import java.util.ArrayList
 import androidx.lifecycle.Observer
-import com.example.foctrainer.R
 
 class ExerciseActivity : AppCompatActivity() {
 
+    private lateinit var adapter: ExerciseAdapter
+    lateinit var exNameList : ArrayList<String>
+    var exerciseId = -1
 
-    companion object {
-        val TAG = "ExerciseActivity"
-    }
-
-    private val scheduleViewModel: ScheduleViewModel by viewModels {
-        ScheduleViewModelFactory((application as FocTrainerApplication).scheduleRepository)
+    private val exerciseViewModel: ExerciseViewModel by viewModels {
+        ExerciseViewModelFactory((application as FocTrainerApplication).exerciseRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_exercise2)
+        setContentView(R.layout.activity_information)
 
-        val recyclerView = findViewById<RecyclerView>(R.id.recyclerViewSchedule)
-        val adapter = ScheduleRecyclerAdapter()
+        val catlist = ArrayList<ExerciseModel>()
+        exerciseViewModel.allExercise.observe(this, Observer<List<ExerciseModel>>(){ exercise->
+            for (ex in exercise){
+                exerciseId = ex.id
+                catlist.add(ex)
+            }})
+
+        val recyclerView = findViewById<RecyclerView>(R.id.exerciseList)
+        adapter = ExerciseAdapter(catlist)
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(this)
-
-        scheduleViewModel.allDates.observe(this) { schedules ->
-            schedules.let { adapter.submitList(it) }
-
-        }
 
 
     }
