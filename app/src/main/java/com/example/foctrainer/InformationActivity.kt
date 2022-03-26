@@ -92,11 +92,9 @@ class InformationActivity : AppCompatActivity() {
     }
 
     private fun menu(){
-
         // Initialize and assign variable
         val bottomNavigationView: BottomNavigationView = findViewById<View>(R.id.bottom_navigation) as BottomNavigationView
         bottomNavigationView.setSelectedItemId(R.id.schedule)
-
         bottomNavigationView.setOnItemSelectedListener { item ->
             when(item.itemId) {
                 R.id.home -> {
