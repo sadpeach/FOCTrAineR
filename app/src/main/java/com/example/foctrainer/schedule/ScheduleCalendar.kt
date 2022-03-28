@@ -15,7 +15,6 @@ import androidx.activity.viewModels
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.foctrainer.InformationActivity
 import com.example.foctrainer.MainActivity
 import com.example.foctrainer.R
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
@@ -72,7 +71,7 @@ class ScheduleCalendar : AppCompatActivity() {
     fun addButtonSetOnClick(view: View){
 
         Log.d(TAG,"selectedDate for add button: $selectedDate")
-        val intent = Intent(this, InformationActivity::class.java)
+        val intent = Intent(this, CreateScheduleActivity::class.java)
         intent.putExtra("selectedDate", selectedDate)
         startActivity(intent)
 
@@ -89,12 +88,6 @@ class ScheduleCalendar : AppCompatActivity() {
 
         val currentDate = CalendarDay.from(year,  month, day)
         calendarView.addDecorators(CurrentDayDecorator(this, currentDate))
-
-//        //trying event dot
-//        val tryDates = HashSet <CalendarDay>();
-//        val test : CalendarDay = CalendarDay.from(Calendar.getInstance().time)
-//        tryDates.add(test)
-//        calendarView.addDecorators(EventDecorator(color = color, tryDates))
         showEventDot(calendarView)
 
         calendarView.setOnDateChangedListener(

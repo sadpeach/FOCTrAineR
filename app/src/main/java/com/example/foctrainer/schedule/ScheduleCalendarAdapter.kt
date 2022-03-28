@@ -31,7 +31,6 @@ class ScheduleCalendarAdapter :
         holder.bind(current)
 
         holder.itemView.setOnClickListener { v: View ->
-            Log.d(TAG, "clicking ${current.exerciseId}")
             val intent = Intent(v.context, Exercise::class.java)
             intent.putExtra("exerciseId", current.exerciseId)
             intent.putExtra("scheduleId", current.id)
@@ -40,11 +39,11 @@ class ScheduleCalendarAdapter :
 
 
         holder.itemView.setOnLongClickListener(OnLongClickListener {
-            Log.d(TAG,"LongClick: ${current.exerciseId}")
+            Log.d(TAG,"LongClick: ${current.id}")
             val intent = Intent(it.context, CreateScheduleActivity::class.java)
             intent.putExtra("scheduleId", current.id)
             it.context.startActivity(intent)
-            true // returning true instead of false, works for me
+            true
         })
 
     }
@@ -52,12 +51,12 @@ class ScheduleCalendarAdapter :
     class ScheduleRecyclerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val exerciseTitleTextView: TextView = itemView.findViewById(R.id.title)
         private val exerciseNotesTextView: TextView = itemView.findViewById(R.id.notes)
+//        private val exerciseDetails:TextView = itemView.findViewById(R.id.setGoal)
 
 
         fun bind(schedule: ScheduleModel) {
             exerciseTitleTextView.text = schedule.title
             exerciseNotesTextView.text = schedule.notes
-
         }
 
         companion object {

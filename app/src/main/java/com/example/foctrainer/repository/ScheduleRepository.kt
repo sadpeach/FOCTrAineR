@@ -25,4 +25,8 @@ class ScheduleRepository (private val scheduleMapper: ScheduleMapper) {
     fun getScheduledCountById (scheduleId:Int) : Flow<Int>  {
         return scheduleMapper.getScheduledCountById(scheduleId)
     }
+
+    fun getScheduledExerciseById(scheduleId:Int): Flow<ScheduleModel>{
+        return scheduleMapper.getScheduledExerciseById(scheduleId)
+    }
 }

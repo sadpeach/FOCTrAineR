@@ -106,6 +106,15 @@
                         android:minHeight="5dp"
                         android:text="Update" />
 
+                    <Button
+                        android:id="@+id/selectButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Select"
+                        android:onClick="selectButtonOnClick"
+                        tools:layout_editor_absoluteX="163dp"
+                        tools:layout_editor_absoluteY="345dp" />
+
                 </RelativeLayout>
             </LinearLayout>
 
@@ -220,14 +229,7 @@
                 tools:itemCount="5"
                 tools:listitem="@layout/card_view" />
 
-            <Button
-                android:id="@+id/selectButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Select"
-                android:onClick="selectButtonOnClick"
-                tools:layout_editor_absoluteX="163dp"
-                tools:layout_editor_absoluteY="345dp" />
+
     </LinearLayout>
 
 </FrameLayout>

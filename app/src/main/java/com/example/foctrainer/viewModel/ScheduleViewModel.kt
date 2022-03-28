@@ -3,6 +3,7 @@ package com.example.foctrainer.viewModel
 import androidx.lifecycle.*
 import com.example.foctrainer.entity.ScheduleModel
 import com.example.foctrainer.repository.ScheduleRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 import java.util.*
 
@@ -22,6 +23,10 @@ class ScheduleViewModel (private val repository: ScheduleRepository):ViewModel()
 
     fun getScheduledCountById(scheduleId:Int):LiveData<Int> {
         return repository.getScheduledCountById(scheduleId).asLiveData()
+    }
+
+    fun getScheduledExerciseById(scheduleId:Int): LiveData<ScheduleModel>{
+        return repository.getScheduledExerciseById(scheduleId).asLiveData()
     }
 
 }

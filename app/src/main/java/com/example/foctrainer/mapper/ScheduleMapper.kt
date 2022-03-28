@@ -24,4 +24,7 @@ interface ScheduleMapper {
 
     @Query("SELECT no_of_sets FROM ScheduleTable WHERE id = :scheduleId")
     fun getScheduledCountById(scheduleId:Int): Flow<Int>
+
+    @Query("SELECT * FROM ScheduleTable WHERE id = :scheduleId")
+    fun getScheduledExerciseById(scheduleId:Int): Flow<ScheduleModel>
 }
