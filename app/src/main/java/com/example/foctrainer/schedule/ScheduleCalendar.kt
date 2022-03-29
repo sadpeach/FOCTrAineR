@@ -15,6 +15,7 @@ import androidx.activity.viewModels
 import androidx.annotation.NonNull
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.foctrainer.LoginActivity
 import com.example.foctrainer.MainActivity
 import com.example.foctrainer.R
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
@@ -30,12 +31,13 @@ import kotlin.collections.HashSet
 
 
 class ScheduleCalendar : AppCompatActivity() {
-
+    private var userId :Int = 0
     companion object{
         val TAG = "Schedule"
         val sdf = SimpleDateFormat("yyyy-MM-dd")
         var selectedDate :String = getTodayDate()
         val color: Int = Color.parseColor("#FF0000")
+        private val PREFS_NAME = "SharedPreferenceFile"
 
 
         private fun getTodayDate() : String{
@@ -54,6 +56,10 @@ class ScheduleCalendar : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_schedule_calendar)
+
+        val settings = getSharedPreferences(PREFS_NAME, 0)
+        userId = settings.getInt("userId",0)
+
         menu()
         calendar()
 
@@ -64,6 +70,8 @@ class ScheduleCalendar : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
 
         changeEventViewBySelectedDate(selectedDate)
+
+
 
     }
 
@@ -99,8 +107,9 @@ class ScheduleCalendar : AppCompatActivity() {
 
     }
     private fun showEventDot(calendarView:MaterialCalendarView){
-        scheduleViewModel.getDates.observe(this) { allDates ->
-            //trying event dot
+        Log.d(TAG,"User id is: $userId")
+        scheduleViewModel.getDates(userId = userId ).observe(this) { allDates ->
+
             val eventDates = HashSet <CalendarDay>()
             val dateFormatter = SimpleDateFormat("yyyy-MM-dd")
             for (date in allDates){
@@ -114,7 +123,7 @@ class ScheduleCalendar : AppCompatActivity() {
     private fun changeEventViewBySelectedDate(selectedDate:String){
 
         Log.d(TAG,"selectedDate passed: $selectedDate")
-        scheduleViewModel.getScheduleByDate(selectedDate).observe(this) { schedules ->
+        scheduleViewModel.getScheduleByDate(selectedDate,userId).observe(this) { schedules ->
             schedules.let { adapter.submitList(it) }
         }
     }

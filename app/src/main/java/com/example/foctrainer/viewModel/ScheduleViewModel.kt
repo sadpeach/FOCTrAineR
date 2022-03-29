@@ -11,22 +11,25 @@ class ScheduleViewModel (private val repository: ScheduleRepository):ViewModel()
 
     val allDates: LiveData<List<ScheduleModel>> = repository.allDates.asLiveData()
 
-    fun getScheduleByDate(selectedDate:String): LiveData<List<ScheduleModel>> {
-        return repository.getScheduleByDate(selectedDate).asLiveData()
+    fun getScheduleByDate(selectedDate:String,userId:Int): LiveData<List<ScheduleModel>> {
+        return repository.getScheduleByDate(selectedDate,userId).asLiveData()
     }
 
     fun createNewDate(date: ScheduleModel) = viewModelScope.launch {
         repository.createNewDate(date)
     }
 
-    val getDates: LiveData<List<String>> = repository.getDates.asLiveData()
+//    val getDates: LiveData<List<String>> = repository.getDates.asLiveData()
+    fun getDates(userId: Int):LiveData<List<String>>{
+        return repository.getDates(userId).asLiveData()
+    }
 
     fun getScheduledCountById(scheduleId:Int):LiveData<Int> {
         return repository.getScheduledCountById(scheduleId).asLiveData()
     }
 
-    fun getScheduledExerciseById(scheduleId:Int): LiveData<ScheduleModel>{
-        return repository.getScheduledExerciseById(scheduleId).asLiveData()
+    fun getScheduledExerciseById(scheduleId:Int,userId: Int): LiveData<ScheduleModel>{
+        return repository.getScheduledExerciseById(scheduleId,userId).asLiveData()
     }
 
 }

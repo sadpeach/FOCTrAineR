@@ -14,19 +14,23 @@ class ScheduleRepository (private val scheduleMapper: ScheduleMapper) {
         scheduleMapper.createNewDate(date)
     }
 
-    fun getScheduleByDate (selectedDate:String): Flow<List<ScheduleModel>>  {
-        return scheduleMapper.getScheduleByDate(selectedDate)
+    fun getScheduleByDate (selectedDate:String,userId:Int): Flow<List<ScheduleModel>>  {
+        return scheduleMapper.getScheduleByDate(selectedDate,userId)
     }
 
     val allDates: Flow<List<ScheduleModel>> = scheduleMapper.getAllDates()
 
-    val getDates: Flow<List<String>> = scheduleMapper.getDates()
+//    val getDates: Flow<List<String>> = scheduleMapper.getDates()
+
+    fun getDates (userId: Int):Flow<List<String>>{
+        return scheduleMapper.getDates(userId)
+    }
 
     fun getScheduledCountById (scheduleId:Int) : Flow<Int>  {
         return scheduleMapper.getScheduledCountById(scheduleId)
     }
 
-    fun getScheduledExerciseById(scheduleId:Int): Flow<ScheduleModel>{
-        return scheduleMapper.getScheduledExerciseById(scheduleId)
+    fun getScheduledExerciseById(scheduleId:Int,userId: Int): Flow<ScheduleModel>{
+        return scheduleMapper.getScheduledExerciseById(scheduleId,userId)
     }
 }

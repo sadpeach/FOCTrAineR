@@ -20,6 +20,9 @@ import android.content.Intent
 import android.util.Log
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.Toast
+import androidx.core.app.NotificationManagerCompat
+import com.example.foctrainer.R
+//import com.example.foctrainer.notification.NotificationHelper
 import kotlin.collections.ArrayList
 import android.widget.ArrayAdapter as ArrayAdapter1
 
@@ -87,33 +90,18 @@ class CreateScheduleActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-
-        //create channel for notification
-//        NotificationHelper.createNotificationChannel(this,
-//            NotificationManagerCompat.IMPORTANCE_DEFAULT, false,
-//            getString(R.string.app_name), "App notification channel.")
-//
-//        binding.setNotification.setOnCheckedChangeListener { buttonView, isChecked
-//            // Responds to switch being checked/unchecked
-//
-//
-//
-//        }
-//
-//
-//        binding.saveScheduleButton.setOnClickListener(){
-//
-//        }
-
+        //set up notification
+//        setupNotification()
 
     }
+
     private fun getScheduledExercise(){
-        scheduleViewModel.getScheduledExerciseById(scheduleId).observe( this,{schedule ->
+        scheduleViewModel.getScheduledExerciseById(scheduleId,userId).observe( this,{schedule ->
 
             binding.eventTitle.setText(schedule.title)
             binding.eventNote.setText(schedule.notes)
 //            binding.eventGoal.setText("hey")
-            binding.exerciseAutoCompleteTextView.setText(schedule.exerciseId)
+//            binding.exerciseAutoCompleteTextView.setText(schedule.exerciseId)
 
         })
     }
@@ -134,20 +122,15 @@ class CreateScheduleActivity : AppCompatActivity() {
     })
     }
 
-    fun createNotificationChannel(context: Context, importance: Int, showBadge: Boolean, name: String, description: String) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//    private fun setupNotification(){
+//        NotificationHelper.createNotificationChannel(this,
+//            NotificationManagerCompat.IMPORTANCE_DEFAULT, false,
+//            getString(R.string.app_name), "App notification channel.")
+//
+//    }
 
-            // 2
-            val channelId = "${context.packageName}-$name"
-            val channel = NotificationChannel(channelId, name, importance)
-            channel.description = description
-            channel.setShowBadge(showBadge)
-
-            // 3
-            val notificationManager = context.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
-        }
     }
 
-}
+
+
 

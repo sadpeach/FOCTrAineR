@@ -16,6 +16,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.camera.view.PreviewView
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
 import com.example.foctrainer.databinding.ActivityCameraxLivePreviewBinding
@@ -73,10 +74,20 @@ class Exercise : AppCompatActivity()  {
         scheduleId = intent.getIntExtra("scheduleId",0)
         Log.d(TAG,"Selected Schedule ID: $scheduleId")
 
+        /**
+         *
+         * Purpose: Retrieve exerciseName from the database through .observe
+         * use the retrieved exerciseName to set the title / global variable for later use
+         *
+         * **/
         //get exerciseName
         exerciseViewModel.getExerciseNameById(selectedExerciseId).observe(this, { exerciseName ->
-            title = exerciseName
-            Log.d(TAG,"Retrieved exercise name from DB: $exerciseName")
+//            title = exerciseName
+//            binding.exerciseName.text = exerciseName
+//            Log.d(TAG,"Retrieved exercise name from DB: $exerciseName")
+//            Log.d(TAG,"title is set: $title")
+            func(exerciseName)
+            Log.d("AsyncCall","Retrieved exercise name from DB: $title")
         })
 
         cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
@@ -162,6 +173,13 @@ class Exercise : AppCompatActivity()  {
 
     }
 
+    private fun func(execName: String){
+        title = execName
+        Log.d(TAG,"Retrieved exercise name from DB: $execName")
+        Log.d(TAG,"title is set: $title")
+    }
+
+
     override fun onSaveInstanceState(bundle: Bundle) {
         super.onSaveInstanceState(bundle)
         bundle.putString(STATE_SELECTED_MODEL, selectedModel)
@@ -224,6 +242,7 @@ class Exercise : AppCompatActivity()  {
         if (imageProcessor != null) {
             imageProcessor!!.stop()
         }
+
         imageProcessor =
 
             try {
@@ -232,20 +251,21 @@ class Exercise : AppCompatActivity()  {
                 val visualizeZ = true
                 val rescaleZ = true
                 val runClassification = true
-//                val selectedExerciseName = title as String
-                val selectedExerciseName = title.toString()
+                val selectedExerciseName = title. toString()
+                Log.d("Usage", "selected exercise name :$selectedExerciseName")
 
-                PoseDetectorProcessor(
-                    this,
-                    poseDetectorOptions!!,
-                    shouldShowInFrameLikelihood,
-                    visualizeZ,
-                    rescaleZ,
-                    runClassification,
-                    /* isStreamMode = */ true,
-                    selectedExerciseId ,
-                    selectedExerciseName
-                )
+                    PoseDetectorProcessor(
+                        this,
+                        poseDetectorOptions!!,
+                        shouldShowInFrameLikelihood,
+                        visualizeZ,
+                        rescaleZ,
+                        runClassification,
+                        /* isStreamMode = */ true,
+                        selectedExerciseId,
+                        selectedExerciseName
+                    )
+
 
             } catch (e: Exception) {
                 Log.e(TAG, "Can not create image processor: $selectedModel", e)
@@ -364,7 +384,11 @@ class Exercise : AppCompatActivity()  {
     }
 
     private fun getScheduledWorkOutCount(){
+        Log.d(TAG,"scheduleId attached:$scheduleId")
         scheduleModel.getScheduledCountById(scheduleId).observe(this,{ scheduledCount ->
+            binding.scheduledGoal.isVisible = true
+            binding.slash.isVisible = true
+            binding.counter.layoutParams.width = 400
             binding.scheduledGoal.text = scheduledCount.toString()
         })
     }

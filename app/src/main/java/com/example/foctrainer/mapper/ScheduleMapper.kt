@@ -16,15 +16,15 @@ interface ScheduleMapper {
     @Query("SELECT * FROM ScheduleTable")
     fun getAllDates(): Flow<List<ScheduleModel>>
 
-    @Query("SELECT * FROM ScheduleTable WHERE date(startDateTime) =:selectedDate")
-    fun getScheduleByDate(selectedDate:String): Flow<List<ScheduleModel>>
+    @Query("SELECT * FROM ScheduleTable WHERE date(startDateTime) =:selectedDate AND user_id=:userId")
+    fun getScheduleByDate(selectedDate:String,userId:Int): Flow<List<ScheduleModel>>
 
-    @Query("SELECT startDateTime FROM ScheduleTable")
-    fun getDates(): Flow<List<String>>
+    @Query("SELECT startDateTime FROM ScheduleTable WHERE user_id=:userId")
+    fun getDates(userId:Int): Flow<List<String>>
 
     @Query("SELECT no_of_sets FROM ScheduleTable WHERE id = :scheduleId")
     fun getScheduledCountById(scheduleId:Int): Flow<Int>
 
-    @Query("SELECT * FROM ScheduleTable WHERE id = :scheduleId")
-    fun getScheduledExerciseById(scheduleId:Int): Flow<ScheduleModel>
+    @Query("SELECT * FROM ScheduleTable WHERE id = :scheduleId AND user_id=:userId ")
+    fun getScheduledExerciseById(scheduleId:Int,userId: Int): Flow<ScheduleModel>
 }
