@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foctrainer.entity.ExerciseModel
 import com.example.foctrainer.exercise.Exercise
+import com.example.foctrainer.schedule.CreateScheduleActivity
 
 class MainRecyclerAdapter : ListAdapter<ExerciseModel, MainRecyclerAdapter.MainRecyclerViewHolder>(MainComparator()) {
         companion object {
@@ -25,9 +26,13 @@ class MainRecyclerAdapter : ListAdapter<ExerciseModel, MainRecyclerAdapter.MainR
         val current = getItem(position)
         holder.bind(current)
 
-        holder.itemView.setOnClickListener { v: View ->
+        holder.itemView.setOnClickListener { v: View->
             Log.d(TAG, "clicking recyclerView item")
-            v.context.startActivity(Intent(v.context, Exercise::class.java))
+
+            val intent = Intent(v.context, Exercise::class.java)
+            intent.putExtra("exerciseId", current.id)
+            v.context.startActivity(intent)
+
         }
 
     }

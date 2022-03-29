@@ -43,6 +43,7 @@ class RepetitionCounter {
             numRepeats++
             poseEntered = false
         }
+        Log.d(TAG,"checking className:$className")
         Log.d(TAG, className + " count: " + numRepeats)
 
         //saving numRepeats to database when yes in dialog us clicked
