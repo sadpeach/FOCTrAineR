@@ -95,7 +95,6 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.schedule -> {
                     // Respond to navigation item 2 click
-                    Log.d("Schedule", "schedulewoo")
                     val intent = Intent(this, ScheduleCalendar::class.java)
                     startActivity(intent)
                     true

@@ -1,7 +1,6 @@
 package com.example.foctrainer
 
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -27,8 +26,6 @@ class MainRecyclerAdapter : ListAdapter<ExerciseModel, MainRecyclerAdapter.MainR
         holder.bind(current)
 
         holder.itemView.setOnClickListener { v: View->
-            Log.d(TAG, "clicking recyclerView item")
-
             val intent = Intent(v.context, Exercise::class.java)
             intent.putExtra("exerciseId", current.id)
             v.context.startActivity(intent)
