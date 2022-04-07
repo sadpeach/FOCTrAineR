@@ -17,7 +17,6 @@ import com.example.foctrainer.entity.ExerciseModel
 import com.example.foctrainer.entity.UserModel
 import com.example.foctrainer.exercise.Exercise
 import com.example.foctrainer.schedule.ScheduleCalendar
-import com.example.foctrainer.schedule.ScheduleCalendarAdapter
 import com.example.foctrainer.viewModel.*
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.components.XAxis
@@ -60,7 +59,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-//        setContentView(R.layout.activity_main)
 
         val settings = getSharedPreferences(PREFS_UserID, 0)
         userID = settings.getInt("userId", -1)
@@ -76,16 +74,6 @@ class MainActivity : AppCompatActivity() {
         exerciseViewModel.allExercise.observe(this) { exercise ->
             exercise.let { adapter.submitList(it) }
         }
-
-
-//        val catlist = ArrayList<ExerciseModel>()
-//        exerciseViewModel.allExercise.observe(this, Observer<List<ExerciseModel>>(){ exercise->
-//            for (ex in exercise){
-//                exerciseId = ex.id
-//                catlist.add(ex)
-//            }})
-
-
 
         // Perform ItemSelectedListener
         bottomNavigationView.setOnItemSelectedListener { item ->
@@ -116,9 +104,6 @@ class MainActivity : AppCompatActivity() {
 //            true
 //        }
 
-//        completeExerciseModel.chartSummary.observe(this, Observer { ex->
-//            Log.d("Chart", ex.toString())
-//        })
 
 //        val bundle = Bundle()
 //        userViewModel.allUsers.observe(this, Observer<List<UserModel>>() { users ->
