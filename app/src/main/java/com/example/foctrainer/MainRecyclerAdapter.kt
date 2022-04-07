@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foctrainer.entity.ExerciseModel
 import com.example.foctrainer.exercise.Exercise
-import com.example.foctrainer.schedule.CreateScheduleActivity
 
 class MainRecyclerAdapter : ListAdapter<ExerciseModel, MainRecyclerAdapter.MainRecyclerViewHolder>(MainComparator()) {
         companion object {

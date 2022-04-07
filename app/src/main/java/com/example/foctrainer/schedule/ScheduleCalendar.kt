@@ -4,18 +4,14 @@ import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
-import android.widget.CalendarView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 import java.util.*
 
 import androidx.activity.viewModels
-import androidx.annotation.NonNull
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.foctrainer.LoginActivity
 import com.example.foctrainer.MainActivity
 import com.example.foctrainer.R
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
@@ -78,7 +74,6 @@ class ScheduleCalendar : AppCompatActivity() {
     //TODO: when clicking on button direct to form for user schedule input
     fun addButtonSetOnClick(view: View){
 
-        Log.d(TAG,"selectedDate for add button: $selectedDate")
         val intent = Intent(this, CreateScheduleActivity::class.java)
         intent.putExtra("selectedDate", selectedDate)
         startActivity(intent)
@@ -107,7 +102,6 @@ class ScheduleCalendar : AppCompatActivity() {
 
     }
     private fun showEventDot(calendarView:MaterialCalendarView){
-        Log.d(TAG,"User id is: $userId")
         scheduleViewModel.getDates(userId = userId ).observe(this) { allDates ->
 
             val eventDates = HashSet <CalendarDay>()
@@ -122,7 +116,6 @@ class ScheduleCalendar : AppCompatActivity() {
 
     private fun changeEventViewBySelectedDate(selectedDate:String){
 
-        Log.d(TAG,"selectedDate passed: $selectedDate")
         scheduleViewModel.getScheduleByDate(selectedDate,userId).observe(this) { schedules ->
             schedules.let { adapter.submitList(it) }
         }

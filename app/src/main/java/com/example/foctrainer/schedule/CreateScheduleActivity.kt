@@ -15,7 +15,6 @@ import com.example.foctrainer.viewModel.ExerciseViewModel
 import com.example.foctrainer.viewModel.ExerciseViewModelFactory
 import com.example.foctrainer.viewModel.ScheduleViewModel
 import com.example.foctrainer.viewModel.ScheduleViewModelFactory
-import java.util.*
 import android.content.Intent
 import android.util.Log
 import android.widget.AdapterView.OnItemClickListener
@@ -59,7 +58,6 @@ class CreateScheduleActivity : AppCompatActivity() {
         selectedDate = intent.getStringExtra("selectedDate").toString()
         scheduleId = intent.getIntExtra("scheduleId",0)
         if (scheduleId > 0){
-            Log.d(TAG,"retrieving scheduleId: $scheduleId")
             getScheduledExercise()
         }
 
@@ -70,7 +68,6 @@ class CreateScheduleActivity : AppCompatActivity() {
                 val selectedExercise: DropDownDisplay? = adapter.getItem(position)
                 if (selectedExercise != null) {
                     selectedExerciseId = selectedExercise.getId()
-                    Log.d(TAG,"User Selected:"+selectedExercise.getDropDownText()+", id=${selectedExercise.getId()}")
                 }
             }
 
@@ -79,8 +76,6 @@ class CreateScheduleActivity : AppCompatActivity() {
             var eventTitle = binding.eventTitle.text.toString()
             var eventGoal = binding.eventGoal.text.toString().toInt()
             var eventNote = binding.eventNote.text.toString()
-
-            Log.d(TAG,"adding userId=$userId, exerciseId=$selectedExerciseId, startDateTime=$selectedDate, notes=$eventNote, no_of_sets=$eventGoal, title=$eventTitle into database")
 
             val date = ScheduleModel( userId = userId,exerciseId = selectedExerciseId, startDateTime= selectedDate,notes= eventNote, no_of_sets=eventGoal,title= eventTitle)
             scheduleViewModel.createNewDate(date = date)

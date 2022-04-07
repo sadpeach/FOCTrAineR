@@ -39,7 +39,6 @@ class ScheduleCalendarAdapter :
 
 
         holder.itemView.setOnLongClickListener(OnLongClickListener {
-            Log.d(TAG,"LongClick: ${current.id}")
             val intent = Intent(it.context, CreateScheduleActivity::class.java)
             intent.putExtra("scheduleId", current.id)
             it.context.startActivity(intent)
