@@ -33,9 +33,6 @@ class MainActivity : AppCompatActivity() {
     //BarChart
     private lateinit var myBarChart: BarChart
 
-//    val homeFragment = HomeFragment()
-//    val scheduleFragment = ScheduleFragment()
-
     lateinit var  caloriesList: ArrayList<BarEntry>
     lateinit var exNameList : ArrayList<String>
     var userID = -1
@@ -92,32 +89,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-
-        //Navigation Bar -Fragment
-//        makeCurrentFragment(homeFragment)
-//        val bottomNavView = findViewById<BottomNavigationView>(R.id.bottom_navigation_menu)
-//        NavigationBarView.OnItemSelectedListener{ it ->
-//            when(it.itemId){
-//                R.id.home -> makeCurrentFragment(homeFragment)
-//                R.id.schedule -> makeCurrentFragment(scheduleFragment)
-//            }
-//            true
-//        }
-
-
-//        val bundle = Bundle()
-//        userViewModel.allUsers.observe(this, Observer<List<UserModel>>() { users ->
-//            bundle.putString("name", "${users[0].userName}")
-//            bundle.putString("height", "${users[0].height}")
-//            bundle.putString("weight", "${users[0].weight}")
-//            bundle.putString("bmi", "${users[0].bmi}")
-//
-//            val myObj = HomeFragment()
-//            myObj.setArguments(bundle)
-//
-//            Log.d("obj", myObj.arguments.toString())
-//        })
-
         displayUserDetails()
         exerciseDetails()
         //Barchart
@@ -125,12 +96,6 @@ class MainActivity : AppCompatActivity() {
         populateBarChart()
 
     }
-
-//    private fun makeCurrentFragment(fragment: Fragment) =
-//        supportFragmentManager.beginTransaction().apply {
-//            replace(R.id.fl_wrapper, fragment)
-//            commit()
-//        }
 
     fun selectButtonOnClick(view: View){
         val intent = Intent(this, Exercise::class.java)
