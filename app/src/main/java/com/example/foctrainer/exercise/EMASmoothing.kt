@@ -16,8 +16,6 @@ class EMASmoothing {
     private var windowSize = 0
     private var alpha = 0f
 
-    // This is a window of {@link ClassificationResult}s as outputted by the {@link PoseClassifier}.
-    // We run smoothing over this window of size {@link windowSize}.
     private var window: Deque<ClassificationResult>? = null
 
     private var lastInputMs: Long = 0

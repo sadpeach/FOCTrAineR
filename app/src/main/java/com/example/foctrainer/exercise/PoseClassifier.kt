@@ -56,29 +56,18 @@ class PoseClassifier {
 
     private fun classify(landmarks: MutableList<PointF3D>): ClassificationResult? {
         val result = ClassificationResult()
-        // Return early if no landmarks detected.
         if (landmarks.isEmpty()) {
             return result
         }
 
-        // We do flipping on X-axis so we are horizontal (mirror) invariant.
         val flippedLandmarks: MutableList<PointF3D> = ArrayList(landmarks)
         multiplyAll(flippedLandmarks, PointF3D.from(-1f, 1f, 1f))
         val embedding = getPoseEmbedding(landmarks)
         val flippedEmbedding = getPoseEmbedding(flippedLandmarks)
 
-
-        // Classification is done in two stages:
-        //  * First we pick top-K samples by MAX distance. It allows to remove samples that are almost
-        //    the same as given pose, but maybe has few joints bent in the other direction.
-        //  * Then we pick top-K samples by MEAN distance. After outliers are removed, we pick samples
-        //    that are closest by average.
-
-        // Keeps max distance on top so we can pop it when top_k size is reached.
         val maxDistances: PriorityQueue<Pair<PoseSample, Float>> = PriorityQueue(
             maxDistanceTopK
         ) { o1, o2 -> -java.lang.Float.compare(o1.second, o2.second) }
-        // Retrieve top K poseSamples by least distance to remove outliers.
         for (poseSample in poseSamples!!) {
             val sampleEmbedding: MutableList<PointF3D> = poseSample.getEmbedding()
             var originalMax = 0f

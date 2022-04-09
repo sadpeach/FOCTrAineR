@@ -43,9 +43,6 @@ class PoseClassifierProcessor {
     private val NUM_LANDMARKS = 33
     private val NUM_DIMS = 3
 
-    // Specify classes for which we want rep counting.
-    // These are the labels in the given {@code POSE_SAMPLES_FILE}. You can set your own class labels
-    // for your pose samples.
     private val PUSHUPS_CLASS = "pushups_down"
     private val SQUATS_CLASS = "squats_down"
     private val POSE_CLASSES = arrayOf(
@@ -63,8 +60,6 @@ class PoseClassifierProcessor {
 
     @WorkerThread
     constructor(context: Context, isStreamMode: Boolean,selectedExerciseId:Int,selectedExerciseName:String) {
-        //precondition -> throws illegalArgument
-        //return the app's main looper
         com.google.common.base.Preconditions.checkState(Looper.myLooper() != Looper.getMainLooper())
         this.isStreamMode = isStreamMode
         if (isStreamMode) {
@@ -77,14 +72,6 @@ class PoseClassifierProcessor {
         loadPoseSamples(context,selectedExerciseId,selectedExerciseName)
     }
 
-    /**
-     * Reads pose samples from the CSV file to pose object and add it to arrayList
-     * Instantiate RepetitionCounter
-     * Instantiate PoseClassifier
-     *
-     * @param context
-     * @return void
-     */
     private fun loadPoseSamples(context: Context,selectedExerciseId: Int,selectedExerciseName: String) {
         Log.d(TAG, "Loading pose sample..$selectedExerciseName")
         val poseSamples: MutableList<PoseSample?> = ArrayList()
@@ -151,15 +138,6 @@ class PoseClassifierProcessor {
         return PoseSample(name, className, landmarks)
     }
 
-    /**
-     * Given a new [Pose] input, returns a list of formatted [String]s with Pose
-     * classification results.
-     *
-     *
-     * Currently it returns up to 2 strings as following:
-     * 0: PoseClass : X reps
-     * 1: PoseClass : [0.0-1.0] confidence
-     */
     @WorkerThread
     fun getPoseResult(pose: Pose): List<String?>? {
         com.google.common.base.Preconditions.checkState(Looper.myLooper() != Looper.getMainLooper())

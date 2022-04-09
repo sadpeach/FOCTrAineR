@@ -53,7 +53,6 @@ class PoseDetectorProcessor(
     }
 
     override fun detectInImage(image: InputImage): Task<PoseWithClassification> {
-        Log.d(TAG, "processing image detection, runClassification$runClassification")
         return detector
             .process(image)
             .continueWith(
@@ -74,8 +73,6 @@ class PoseDetectorProcessor(
     }
 
     override fun detectInImage(image: MlImage): Task<PoseWithClassification> {
-        Log.d(TAG, "processing MLimage detection, runClassification $runClassification")
-
         return detector
             .process(image)
             .continueWith(
@@ -90,7 +87,6 @@ class PoseDetectorProcessor(
                         }
                         classificationResult = poseClassifierProcessor?.getPoseResult(pose) as List<String>
                         counter = poseClassifierProcessor!!.getCounter()
-                        Log.d(TAG,"Detecting count:$counter")
                     }
                     PoseWithClassification(pose, classificationResult)
                 }
@@ -103,7 +99,6 @@ class PoseDetectorProcessor(
         graphicOverlay: GraphicOverlay
     ) {
         //print counter on screen
-//        Log.d(TAG,"onsuccess"+poseWithClassification.get)
         graphicOverlay.add(
             PoseGraphic(
                 graphicOverlay,
@@ -127,7 +122,7 @@ class PoseDetectorProcessor(
     }
 
     override fun processBitmap(bitmap: Bitmap, graphicOverlay: GraphicOverlay) {
-        TODO("Not yet implemented")
+
     }
 
     override fun getCounter(): Int {

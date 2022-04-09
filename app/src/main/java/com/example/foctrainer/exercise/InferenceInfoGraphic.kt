@@ -15,7 +15,6 @@ class InferenceInfoGraphic : GraphicOverlay.Graphic {
     private var frameLatency: Long = 0
     private var detectorLatency: Long = 0
 
-    // Only valid when a stream of input images is being processed. Null for single image mode.
     @Nullable
     private var framesPerSecond: Int? = null
     private var showLatencyInfo = true

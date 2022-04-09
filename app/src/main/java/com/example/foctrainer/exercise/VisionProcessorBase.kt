@@ -78,7 +78,6 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
         )
     }
 
-    // -----------------Code for processing live preview frame from CameraX API-----------------------
     @RequiresApi(VERSION_CODES.LOLLIPOP)
     @ExperimentalGetImage
     override fun processImageProxy(image: ImageProxy, graphicOverlay: GraphicOverlay) {
@@ -102,11 +101,7 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
                 /* shouldShowFps= */ true,
                 frameStartMs
             )
-                // When the image is from CameraX analysis use case, must call image.close() on received
-                // images when finished using them. Otherwise, new images may not be received or the camera
-                // may stall.
-                // Currently MlImage doesn't support ImageProxy directly, so we still need to call
-                // ImageProxy.close() here.
+
                 .addOnCompleteListener { image.close() }
 
             return
@@ -119,9 +114,7 @@ abstract class VisionProcessorBase<T>(context: Context) : VisionImageProcessor {
             /* shouldShowFps= */ true,
             frameStartMs
         )
-            // When the image is from CameraX analysis use case, must call image.close() on received
-            // images when finished using them. Otherwise, new images may not be received or the camera
-            // may stall.
+
             .addOnCompleteListener { image.close() }
     }
 
