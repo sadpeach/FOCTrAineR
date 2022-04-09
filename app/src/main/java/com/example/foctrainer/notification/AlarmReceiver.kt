@@ -25,18 +25,19 @@
 //
 //    override fun onReceive(context: Context, intent: Intent) {
 //
-//        //Things to do when message is received
 //        if (context != null && intent != null && intent.action != null) {
-//
+//            // 1
 //            if (intent.action!!.equals(context.getString(R.string.action_notify_administer_medication), ignoreCase = true)) {
 //                if (intent.extras != null) {
-//                    NotifUtils.application = context.applicationContext as Application
-//                    val reminderData = NotifUtils.getReminderById(intent.extras!!.getInt(ReminderDialog.KEY_ID))
+//                    // 2
+//                    val reminderData = DataUtils.getReminderById(intent.extras!!.getInt(ReminderDialog.KEY_ID))
 //                    if (reminderData != null) {
-//                        NotificationHelper.createNotificationForEvent(context, reminderData)
+//                        // 3
+//                        NotificationHelper.createNotificationForPet(context, reminderData)
 //                    }
 //                }
 //            }
 //        }
+//
 //    }
 //}

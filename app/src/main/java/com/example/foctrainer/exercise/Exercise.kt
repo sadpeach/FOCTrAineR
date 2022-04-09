@@ -17,14 +17,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.ViewModelProvider
 import androidx.camera.view.PreviewView
 import androidx.core.view.isVisible
-import androidx.lifecycle.lifecycleScope
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
 import com.example.foctrainer.databinding.ActivityCameraxLivePreviewBinding
 import com.google.mlkit.common.MlKitException
-import kotlinx.coroutines.*
 import com.example.foctrainer.MainActivity
 import com.example.foctrainer.entity.CompletedExerciseModel
-import com.example.foctrainer.entity.ScheduleModel
 import com.example.foctrainer.utils.CaloriesCalculator
 import com.example.foctrainer.viewModel.*
 import java.text.SimpleDateFormat
@@ -68,19 +65,10 @@ class Exercise : AppCompatActivity()  {
 
         //get exerciseId
         selectedExerciseId = intent.getIntExtra("exerciseId",0)
-        Log.d(TAG, "Selected Exercise Id: $selectedExerciseId")
 
         //get scheduleId if any
         scheduleId = intent.getIntExtra("scheduleId",0)
-        Log.d(TAG,"Selected Schedule ID: $scheduleId")
 
-        /**
-         *
-         * Purpose: Retrieve exerciseName from the database through .observe
-         * use the retrieved exerciseName to set the title / global variable for later use
-         *
-         * **/
-        //get exerciseName
         exerciseViewModel.getExerciseNameById(selectedExerciseId).observe(this, { exerciseName ->
 //            title = exerciseName
 //            binding.exerciseName.text = exerciseName
@@ -153,23 +141,6 @@ class Exercise : AppCompatActivity()  {
 
             dialog.show()
         }
-
-//        Log.d(TAG,"count:${binding.counter.text}, scheduleGoal:${binding.scheduledGoal.text}")
-//        if (binding.counter.text.toString().toInt() == binding.scheduledGoal.text.toString().toInt()){
-//            val popdialog = AlertDialog.Builder(this)
-//            popdialog.setTitle("Congratulations")
-//                .setMessage("Scheduled workout event completed!")
-//
-//            popdialog.show()
-//
-//            val t = Timer()
-//            t.schedule(object : TimerTask() {
-//                override fun run() {
-//                    popdialog.setCancelable(true)
-//                    t.cancel()
-//                }
-//            }, 2000)
-//        }
 
     }
 
@@ -252,7 +223,6 @@ class Exercise : AppCompatActivity()  {
                 val rescaleZ = true
                 val runClassification = true
                 val selectedExerciseName = title. toString()
-                Log.d("Usage", "selected exercise name :$selectedExerciseName")
 
                     PoseDetectorProcessor(
                         this,
@@ -304,7 +274,6 @@ class Exercise : AppCompatActivity()  {
                 }
                 try {
                     graphicOverlay?.let { imageProcessor!!.processImageProxy(imageProxy, it) }
-                    Log.d(TAG," updating counter to: "+imageProcessor?.getCounter())
                     binding.counter.text = imageProcessor?.getCounter().toString()
 
                 } catch (e: MlKitException) {
@@ -384,7 +353,6 @@ class Exercise : AppCompatActivity()  {
     }
 
     private fun getScheduledWorkOutCount(){
-        Log.d(TAG,"scheduleId attached:$scheduleId")
         scheduleModel.getScheduledCountById(scheduleId).observe(this,{ scheduledCount ->
             binding.scheduledGoal.isVisible = true
             binding.slash.isVisible = true
@@ -394,38 +362,5 @@ class Exercise : AppCompatActivity()  {
     }
 }
 
-
-
-//toggle between front and back camera
-//    override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
-//        Log.d(TAG,"on checkedchanged")
-//        if (cameraProvider == null) {
-//            return
-//        }
-//        val newLensFacing =
-//            if (lensFacing == CameraSelector.LENS_FACING_FRONT) {
-//                CameraSelector.LENS_FACING_BACK
-//            } else {
-//                CameraSelector.LENS_FACING_FRONT
-//            }
-//        val newCameraSelector = CameraSelector.Builder().requireLensFacing(newLensFacing).build()
-//        try {
-//            if (cameraProvider!!.hasCamera(newCameraSelector)) {
-//                Log.d(TAG, "Set facing to $newLensFacing")
-//                lensFacing = newLensFacing
-//                cameraSelector = newCameraSelector
-//                bindAllCameraUseCases()
-//                return
-//            }
-//        } catch (e: CameraInfoUnavailableException) {
-//            // Falls through
-//        }
-//        Toast.makeText(
-//            applicationContext,
-//            "This device does not have lens with facing: $newLensFacing",
-//            Toast.LENGTH_SHORT
-//        )
-//            .show()
-//    }
 
 

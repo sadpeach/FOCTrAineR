@@ -12,7 +12,6 @@ import android.view.Window
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.DialogFragment
-import androidx.fragment.app.viewModels
 import com.example.foctrainer.R
 import com.example.foctrainer.viewModel.UserViewModel
 import com.example.foctrainer.viewModel.UserViewModelFactory
@@ -20,10 +19,7 @@ import com.example.foctrainer.entity.UserModel
 import com.google.android.material.textfield.TextInputEditText
 import java.lang.Exception
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
-import com.example.foctrainer.mapper.UserMapper
-import com.example.foctrainer.repository.UserRepository
 
 
 class SignUpDialog : DialogFragment() {
@@ -58,7 +54,6 @@ class SignUpDialog : DialogFragment() {
             val height = view.findViewById<TextInputEditText>(R.id.height).text.toString().toFloat()
             val weight = view.findViewById<TextInputEditText>(R.id.weight).text.toString().toFloat()
             val bmi = view.findViewById<TextInputEditText>(R.id.bmi).text.toString().toFloat()
-//        val age = view.findViewById<TextView>(R.id.age).text
 
             try{
                 var user:UserModel = UserModel(userName = userName,password = userPassword,height = height,weight = weight,bmi = bmi)
@@ -80,10 +75,6 @@ class SignUpDialog : DialogFragment() {
 
     companion object {
         private val TAG = "SignUpDialog"
-    }
-
-    fun addSignUpUserToSharePref(){
-
     }
 
 }

@@ -16,12 +16,8 @@ import com.example.foctrainer.viewModel.ExerciseViewModelFactory
 import com.example.foctrainer.viewModel.ScheduleViewModel
 import com.example.foctrainer.viewModel.ScheduleViewModelFactory
 import android.content.Intent
-import android.util.Log
 import android.widget.AdapterView.OnItemClickListener
 import android.widget.Toast
-import androidx.core.app.NotificationManagerCompat
-import com.example.foctrainer.R
-//import com.example.foctrainer.notification.NotificationHelper
 import kotlin.collections.ArrayList
 import android.widget.ArrayAdapter as ArrayAdapter1
 
@@ -95,8 +91,6 @@ class CreateScheduleActivity : AppCompatActivity() {
 
             binding.eventTitle.setText(schedule.title)
             binding.eventNote.setText(schedule.notes)
-//            binding.eventGoal.setText("hey")
-//            binding.exerciseAutoCompleteTextView.setText(schedule.exerciseId)
 
         })
     }

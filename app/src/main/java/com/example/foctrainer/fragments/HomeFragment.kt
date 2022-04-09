@@ -9,11 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
-import androidx.activity.viewModels
 import com.example.foctrainer.R
-import com.example.foctrainer.databaseConfig.FocTrainerApplication
-import com.example.foctrainer.viewModel.UserViewModel
-import com.example.foctrainer.viewModel.UserViewModelFactory
 
 class HomeFragment : Fragment() {
 

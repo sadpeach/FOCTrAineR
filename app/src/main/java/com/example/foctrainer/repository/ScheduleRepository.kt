@@ -4,7 +4,6 @@ import androidx.annotation.WorkerThread
 import com.example.foctrainer.entity.ScheduleModel
 import com.example.foctrainer.mapper.ScheduleMapper
 import kotlinx.coroutines.flow.Flow
-import java.util.*
 
 class ScheduleRepository (private val scheduleMapper: ScheduleMapper) {
 
@@ -19,8 +18,6 @@ class ScheduleRepository (private val scheduleMapper: ScheduleMapper) {
     }
 
     val allDates: Flow<List<ScheduleModel>> = scheduleMapper.getAllDates()
-
-//    val getDates: Flow<List<String>> = scheduleMapper.getDates()
 
     fun getDates (userId: Int):Flow<List<String>>{
         return scheduleMapper.getDates(userId)
