@@ -30,6 +30,8 @@ import java.util.*
 
 class Exercise : AppCompatActivity()  {
 
+
+    private val PREFS_NAME = "SharedPreferenceFile"
     private lateinit var binding:ActivityCameraxLivePreviewBinding
     private var cameraProvider: ProcessCameraProvider? = null
     private var previewUseCase: Preview? = null
@@ -43,7 +45,8 @@ class Exercise : AppCompatActivity()  {
     private var graphicOverlay: GraphicOverlay? = null
     private var selectedExerciseId: Int = 0
     private var scheduleId: Int = 0
-    private val userId = 1 // need to change
+    private lateinit var exerciseName:String
+    private var userId = -1 // need to change
 
     //all database
     private val exerciseViewModel: ExerciseViewModel by viewModels {
@@ -63,20 +66,22 @@ class Exercise : AppCompatActivity()  {
         binding = ActivityCameraxLivePreviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        //get userId
+        val settings = getSharedPreferences(PREFS_NAME, 0)
+        userId = settings.getInt("userId",-1)
+
         //get exerciseId
         selectedExerciseId = intent.getIntExtra("exerciseId",0)
 
+        //get exerciseName
+        exerciseName = intent.getStringExtra("exerciseName").toString()
+        exerciseViewModel.getExerciseNameById(selectedExerciseId).observe(this, { exerciseName ->
+            title = exerciseName
+        })
+        title = exerciseName
+
         //get scheduleId if any
         scheduleId = intent.getIntExtra("scheduleId",0)
-
-        exerciseViewModel.getExerciseNameById(selectedExerciseId).observe(this, { exerciseName ->
-//            title = exerciseName
-//            binding.exerciseName.text = exerciseName
-//            Log.d(TAG,"Retrieved exercise name from DB: $exerciseName")
-//            Log.d(TAG,"title is set: $title")
-            func(exerciseName)
-            Log.d("AsyncCall","Retrieved exercise name from DB: $title")
-        })
 
         cameraSelector = CameraSelector.Builder().requireLensFacing(lensFacing).build()
         graphicOverlay = binding.graphicOverlay
@@ -94,7 +99,6 @@ class Exercise : AppCompatActivity()  {
             selectedModel = savedInstanceState.getString(STATE_SELECTED_MODEL, OBJECT_DETECTION)
         }
 
-        //permission check
         if (allPermissionsGranted()) {
             cameraProvider()
 
@@ -107,7 +111,6 @@ class Exercise : AppCompatActivity()  {
         if (scheduleId != 0) getScheduledWorkOutCount()
 
         binding.endWorkout.setOnClickListener() {
-            val exeName = title.toString()
             val dialog = AlertDialog.Builder(this)
             dialog.setTitle("Workout Ending")
                 .setMessage("You have completed ${binding.counter.text} $title")
@@ -124,7 +127,7 @@ class Exercise : AppCompatActivity()  {
                         no_completed_sets = counter,
                         total_calories = CaloriesCalculator(
                             weight = 12.3f,
-                            exerciseName = exeName,
+                            exerciseName = title.toString(),
                             noOfExerciseCompleted = counter
                         ).getCalories())
                     completeExerciseModel.insertNewCompletedExercise(completedExercise = completedExercise )
@@ -143,13 +146,6 @@ class Exercise : AppCompatActivity()  {
         }
 
     }
-
-    private fun func(execName: String){
-        title = execName
-        Log.d(TAG,"Retrieved exercise name from DB: $execName")
-        Log.d(TAG,"title is set: $title")
-    }
-
 
     override fun onSaveInstanceState(bundle: Bundle) {
         super.onSaveInstanceState(bundle)
@@ -222,7 +218,6 @@ class Exercise : AppCompatActivity()  {
                 val visualizeZ = true
                 val rescaleZ = true
                 val runClassification = true
-                val selectedExerciseName = title. toString()
 
                     PoseDetectorProcessor(
                         this,
@@ -233,7 +228,7 @@ class Exercise : AppCompatActivity()  {
                         runClassification,
                         /* isStreamMode = */ true,
                         selectedExerciseId,
-                        selectedExerciseName
+                        title.toString()
                     )
 
 

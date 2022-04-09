@@ -27,6 +27,7 @@ class MainRecyclerAdapter : ListAdapter<ExerciseModel, MainRecyclerAdapter.MainR
         holder.itemView.setOnClickListener { v: View->
             val intent = Intent(v.context, Exercise::class.java)
             intent.putExtra("exerciseId", current.id)
+            intent.putExtra("exerciseName",current.name)
             v.context.startActivity(intent)
 
         }
