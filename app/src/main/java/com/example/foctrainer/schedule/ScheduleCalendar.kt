@@ -17,6 +17,8 @@ import com.example.foctrainer.R
 import com.example.foctrainer.databaseConfig.FocTrainerApplication
 import com.example.foctrainer.utils.CurrentDayDecorator
 import com.example.foctrainer.utils.EventDecorator
+import com.example.foctrainer.viewModel.ScheduleExerciseViewModel
+import com.example.foctrainer.viewModel.ScheduleExerciseViewModelFactory
 import com.example.foctrainer.viewModel.ScheduleViewModel
 import com.example.foctrainer.viewModel.ScheduleViewModelFactory
 import com.prolificinteractive.materialcalendarview.CalendarDay
@@ -47,6 +49,10 @@ class ScheduleCalendar : AppCompatActivity() {
 
     private val scheduleViewModel: ScheduleViewModel by viewModels {
         ScheduleViewModelFactory((application as FocTrainerApplication).scheduleRepository)
+    }
+
+    private val scheduleExerciseViewModel: ScheduleExerciseViewModel by viewModels {
+        ScheduleExerciseViewModelFactory((application as FocTrainerApplication).scheduleExerciseRepository)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,11 +118,16 @@ class ScheduleCalendar : AppCompatActivity() {
                 }
             calendarView.addDecorators(EventDecorator(color = color, eventDates))
         }
+
     }
 
     private fun changeEventViewBySelectedDate(selectedDate:String){
 
-        scheduleViewModel.getScheduleByDate(selectedDate,userId).observe(this) { schedules ->
+//        scheduleViewModel.getScheduleByDate(selectedDate,userId).observe(this) { schedules ->
+//            schedules.let { adapter.submitList(it) }
+//        }
+
+        scheduleExerciseViewModel.getScheduleExercise(selectedDate,userId).observe(this) { schedules ->
             schedules.let { adapter.submitList(it) }
         }
     }

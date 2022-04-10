@@ -35,7 +35,7 @@ class Exercise : AppCompatActivity()  {
     private lateinit var binding:ActivityCameraxLivePreviewBinding
     private var cameraProvider: ProcessCameraProvider? = null
     private var previewUseCase: Preview? = null
-    private var lensFacing = CameraSelector.LENS_FACING_BACK
+    private var lensFacing = CameraSelector.LENS_FACING_FRONT
     private var previewView: PreviewView? = null
     private var cameraSelector: CameraSelector? = null
     private var analysisUseCase: ImageAnalysis? = null
@@ -48,10 +48,6 @@ class Exercise : AppCompatActivity()  {
     private lateinit var exerciseName:String
     private var userId = -1 // need to change
 
-    //all database
-    private val exerciseViewModel: ExerciseViewModel by viewModels {
-        ExerciseViewModelFactory((application as FocTrainerApplication).exerciseRepository)
-    }
 
     private val completeExerciseModel: CompletedExerciseViewModel by viewModels {
         CompletedExerciseViewModelFactory((application as FocTrainerApplication).completedExerciseRepository)
@@ -75,9 +71,6 @@ class Exercise : AppCompatActivity()  {
 
         //get exerciseName
         exerciseName = intent.getStringExtra("exerciseName").toString()
-        exerciseViewModel.getExerciseNameById(selectedExerciseId).observe(this, { exerciseName ->
-            title = exerciseName
-        })
         title = exerciseName
 
         //get scheduleId if any
@@ -228,7 +221,7 @@ class Exercise : AppCompatActivity()  {
                         runClassification,
                         /* isStreamMode = */ true,
                         selectedExerciseId,
-                        title.toString()
+                        exerciseName
                     )
 
 

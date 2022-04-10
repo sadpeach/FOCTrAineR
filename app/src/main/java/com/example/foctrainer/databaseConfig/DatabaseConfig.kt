@@ -17,6 +17,7 @@ abstract class FocTrainerDatabase : RoomDatabase() {
     abstract fun userMapper():UserMapper
     abstract fun scheduleMapper():ScheduleMapper
     abstract fun completedExerciseMapper():CompletedExerciseMapper
+    abstract fun scheduleExerciseMapper():ScheduleExerciseMapper
 
     companion object {
 

@@ -1,6 +1,7 @@
 package com.example.foctrainer.schedule
 
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnLongClickListener
@@ -10,11 +11,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.foctrainer.R
+import com.example.foctrainer.entity.ScheduleExerciseModel
 import com.example.foctrainer.entity.ScheduleModel
 import com.example.foctrainer.exercise.Exercise
+import com.example.foctrainer.mapper.ScheduleExerciseMapper
 
 class ScheduleCalendarAdapter :
-    ListAdapter<ScheduleModel, ScheduleCalendarAdapter.ScheduleRecyclerViewHolder>(ScheduleComparator()) {
+    ListAdapter<ScheduleExerciseModel, ScheduleCalendarAdapter.ScheduleRecyclerViewHolder>(ScheduleComparator()) {
 
     companion object {
         val TAG = "ScheduleCalendarAdapter"
@@ -30,15 +33,16 @@ class ScheduleCalendarAdapter :
 
         holder.itemView.setOnClickListener { v: View ->
             val intent = Intent(v.context, Exercise::class.java)
-            intent.putExtra("exerciseId", current.exerciseId)
-            intent.putExtra("scheduleId", current.id)
+            intent.putExtra("exerciseId", current.exercise_id)
+            intent.putExtra("scheduleId", current.scheduleId)
+            intent.putExtra("exerciseName",current.name)
             v.context.startActivity(intent)
         }
 
 
         holder.itemView.setOnLongClickListener(OnLongClickListener {
             val intent = Intent(it.context, CreateScheduleActivity::class.java)
-            intent.putExtra("scheduleId", current.id)
+            intent.putExtra("scheduleId", current.scheduleId)
             it.context.startActivity(intent)
             true
         })
@@ -51,7 +55,7 @@ class ScheduleCalendarAdapter :
 //        private val exerciseDetails:TextView = itemView.findViewById(R.id.setGoal)
 
 
-        fun bind(schedule: ScheduleModel) {
+        fun bind(schedule: ScheduleExerciseModel) {
             exerciseTitleTextView.text = schedule.title
             exerciseNotesTextView.text = schedule.notes
         }
@@ -65,13 +69,13 @@ class ScheduleCalendarAdapter :
         }
     }
 
-    class ScheduleComparator : DiffUtil.ItemCallback<ScheduleModel>() {
-        override fun areItemsTheSame(oldItem: ScheduleModel, newItem: ScheduleModel): Boolean {
+    class ScheduleComparator : DiffUtil.ItemCallback<ScheduleExerciseModel>() {
+        override fun areItemsTheSame(oldItem: ScheduleExerciseModel, newItem: ScheduleExerciseModel): Boolean {
             return oldItem === newItem
         }
 
-        override fun areContentsTheSame(oldItem: ScheduleModel, newItem: ScheduleModel): Boolean {
-            return oldItem.exerciseId == newItem.exerciseId
+        override fun areContentsTheSame(oldItem: ScheduleExerciseModel, newItem: ScheduleExerciseModel): Boolean {
+            return oldItem.exercise_id == newItem.exercise_id
         }
     }
 }

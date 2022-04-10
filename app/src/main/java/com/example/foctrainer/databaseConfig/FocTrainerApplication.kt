@@ -12,4 +12,5 @@ class FocTrainerApplication : Application() {
     val userRepository by lazy { UserRepository(database.userMapper()) }
     val completedExerciseRepository by lazy { CompletedExerciseRepository(database.completedExerciseMapper()) }
     val scheduleRepository by lazy { ScheduleRepository(database.scheduleMapper()) }
+    val scheduleExerciseRepository by lazy { ScheduleExerciseRepository(database.scheduleExerciseMapper()) }
 }
