@@ -22,18 +22,14 @@
 //class AlarmReceiver : BroadcastReceiver() {
 //    private lateinit var userViewModel:UserViewModel
 //
-//
 //    override fun onReceive(context: Context, intent: Intent) {
-//
 //        if (context != null && intent != null && intent.action != null) {
-//            // 1
 //            if (intent.action!!.equals(context.getString(R.string.action_notify_administer_medication), ignoreCase = true)) {
 //                if (intent.extras != null) {
-//                    // 2
 //                    val reminderData = DataUtils.getReminderById(intent.extras!!.getInt(ReminderDialog.KEY_ID))
 //                    if (reminderData != null) {
 //                        // 3
-//                        NotificationHelper.createNotificationForPet(context, reminderData)
+//                        NotificationHelper.createNotificationForEvent(context, reminderData)
 //                    }
 //                }
 //            }

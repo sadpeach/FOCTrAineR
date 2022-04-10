@@ -39,51 +39,31 @@
 //            R.drawable.baseline_done_black_24,
 //            context.getString(R.string.administer),
 //            administerPendingIntent)
-//// 4
 //        notificationManager.notify(scheduleData.id, notificationBuilder.build())
 //    }
 //
-////    private fun buildGroupNotification(context: Context, reminderData: ReminderData): NotificationCompat.Builder {
-////        val channelId = "${context.packageName}-${reminderData.type.name}"
-////        return NotificationCompat.Builder(context, channelId).apply {
-////            setSmallIcon(R.drawable.ic_stat_medicine)
-////            setContentTitle(reminderData.type.name)
-////            setContentText(context.getString(R.string.group_notification_for, reminderData.type.name))
-////            setStyle(NotificationCompat.BigTextStyle().bigText(context.getString(R.string.group_notification_for, reminderData.type.name)))
-////            setAutoCancel(true)
-////            setGroupSummary(true)
-////            setGroup(reminderData.type.name)
-////        }
-////    }
 //
-//    private fun buildNotificationForEvent(context: Context, reminderData: ReminderData): NotificationCompat.Builder {
+//    private fun buildNotificationForEvent(context: Context, scheduleData: ScheduleModel): NotificationCompat.Builder {
 //
-//        val channelId = "${context.packageName}-${reminderData.type.name}"
+//        val channelId = "${context.packageName}-${scheduleData.title}"
 //
 //        return NotificationCompat.Builder(context, channelId).apply {
-//            setSmallIcon(R.drawable.ic_stat_medicine)
-//            setContentTitle(reminderData.name)
+//            setSmallIcon(R.drawable.circle)
+//            setContentTitle(scheduleData.title)
 //            setAutoCancel(true)
 //
-//            // get a drawable reference for the LargeIcon
-//            val drawable = when (reminderData.type) {
-//                ReminderData.PetType.Dog -> R.drawable.dog
-//                ReminderData.PetType.Cat -> R.drawable.cat
-//                else -> R.drawable.other
-//            }
-//            setLargeIcon(BitmapFactory.decodeResource(context.resources, drawable))
-//            setContentText("${reminderData.medicine}, ${reminderData.desc}")
-////            setGroup(reminderData.type.name)
+//            setLargeIcon(BitmapFactory.decodeResource(context.resources, R.drawable.circle))
+//            setContentText("${scheduleData.title}, ${scheduleData.notes}")
 //
 //            // note is not important so if it doesn't exist no big deal
-//            if (reminderData.note != null) {
-//                setStyle(NotificationCompat.BigTextStyle().bigText(reminderData.note))
+//            if (scheduleData.notes != null) {
+//                setStyle(NotificationCompat.BigTextStyle().bigText(scheduleData.notes))
 //            }
 //
 //            // Launches the app to open the reminder edit screen when tapping the whole notification
 //            val intent = Intent(context, MainActivity::class.java).apply {
 //                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-//                putExtra(ReminderDialog.KEY_ID, reminderData.id)
+//                putExtra(ReminderDialog.KEY_ID, scheduleData.id)
 //            }
 //
 //            val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
