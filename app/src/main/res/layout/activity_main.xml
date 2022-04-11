@@ -7,26 +7,6 @@
     tools:context=".MainActivity"
     android:orientation="vertical">
 
-<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--        android:id="@+id/bottom_navigation"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        android:background="?android:attr/windowBackground"-->
-<!--        android:clickable="true"-->
-<!--        app:menu="@menu/bottom_navigation_menu" />-->
-
-<!--    <FrameLayout-->
-<!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--        xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--        xmlns:tools="http://schemas.android.com/tools"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        tools:context=".MainActivity"-->
-<!--        android:name="com.example.foctrainer.fragments.HomeFragment"-->
-<!--        android:id="@+id/root_container">-->
-<!--    </FrameLayout>-->
-
         <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -42,15 +22,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="20dp">
-
-                        <ImageView
-                            android:id="@+id/profileImg"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginTop="30dp"
-                            tools:srcCompat="@tools:sample/avatars" />
 
                         <TextView
                             android:id="@+id/welcome"
@@ -80,16 +51,6 @@
                             android:textColor="@color/white"
                             android:textSize="20dp" />
 
-<!--                        <EditText-->
-<!--                            android:id="@+id/editHeight"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_below="@+id/name"-->
-<!--                            android:layout_toRightOf="@id/height"-->
-<!--                            android:backgroundTint="@color/white"-->
-<!--                            android:ems="5"-->
-<!--                            android:padding="5dp"-->
-<!--                            android:textColor="@color/white" />-->
 
                         <TextView
                             android:id="@+id/weight"
@@ -99,27 +60,6 @@
                             android:text="Weight: "
                             android:textColor="@color/white"
                             android:textSize="20dp" />
-
-<!--                        <EditText-->
-<!--                            android:id="@+id/editWeight"-->
-<!--                            android:layout_width="wrap_content"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:layout_below="@+id/height"-->
-<!--                            android:layout_toRightOf="@id/weight"-->
-<!--                            android:backgroundTint="@color/white"-->
-<!--                            android:ems="5"-->
-<!--                            android:padding="5dp"-->
-<!--                            android:textColor="@color/white" />-->
-
-                        <Button
-                            android:id="@+id/btnSchedule"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@+id/height"
-                            android:layout_alignParentEnd="true"
-                            android:minHeight="5dp"
-                            android:text="Schedule WorkOut"
-                            android:onClick="scheduleButtonOnClick"/>
 
                     </RelativeLayout>
                 </LinearLayout>
@@ -149,11 +89,6 @@
                         android:layout_height="wrap_content"
                         android:gravity="center">
 
-    <!--&lt;!&ndash;                <LinearLayout&ndash;&gt;-->
-    <!--&lt;!&ndash;                    android:layout_width="match_parent"&ndash;&gt;-->
-    <!--&lt;!&ndash;                    android:layout_height="wrap_content"&ndash;&gt;-->
-    <!--&lt;!&ndash;                    android:layout_marginTop="10dp"&ndash;&gt;-->
-    <!--&lt;!&ndash;                    android:gravity="center">&ndash;&gt;-->
                         <ImageView
                             android:layout_width="70dp"
                             android:layout_height="70dp"
@@ -186,7 +121,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_marginTop="20dp"
                             android:textColor="@color/black"/>
-    <!--&lt;!&ndash;                </LinearLayout>&ndash;&gt;-->
+
                     </RelativeLayout>
 
                     <LinearLayout
@@ -248,15 +183,6 @@
                 tools:itemCount="5"
                 tools:listitem="@layout/card_view" />
 
-
-            <!--    <Button-->
-            <!--        android:id="@+id/selectButton"-->
-            <!--        android:layout_width="wrap_content"-->
-            <!--        android:layout_height="wrap_content"-->
-            <!--        android:text="Select"-->
-            <!--        android:onClick="selectButtonOnClick"-->
-            <!--        tools:layout_editor_absoluteX="163dp"-->
-            <!--        tools:layout_editor_absoluteY="345dp" />-->
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>
