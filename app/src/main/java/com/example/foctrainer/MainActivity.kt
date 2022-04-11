@@ -112,7 +112,7 @@ class MainActivity : AppCompatActivity() {
         val tvName = findViewById<TextView>(R.id.name)
         val textHeight = findViewById<TextView>(R.id.height)
         val textWeight = findViewById<TextView>(R.id.weight)
-        val tvBmi = findViewById<TextView>(R.id.bmi)
+
 
         userViewModel.allUsers.observe(this, Observer<List<UserModel>>() { users ->
             for (user in users) {
@@ -120,7 +120,7 @@ class MainActivity : AppCompatActivity() {
                     tvName.append(user.userName)
                     textHeight.append(user.height.toString())
                     textWeight.append(user.weight.toString())
-                    tvBmi.append(user.bmi.toString())
+
                 }
             }
         })

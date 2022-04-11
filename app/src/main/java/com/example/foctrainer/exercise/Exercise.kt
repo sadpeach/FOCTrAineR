@@ -101,7 +101,7 @@ class Exercise : AppCompatActivity()  {
             )
         }
 
-        if (scheduleId != 0) getScheduledWorkOutCount()
+        if (scheduleId > 0) getScheduledWorkOutCount()
 
         binding.endWorkout.setOnClickListener() {
             val dialog = AlertDialog.Builder(this)
@@ -344,7 +344,6 @@ class Exercise : AppCompatActivity()  {
         scheduleModel.getScheduledCountById(scheduleId).observe(this,{ scheduledCount ->
             binding.scheduledGoal.isVisible = true
             binding.slash.isVisible = true
-            binding.counter.layoutParams.width = 400
             binding.scheduledGoal.text = scheduledCount.toString()
         })
     }
